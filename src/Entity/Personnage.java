@@ -47,6 +47,11 @@ public class Personnage {
     }
   }
 
+  public void tp(float n_x, float n_y) {
+    x = n_x;
+    y = n_y;
+  }
+
   public void changeDir(Direction n_dir) {
     dir = n_dir;
   }
