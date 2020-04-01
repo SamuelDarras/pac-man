@@ -1,4 +1,8 @@
 # Game package
 
 package contenant les classes du jeu :
-* Plateau
+* Plateau.java
+
+# A faire
+Classes :
+* Partie.java
