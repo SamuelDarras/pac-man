@@ -1,5 +1,5 @@
 import java.io.*;
-package Game;
+
 
 public class Plateau{
     int[][] plateau;
@@ -38,4 +38,5 @@ public class Plateau{
     //public static void main(String[] args)throws Exception {
     //    Plateau j = new Plateau("level1.txt");
     //}
+
 }
