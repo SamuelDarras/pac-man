@@ -1,17 +1,27 @@
 package Utils;
 
-class Position {
-  private double x;
-  private double y;
-  public Position(double _x, double _y) {
+class Position<N> {
+  private N x;
+  private N y;
+  public Position(N _x, N _y) {
     x = _x;
     y = _y;
   }
   public Position(Position p) {
-    x = p.getX();
-    y = p.getY();
+    x = (N)p.getX();
+    y = (N)p.getY();
   }
 
-  public double getX() { return x; }
-  public double getY() { return y; }
+  public void set(Position<N> n_p) {
+    x = n_p.getX();
+    y = n_p.getY();
+  }
+  public void setX(N n_x) { x = n_x; }
+  public void setY(N n_y) { y = n_y; }
+
+  public Position<N> get() { return this; }
+  public N getX() { return x; }
+  public N getY() { return y; }
+
+  public String toString() { return "x: " + x + "; y: " + y; }
 }
