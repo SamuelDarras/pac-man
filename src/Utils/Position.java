@@ -1,7 +1,5 @@
 package Utils;
 
-import javafx.geometry.Pos;
-
 public class Position<N> {
   private N x;
   private N y;
