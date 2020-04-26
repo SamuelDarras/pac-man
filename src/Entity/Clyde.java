@@ -1,15 +1,16 @@
 package Entity;
 
-class Clyde {
+class Clyde extends Personnage {
   public Clyde(double x, double y, double speed) {
     super(x, y, speed);
   }
 
-  public tick() {
+  public void tick() {
+    AI();
     super.move();
   }
 
-  public void AI() {
+  private void AI() {
 
   }
 }
