@@ -1,6 +1,6 @@
 package Entity;
 
-class Clyde extends Personnage {
+class Clyde extends Ghost {
   public Clyde(double x, double y, double speed) {
     super(x, y, speed);
   }
@@ -10,7 +10,7 @@ class Clyde extends Personnage {
     super.move();
   }
 
-  private void AI() {
+  public void AI() {
 
   }
 }
