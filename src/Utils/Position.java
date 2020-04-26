@@ -1,15 +1,15 @@
 package Utils;
 
-class Position<N> {
+public class Position<N> {
   private N x;
   private N y;
   public Position(N _x, N _y) {
     x = _x;
     y = _y;
   }
-  public Position(Position p) {
-    x = (N)p.getX();
-    y = (N)p.getY();
+  public Position(Position<N> p) {
+    x = p.getX();
+    y = p.getY();
   }
 
   public void set(Position<N> n_p) {
