@@ -1,5 +1,7 @@
 package Utils;
 
+import javafx.geometry.Pos;
+
 public class Position<N> {
   private N x;
   private N y;
@@ -22,6 +24,8 @@ public class Position<N> {
   public Position<N> get() { return this; }
   public N getX() { return x; }
   public N getY() { return y; }
+
+  public Position<N> copy() { return new Position<>(x, y); }
 
   public String toString() { return "x: " + x + "; y: " + y; }
 }
