@@ -15,15 +15,10 @@ public class Partie {
         score = new Score();
     }
 
-    public void scoreAdd(int s) {
-        score.scoreAdd(s);
-    }
-
     public void run() throws Exception {
-        Plateau p1 = new Plateau("/home/samuel/pacman/src/levels/level1V2.txt");
-
-
+        Plateau p1 = new Plateau("src/levels/level1V2.txt");
         int sec = 0;
+
 
         while (!quitter) {
             long start = System.currentTimeMillis();
@@ -31,33 +26,38 @@ public class Partie {
             long finish = System.currentTimeMillis();
             total += finish - start;
 
-
-            if (sec != total / 1000) {
-                sec = (int) (total / 1000);
+            if(total/1000 != sec) {
+                sec = (int) total/1000;
                 System.out.println(sec);
-                action = true;
             }
 
-            doSomthingAt(1000, () -> {
+            action = true;
+
+            doSomethingAt(1000, () -> {
                 if ( !(p1.getIndex(p1.getIdxFruit()) instanceof Fruit) ) {
-                    System.out.println("OOF !!");
                     p1.setIndex(p1.getIdxFruit(), new Fruit(200, 10, 10));
                 }
             });
 
-            doSomthingAt(3000, () -> quitter = true);
+            doSomethingAt(3000, () -> {
+                quitter = true;
+            });
 
         }
     }
 
-    private void doSomthingAt(long timing, Callback callback) {
-        if (action && total == timing) {
+    public void scoreAdd(int s) {
+        score.scoreAdd(s);
+    }
+
+    interface Callback {
+        void call();
+    }
+    private void doSomethingAt(long timing, Callback callback) {
+        if (action && total >= timing && total <= timing + 100) {
             callback.call();
             action = false;
         }
     }
 }
 
-interface Callback {
-    void call();
-}
