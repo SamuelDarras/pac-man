@@ -34,7 +34,7 @@ public class Plateau {
             t = read.readLine();
             for (int j = 0; j < larg; j++) {
                 if (t.charAt(j) == '1') {
-                    plateau[larg * i + j] =  new Wall(i, j);
+                    plateau[larg * i + j] = new Wall(i, j);
                 }
                 if (t.charAt(j) != '0') {
                     if (t.charAt(j) == 'p')
