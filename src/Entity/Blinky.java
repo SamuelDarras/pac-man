@@ -1,6 +1,6 @@
 package Entity;
 
-class Blinky extends Ghost {
+public class Blinky extends Ghost {
   public Blinky(double x, double y, double speed) {
     super(x, y, speed);
   }

@@ -1,6 +1,6 @@
 package Entity;
 
-class Inky extends Ghost {
+public class Inky extends Ghost {
   public Inky(double x, double y, double speed) {
     super(x, y, speed);
   }
