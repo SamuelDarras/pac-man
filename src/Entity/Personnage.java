@@ -2,7 +2,7 @@ package Entity;
 
 import Utils.*;
 
-public class Personnage {
+public class Personnage extends Entity{
 
   private double x;
   private double y;
@@ -14,8 +14,7 @@ public class Personnage {
   private Direction dir = Direction.RIGHT;
 
   public Personnage (double _x, double _y, double _baseSpeed) {
-    x = _x;
-    y = _y;
+    super(_x, _y, 2, 2);
     baseSpeed = _baseSpeed;
     speed = baseSpeed;
   }
@@ -75,7 +74,5 @@ public class Personnage {
   public double getX() {  return x;}
   public double getY() {  return y;}
 
-  public String toString() {
-    return "(x: " + x + " ; y: " + y + ") | speed: " + speed + " | Direction: " + dir;
-  }
+  public String toString() { return "(x: " + x + " ; y: " + y + ") | speed: " + speed + " | Direction: " + dir; }
 }
