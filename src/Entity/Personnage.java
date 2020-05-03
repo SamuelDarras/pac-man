@@ -14,7 +14,7 @@ public class Personnage extends Entity{
   private Direction dir = Direction.RIGHT;
 
   public Personnage (double _x, double _y, double _baseSpeed) {
-    super(_x, _y, 2, 2);
+    super(_x, _y, Sizes.PERSONNAGE_SIZE, Sizes.PERSONNAGE_SIZE);
     baseSpeed = _baseSpeed;
     speed = baseSpeed;
   }
