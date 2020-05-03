@@ -60,15 +60,6 @@ public class Plateau {
         return plateau;
     }
 
-    public static void main(String[] args) throws Exception {
-        Plateau j = new Plateau("level1.txt");
-        for (int i = 0; i < j.plateau.length; i++)
-            if (i % 28 == 0) {
-                System.out.println();
-                System.out.print(j.getIndex(i));
-            }
-    }
-
     public void removeIndex(int index) {
         plateau[index] = null;
     }
