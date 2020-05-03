@@ -20,6 +20,8 @@ public class Entity {
 
     public double[] getHitbox() { return hitbox; }
 
+    public void setHitbox(double w, double h) { hitbox[0] = w; hitbox[1] = h; }
+
     public boolean hit(Entity other) {
 
         double x = pos.getX();
