@@ -1,5 +1,7 @@
 package Entity;
 
+import Utils.Sizes;
+
 public class Fruit extends Items{
 
     private boolean afficheScore = true;
@@ -8,6 +10,7 @@ public class Fruit extends Items{
 
     public Fruit(int score, double x, double y){
         super(score, x, y);
+        setHitbox(Sizes.FRUIT_SIZE, Sizes.FRUIT_SIZE);
     }
 
     public boolean isAfficheScore() {
