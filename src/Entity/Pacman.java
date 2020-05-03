@@ -12,8 +12,11 @@ public class Pacman extends Personnage{
 	private boolean superPacman = false;
 
 	public Pacman(){
-        super(10, 10, 1);
+        super(0, 0, 1);
 	}
+	public Pacman(double x, double y){
+	    super(x, y, 1);
+    }
 
 	public boolean isDead(Plateau p){
         for (Entity e : p.getPlateau()) {
