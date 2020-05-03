@@ -1,6 +1,6 @@
 package Game;
 
-import Entity.Fruit;
+import Entity.*;
 
 public class Partie {
     private Score score;
@@ -19,8 +19,10 @@ public class Partie {
         Plateau p1 = new Plateau("src/levels/level1V2.txt");
         int sec = 0;
 
+        Pacman pactest = new Pacman(10, 10);
 
         while (!quitter) {
+            action = true;
             long start = System.currentTimeMillis();
             //System.out.println(total);
             long finish = System.currentTimeMillis();
@@ -31,17 +33,7 @@ public class Partie {
                 System.out.println(sec);
             }
 
-            action = true;
 
-            doSomethingAt(1000, () -> {
-                if ( !(p1.getIndex(p1.getIdxFruit()) instanceof Fruit) ) {
-                    p1.setIndex(p1.getIdxFruit(), new Fruit(200, 10, 10));
-                }
-            });
-
-            doSomethingAt(3000, () -> {
-                quitter = true;
-            });
 
         }
     }
