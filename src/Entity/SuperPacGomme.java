@@ -4,8 +4,8 @@ public class SuperPacGomme extends Items{
 
     private boolean afficheScore = true;
 
-    public SuperPacGomme(){
-       super(100);
+    public SuperPacGomme(double x, double y){
+       super(100, x, y);
     }
 
     public boolean isAfficheScore() {
