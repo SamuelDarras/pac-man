@@ -19,10 +19,8 @@ public class Partie {
         Plateau p1 = new Plateau("src/levels/level1V2.txt");
         int sec = 0;
 
-        Pacman pactest = new Pacman(10, 10);
 
         while (!quitter) {
-            action = true;
             long start = System.currentTimeMillis();
             //System.out.println(total);
             long finish = System.currentTimeMillis();
@@ -35,6 +33,8 @@ public class Partie {
 
 
 
+            if(total >= 2000)
+                quitter = true;
         }
     }
 
@@ -46,10 +46,12 @@ public class Partie {
         void call();
     }
     private void doSomethingAt(long timing, Callback callback) {
-        if (action && total >= timing && total <= timing + 100) {
+        if (action && total == timing) {
             callback.call();
             action = false;
         }
+        if (!action && total >= timing + 5)
+            action = true;
     }
 }
 

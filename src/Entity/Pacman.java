@@ -14,8 +14,8 @@ public class Pacman extends Personnage{
 	public Pacman(){
         super(0, 0, 1);
 	}
-	public Pacman(double x, double y){
-	    super(x, y, 1);
+	public Pacman(double x, double y, double speed){
+	    super(x, y, speed);
     }
 
 	public boolean isDead(Plateau p){
