@@ -4,9 +4,6 @@ import Utils.*;
 
 public class Personnage extends Entity{
 
-  private double x;
-  private double y;
-
   private double baseSpeed;
   private double speed;
   private static final double[] speedLimits = new double[] {0, 4};
@@ -14,41 +11,46 @@ public class Personnage extends Entity{
   private Direction dir = Direction.RIGHT;
 
   public Personnage (double _x, double _y, double _baseSpeed) {
-    super(_x, _y, Sizes.PERSONNAGE_SIZE, Sizes.PERSONNAGE_SIZE);
+    super(_x, _y, Constants.PERSONNAGE_SIZE, Constants.PERSONNAGE_SIZE);
     baseSpeed = _baseSpeed;
     speed = baseSpeed;
   }
 
-  public void tick() {
-    move();
-  }
+  public void move(double dt) {
+    double x = getPos().getX();
+    double y = getPos().getY();
 
-  public void move() {
     switch (dir) {
       case UP:
-        y -= speed;
+        y -= speed*dt;
         break;
 
       case DOWN:
-        y += speed;
+        y += speed*dt;
         break;
 
       case LEFT:
-        x -= speed;
+        x -= speed*dt;
         break;
 
       case RIGHT:
-        x += speed;
+        x += speed*dt;
         break;
 
       default:
         break;
     }
+
+    x %= Constants.SCENE_WIDTH;
+    y %= Constants.SCENE_HEIGHT;
+    x = x < 0 ? Constants.SCENE_WIDTH : x;
+    y = y < 0 ? Constants.SCENE_HEIGHT : y;
+
+    setPos(new Position<>(x, y));
   }
 
   public void tp(float n_x, float n_y) {
-    x = n_x;
-    y = n_y;
+    setPos(new Position(n_x, n_y));
   }
 
   public void changeDir(Direction n_dir) {
@@ -71,8 +73,5 @@ public class Personnage extends Entity{
   public double getSpeed() { return speed; }
   public double getBaseSpeed() { return baseSpeed; }
 
-  public double getX() {  return x;}
-  public double getY() {  return y;}
-
-  public String toString() { return "(x: " + x + " ; y: " + y + ") | speed: " + speed + " | Direction: " + dir; }
+  public String toString() { return "(x: " + getPos().getX() + " ; y: " + getPos().getY() + ") | speed: " + speed + " | Direction: " + dir; }
 }
