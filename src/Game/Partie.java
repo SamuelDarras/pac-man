@@ -1,48 +1,41 @@
 package Game;
 
+
 import Entity.*;
 
 public class Partie {
     private Score score;
 
-
-    private boolean action = true;
-    boolean quitter = false;
-    long total = 0;
+    private Plateau pla;
+    private Pacman pacman;
 
 
-    public Partie() {
+    public Partie(String levelPath) throws Exception {
         score = new Score();
+        pla = new Plateau(levelPath);
+        pacman = pla.getPacman();
     }
 
-    public void run() throws Exception {
-        Plateau p1 = new Plateau("src/levels/level1V2.txt");
-        int sec = 0;
-
-
-        while (!quitter) {
-            long start = System.currentTimeMillis();
-            //System.out.println(total);
-            long finish = System.currentTimeMillis();
-            total += finish - start;
-
-            if(total/1000 != sec) {
-                sec = (int) total/1000;
-                System.out.println(sec);
-            }
-
-
-
-            if(total >= 2000)
-                quitter = true;
+    public void tick(double dt) {
+        for (Entity e : pla.getPlateau()) {
+            if (e instanceof Ghost)
+                ((Ghost) e).move(dt);
         }
+    }
+
+    public Plateau getPlateau() {
+        return pla;
+    }
+
+    public Pacman getPacman() {
+        return pacman;
     }
 
     public void scoreAdd(int s) {
         score.scoreAdd(s);
     }
 
-    interface Callback {
+    /*interface Callback {
         void call();
     }
     private void doSomethingAt(long timing, Callback callback) {
@@ -52,6 +45,6 @@ public class Partie {
         }
         if (!action && total >= timing + 5)
             action = true;
-    }
+    }*/
 }
 
