@@ -1,13 +1,13 @@
 package Entity;
 
-import Utils.Sizes;
+import Utils.Constants;
 
 public class Items extends Entity{
 
     private int score;
 
     public Items(int score, double x, double y){
-        super(x, y, Sizes.ITEM_DEFAULT_SIZE, Sizes.ITEM_DEFAULT_SIZE);
+        super(x, y, Constants.ITEM_DEFAULT_SIZE, Constants.ITEM_DEFAULT_SIZE);
         this.score = score;
     }
 

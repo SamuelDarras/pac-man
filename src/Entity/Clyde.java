@@ -5,9 +5,9 @@ public class Clyde extends Ghost {
     super(x, y, speed);
   }
 
-  public void tick() {
+  public void tick(double dt) {
     AI();
-    super.move();
+    super.move(dt);
   }
 
   public void AI() {

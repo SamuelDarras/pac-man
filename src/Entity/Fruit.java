@@ -1,6 +1,6 @@
 package Entity;
 
-import Utils.Sizes;
+import Utils.Constants;
 
 public class Fruit extends Items{
 
@@ -10,7 +10,7 @@ public class Fruit extends Items{
 
     public Fruit(int score, double x, double y){
         super(score, x, y);
-        setHitbox(Sizes.FRUIT_SIZE, Sizes.FRUIT_SIZE);
+        setHitbox(Constants.FRUIT_SIZE, Constants.FRUIT_SIZE);
     }
 
     public boolean isAfficheScore() {

@@ -5,7 +5,7 @@ public abstract class Ghost extends Personnage{
         super(x, y, baseSpeed);
     }
 
-    public abstract void tick();
+    public abstract void tick(double dt);
 
     public abstract void AI();
 }

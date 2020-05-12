@@ -12,7 +12,7 @@ public class Pacman extends Personnage{
 	private boolean superPacman = false;
 
 	public Pacman(){
-        super(0, 0, 1);
+        super(0, 0, Constants.PACMAN_SPEED);
 	}
 	public Pacman(double x, double y, double speed){
 	    super(x, y, speed);
@@ -35,7 +35,7 @@ public class Pacman extends Personnage{
         }
     }
 
-    public void move(){
-    	super.move();
+    public void move(double dt){
+    	super.move(dt);
     }
 }
