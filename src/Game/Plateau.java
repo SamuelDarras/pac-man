@@ -38,19 +38,19 @@ public class Plateau {
         for (int i = 0; i < larg; i++) {
             t = read.readLine();
             for (int j = 0; j < larg; j++) {
-                x = i * 1.0*Constants.SCENE_WIDTH/getLargeur();
-                y = j * 1.0*Constants.SCENE_WIDTH/getLargeur();
+                x = j * 1.0*Constants.SCENE_WIDTH/getLargeur();
+                y = i * 1.0*Constants.SCENE_WIDTH/getLargeur();
 
                 if (t.charAt(j) == '1') {
-                    plateau[larg * i + j] = new Wall(x, y);
+                    plateau[larg * j + i] = new Wall(x, y);
                 }
                 else if (t.charAt(j) != '0') {
                     if (t.charAt(j) == 'p')
-                        plateau[larg * i + j] = new PacGomme(x, y);
+                        plateau[larg * j + i] = new PacGomme(x, y);
                     else
-                        plateau[larg * i + j] = new SuperPacGomme(x, y);
+                        plateau[larg * j + i] = new SuperPacGomme(x, y);
                 } else {
-                    plateau[larg * i + j] = new Entity(x, y, 1, 1);
+                    plateau[larg * j + i] = new Entity(x, y, 1, 1);
                 }
 
             }
