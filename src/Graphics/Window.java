@@ -139,6 +139,10 @@ public class Window extends Application {
                         gc.setFill(Color.WHEAT);
                         gc.fillOval(x, y , PERSONNAGE_SIZE/4, PERSONNAGE_SIZE/4);
                         break;
+                    case "SuperPacGomme":
+                        gc.setFill(Color.WHEAT);
+                        gc.fillOval(x, y , PERSONNAGE_SIZE/2, PERSONNAGE_SIZE/2);
+                        break;
                     case "Pacman":
                         switch (dir) {
                             case RIGHT:

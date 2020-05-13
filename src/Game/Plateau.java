@@ -49,6 +49,9 @@ public class Plateau {
                     case 'p':
                         plateau[larg * i + j] = new PacGomme(x + Constants.SCENE_WIDTH/(1.0*getLargeur())/2, y + Constants.SCENE_HEIGHT/(1.0*getHauteur())/2);
                         break;
+                    case 's':
+                        plateau[larg * i + j] = new SuperPacGomme(x + Constants.SCENE_WIDTH/(1.0*getLargeur())/2, y + Constants.SCENE_HEIGHT/(1.0*getHauteur())/2);
+                        break;
                     case 'I':
                         plateau[larg * i + j] = new Inky(x, y, Constants.GHOST_SPEED);
                         break;
