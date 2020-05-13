@@ -26,16 +26,24 @@ public class Pacman extends Personnage{
         return false;
 	}
 
-	public void manger(Plateau plateau, Partie partie){
-        for (Entity e : plateau.getPlateau()) {
+	public void manger(Partie partie){
+        for (Entity e : partie.getPlateau().getPlateau()) {
             if(e instanceof Items && e.hit(this)) {
                 partie.scoreAdd(((Items) e).getScore());
-                plateau.remove(e);
+                partie.getPlateau().remove(e);
             }
         }
     }
 
-    public void move(double dt){
-    	super.move(dt);
+    public void move(double dt, Plateau p){
+
+        Position prevPos = getPos().copy();
+	    super.move(dt);
+	    for (Entity e : p.getPlateau()) {
+	        if (e instanceof Wall && hit(e)) {
+	            setPos(prevPos);
+            }
+        }
+
     }
 }
