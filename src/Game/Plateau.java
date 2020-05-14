@@ -3,6 +3,7 @@ package Game;
 import Entity.*;
 import Utils.Constants;
 import Utils.Position;
+import javafx.scene.image.Image;
 
 import java.io.*;
 
@@ -77,6 +78,8 @@ public class Plateau {
                         break;
                 }
 
+                
+
                 /*if (t.charAt(j) == '1') {
                     plateau[larg * j + i] = new Wall(x, y);
                 } else if (t.charAt(j) != '0') {
@@ -89,7 +92,14 @@ public class Plateau {
                 }*/
 
             }
+
         }
+
+        for (int i = 1; i < plateau.length-1; i++) {
+            if (plateau[i] instanceof Wall)
+                ((Wall) plateau[i]).setImg(defineWallImage(plateau[i-1], i-larg >= 0 ? plateau[i-larg] : null, plateau[i+1], i+larg < plateau.length ? plateau[i+larg] : null));
+        }
+
 
         /*int[] parsedLst = new int[lst.length];
         for (int i = 0; i < parsedLst.length; i++) {
@@ -107,6 +117,17 @@ public class Plateau {
 
     public Entity[] getPlateau() {
         return plateau;
+    }
+
+    private Image defineWallImage(Entity l, Entity t, Entity r, Entity d) {
+        Image img = null;
+
+        if ( (l instanceof Wall) && !(t instanceof Wall) && !(r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-End-E.png");
+        if ( !(l instanceof Wall) && (t instanceof Wall) && !(r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-End-S.png");
+        if ( !(l instanceof Wall) && !(t instanceof Wall) && (r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-End-O.png");
+        if ( !(l instanceof Wall) && !(t instanceof Wall) && !(r instanceof Wall) && (d instanceof Wall) ) img = new Image("img/walls/Wall-End-N.png");
+
+        return img;
     }
 
     public int getLargeur() {

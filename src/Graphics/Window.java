@@ -1,6 +1,8 @@
 package Graphics;
 
 import Entity.Entity;
+import Entity.Wall;
+
 import Game.Partie;
 import Utils.Direction;
 import javafx.animation.AnimationTimer;
@@ -139,8 +141,12 @@ public class Window extends Application {
                     gc.fillOval(x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
                     break;*/
                 case "Wall":
-                    gc.setFill(Color.DARKBLUE);
-                    gc.fillRect(x, y, WALL_WIDTH, WALL_HEIGHT);
+                    if (((Wall) e).getImg() != null)
+                        gc.drawImage(((Wall) e).getImg(), x, y, WALL_WIDTH, WALL_HEIGHT);
+                    else {
+                        gc.setFill(Color.DARKBLUE);
+                        gc.fillRect(x, y, WALL_WIDTH, WALL_HEIGHT);
+                    }
                     break;
                 case "PacGomme":
                     gc.setFill(Color.WHEAT);
