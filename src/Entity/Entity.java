@@ -14,6 +14,11 @@ public class Entity {
         pos = p.copy();
         hitbox = new double[] { w, h };
     }
+    public Entity(Position<Double> p, double[] h) {
+        pos = p.copy();
+        hitbox = h;
+    }
+
 
     public Position<Double> getPos() { return pos; }
     public void setPos(Position<Double> n_pos) { pos = n_pos.copy(); }
