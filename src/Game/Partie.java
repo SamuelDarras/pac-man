@@ -35,6 +35,9 @@ public class Partie {
         score.scoreAdd(s);
     }
 
+    public Score getScore() {
+        return score;
+    }
     /*interface Callback {
         void call();
     }
