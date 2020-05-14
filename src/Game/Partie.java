@@ -19,7 +19,7 @@ public class Partie {
     public void tick(double dt) {
         for (Entity e : pla.getPlateau()) {
             if (e instanceof Ghost)
-                ((Ghost) e).move(dt);
+                ((Ghost) e).move(dt, pla);
         }
     }
 
