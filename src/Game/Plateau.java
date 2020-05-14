@@ -87,10 +87,10 @@ public class Plateau {
             }
         }
 
-        int[] parsedLst = new int[lst.length];
+        /*int[] parsedLst = new int[lst.length];
         for (int i = 0; i < parsedLst.length; i++) {
             parsedLst[i] = Integer.parseInt(lst[i]);
-        }
+        }*/
 
 //        idxFruit = parsedLst[12] * larg + parsedLst[13];
 
@@ -132,7 +132,7 @@ public class Plateau {
     public void remove(Entity ent) {
         for (int i = 0; i < plateau.length; i++) {
             if (plateau[i] == ent) {
-                plateau[i] = null;
+                plateau[i] = new Entity(plateau[i].getPos(), plateau[i].getHitbox());
                 return;
             }
         }
