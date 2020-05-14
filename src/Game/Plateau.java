@@ -97,7 +97,7 @@ public class Plateau {
 
         for (int i = 1; i < plateau.length-1; i++) {
             if (plateau[i] instanceof Wall)
-                ((Wall) plateau[i]).setImg(defineWallImage(plateau[i-1], i-larg >= 0 ? plateau[i-larg] : null, plateau[i+1], i+larg < plateau.length ? plateau[i+larg] : null));
+                ((Wall) plateau[i]).setImg(defineWallImage(plateau[i-1], i-larg >= 0 ? plateau[i-larg] : null, plateau[i+1], i+larg < plateau.length ? plateau[i+larg] : null, i-larg+1 >= 0 ? plateau[i-larg+1] : null,i+larg+1 < plateau.length ? plateau[i+larg+1] : null,i+larg-1 < plateau.length ? plateau[i+larg-1] : null,i-larg-1 >= 0 ? plateau[i-larg-1] : null));
         }
 
 
@@ -119,14 +119,30 @@ public class Plateau {
         return plateau;
     }
 
-    private Image defineWallImage(Entity l, Entity t, Entity r, Entity d) {
-        Image img = null;
+    private Image defineWallImage(Entity l, Entity t, Entity r, Entity d, Entity NE, Entity SE, Entity SO, Entity NO) {
+        Image img = null;       //O         N         E         S
 
         if ( (l instanceof Wall) && !(t instanceof Wall) && !(r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-End-E.png");
         if ( !(l instanceof Wall) && (t instanceof Wall) && !(r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-End-S.png");
         if ( !(l instanceof Wall) && !(t instanceof Wall) && (r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-End-O.png");
         if ( !(l instanceof Wall) && !(t instanceof Wall) && !(r instanceof Wall) && (d instanceof Wall) ) img = new Image("img/walls/Wall-End-N.png");
+        if ( (l instanceof Wall) && !(t instanceof Wall) && (r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-Horizontal.png");
+        if ( !(l instanceof Wall) && (t instanceof Wall) && !(r instanceof Wall) && (d instanceof Wall) ) img = new Image("img/walls/Wall-Vertical.png");
+        if ( (l instanceof Wall) && (t instanceof Wall) && !(r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-Angle-NO.png");
+        if ( !(l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-Angle-NE.png");
+        if ( !(l instanceof Wall) && !(t instanceof Wall) && (r instanceof Wall) && (d instanceof Wall) ) img = new Image("img/walls/Wall-Angle-SE.png");
+        if ( (l instanceof Wall) && !(t instanceof Wall) && !(r instanceof Wall) && (d instanceof Wall) ) img = new Image("img/walls/Wall-Angle-SO.png");
 
+        if ( (l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && (d instanceof Wall) ) img = new Image("img/walls/Fond.png");
+        if ( (l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && (d instanceof Wall) && !(SE instanceof Wall) && !(SO instanceof Wall) ) img = new Image("img/walls/Wall-T-S.png");
+        if ( (l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && !(d instanceof Wall) && !(NE instanceof Wall) && !(NO instanceof Wall) )  img = new Image("img/walls/Wall-T-N.png");
+        if ( (l instanceof Wall) && (t instanceof Wall) && !(r instanceof Wall) && (d instanceof Wall) && !(SO instanceof Wall) && !(NO instanceof Wall) ) img = new Image("img/walls/Wall-T-O.png");
+        if ( !(l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && (d instanceof Wall) && !(NE instanceof Wall) && !(SE instanceof Wall)) img = new Image("img/walls/Wall-T-E.png");
+
+        if ( !(l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && (d instanceof Wall) && (NE instanceof Wall) && (SE instanceof Wall)) img = new Image("img/walls/Wall-Vertical.png");
+        if ( (l instanceof Wall) && (t instanceof Wall) && !(r instanceof Wall) && (d instanceof Wall) && (NO instanceof Wall) && (SO instanceof Wall)) img = new Image("img/walls/Wall-Vertical.png");
+        if ( (l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && !(d instanceof Wall) && (NE instanceof Wall) && (NO instanceof Wall)) img = new Image("img/walls/Wall-Horizontal.png");
+        if ( (l instanceof Wall) && !(t instanceof Wall) && (r instanceof Wall) && (d instanceof Wall) && (SE instanceof Wall) && (SO instanceof Wall)) img = new Image("img/walls/Wall-Horizontal.png");
 
 
         return img;

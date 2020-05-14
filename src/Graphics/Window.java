@@ -55,7 +55,7 @@ public class Window extends Application {
 
         iv.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             root.getChildren().remove(iv);
-            AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
+            //AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
 
             new AnimationTimer() {
                 long prevtime;
@@ -66,8 +66,8 @@ public class Window extends Application {
 
                     deltaTime = currentNanoTime - prevtime;
 
-                    if (!chomp.isPlaying())
-                        chomp.play();
+                    //if (!chomp.isPlaying())
+                    //    chomp.play();
 
                     //partie.tick(deltaTime / 10000000.0);
 
@@ -183,8 +183,8 @@ public class Window extends Application {
         }
     }
 
-    public static AudioClip openAudio(String path) {
-        return new AudioClip(Paths.get(path).toUri().toString());
-    }
+    //public static AudioClip openAudio(String path) {
+    //    return new AudioClip(Paths.get(path).toUri().toString());
+    //}
 
 }
