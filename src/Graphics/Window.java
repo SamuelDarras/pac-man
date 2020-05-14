@@ -39,11 +39,10 @@ public class Window extends Application {
     public void start(Stage stage) throws Exception {
         partie = new Partie("src/levels/level1V2.txt");
 
-
-        System.out.println(partie.getPlateau().getLargeur() + "; " + partie.getPlateau().getHauteur());
-        Init(partie.getPlateau().getLargeur(), partie.getPlateau().getHauteur());
         stage.setTitle("toto");
+
         final Group root = new Group();
+
         Canvas canvas = new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         root.getChildren().add(canvas);
@@ -141,7 +140,7 @@ public class Window extends Application {
                     break;*/
                 case "Wall":
                     gc.setFill(Color.DARKBLUE);
-                    gc.fillRect(x, y, 1.02 * SCENE_WIDTH / (1.0 * partie.getPlateau().getLargeur()), 1.02 * SCENE_HEIGHT / (1.0 * partie.getPlateau().getHauteur()));
+                    gc.fillRect(x, y, WALL_WIDTH, WALL_HEIGHT);
                     break;
                 case "PacGomme":
                     gc.setFill(Color.WHEAT);

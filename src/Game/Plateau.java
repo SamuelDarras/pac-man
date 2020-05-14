@@ -6,6 +6,8 @@ import Utils.Position;
 
 import java.io.*;
 
+import static Utils.Constants.*;
+
 public class Plateau {
     int idxFruit = 0;
     int larg;
@@ -32,6 +34,8 @@ public class Plateau {
         larg = Integer.parseInt(lst[1]);
         haut = Integer.parseInt(lst[0]);
 
+        Init(larg, haut);
+
         plateau = new Entity[larg * haut];
         double x;
         double y;
@@ -39,33 +43,33 @@ public class Plateau {
             t = read.readLine();
             System.out.println(t);
             for (int j = 0; j < larg; j++) {
-                x = j * 1.0*Constants.SCENE_WIDTH/getLargeur();
-                y = i * 1.0*Constants.SCENE_HEIGHT/getHauteur();
+                x = j * 1.0* SCENE_WIDTH/getLargeur();
+                y = i * 1.0* SCENE_HEIGHT/getHauteur();
 
                 switch (t.charAt(j)) {
                     case '1':
-                        plateau[larg * i + j] = new Wall(x, y, Constants.SCENE_WIDTH/(1.0*getLargeur()), Constants.SCENE_HEIGHT/(1.0*getHauteur()));
+                        plateau[larg * i + j] = new Wall(x, y, WALL_WIDTH, WALL_HEIGHT);
                         break;
                     case 'p':
-                        plateau[larg * i + j] = new PacGomme(x + Constants.SCENE_WIDTH/(1.0*getLargeur())/2, y + Constants.SCENE_HEIGHT/(1.0*getHauteur())/2);
+                        plateau[larg * i + j] = new PacGomme(x + WALL_WIDTH/2 - PERSONNAGE_SIZE/4/2, y + WALL_HEIGHT/2 - PERSONNAGE_SIZE/4/2);
                         break;
                     case 's':
-                        plateau[larg * i + j] = new SuperPacGomme(x + Constants.SCENE_WIDTH/(1.0*getLargeur())/2, y + Constants.SCENE_HEIGHT/(1.0*getHauteur())/2);
+                        plateau[larg * i + j] = new SuperPacGomme(x + WALL_WIDTH/2 - PERSONNAGE_SIZE/2/2, y + WALL_HEIGHT/2 - PERSONNAGE_SIZE/2/2);
                         break;
                     case 'I':
-                        plateau[larg * i + j] = new Inky(x, y, Constants.GHOST_SPEED);
+                        plateau[larg * i + j] = new Inky(x, y, GHOST_SPEED);
                         break;
                     case 'P':
-                        plateau[larg * i + j] = new Pinky(x, y, Constants.GHOST_SPEED);
+                        plateau[larg * i + j] = new Pinky(x, y, GHOST_SPEED);
                         break;
                     case 'B':
-                        plateau[larg * i + j] = new Blinky(x, y, Constants.GHOST_SPEED);
+                        plateau[larg * i + j] = new Blinky(x, y, GHOST_SPEED);
                         break;
                     case 'C':
-                        plateau[larg * i + j] = new Clyde(x, y, Constants.GHOST_SPEED);
+                        plateau[larg * i + j] = new Clyde(x, y, GHOST_SPEED);
                         break;
                     case 'M':
-                        pacman = new Pacman(x, y, Constants.PACMAN_SPEED);
+                        pacman = new Pacman(x, y, PACMAN_SPEED);
                         plateau[larg * i + j] = pacman;
                         break;
                     default:
