@@ -35,15 +35,4 @@ public class Pacman extends Personnage{
         }
     }
 
-    public void move(double dt, Plateau p){
-
-        Position prevPos = getPos().copy();
-	    super.move(dt);
-	    for (Entity e : p.getPlateau()) {
-	        if (e instanceof Wall && hit(e)) {
-	            setPos(prevPos);
-            }
-        }
-
-    }
 }
