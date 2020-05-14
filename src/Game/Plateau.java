@@ -127,6 +127,8 @@ public class Plateau {
         if ( !(l instanceof Wall) && !(t instanceof Wall) && (r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-End-O.png");
         if ( !(l instanceof Wall) && !(t instanceof Wall) && !(r instanceof Wall) && (d instanceof Wall) ) img = new Image("img/walls/Wall-End-N.png");
 
+
+
         return img;
     }
 
