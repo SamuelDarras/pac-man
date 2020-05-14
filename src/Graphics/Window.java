@@ -123,7 +123,7 @@ public class Window extends Application {
             double y = e.getPos().getY();
 
             switch (type) {
-                case "Inky":
+                /*case "Inky":
                     gc.setFill(Color.DARKBLUE);
                     gc.fillOval(x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
                     break;
@@ -138,7 +138,7 @@ public class Window extends Application {
                 case "Pinky":
                     gc.setFill(Color.PINK);
                     gc.fillOval(x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
-                    break;
+                    break;*/
                 case "Wall":
                     gc.setFill(Color.DARKBLUE);
                     gc.fillRect(x, y, 1.02 * SCENE_WIDTH / (1.0 * partie.getPlateau().getLargeur()), 1.02 * SCENE_HEIGHT / (1.0 * partie.getPlateau().getHauteur()));
