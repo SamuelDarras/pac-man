@@ -57,8 +57,6 @@ public class Personnage extends Entity{
       x *= Constants.WALL_WIDTH;
     }
 
-    System.out.println(x+"   "+y);
-
     setPos(new Position<>(x, y));
 
     for (Entity e : p.getPlateau()) {
