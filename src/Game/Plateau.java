@@ -1,11 +1,10 @@
 package Game;
 
 import Entity.*;
-import Utils.Constants;
-import Utils.Position;
 import javafx.scene.image.Image;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 import static Utils.Constants.*;
 
@@ -19,21 +18,19 @@ public class Plateau {
     Entity[] plateau;
 
     public Plateau(String levelPath) throws Exception {
-        try {
-            remplirPlateau(levelPath);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw e;
-        }
+        remplirPlateau(levelPath);
     }
 
     public void remplirPlateau(String levelPath) throws Exception {
         BufferedReader read = new BufferedReader(new FileReader(levelPath));
         String t = read.readLine();
-        String[] lst = t.split(" ");
+        String[] lst = t.split("[. ]");
 
-        larg = Integer.parseInt(lst[1]);
         haut = Integer.parseInt(lst[0]);
+        larg = Integer.parseInt(lst[1]);
+
+        System.out.print(haut);
+        System.out.println("; " + larg);
 
         Init(larg, haut);
 
@@ -42,20 +39,18 @@ public class Plateau {
         double y;
         for (int i = 0; i < haut; i++) {
             t = read.readLine();
-            System.out.println(t);
             for (int j = 0; j < larg; j++) {
-                x = j * 1.0* SCENE_WIDTH/getLargeur();
-                y = i * 1.0* SCENE_HEIGHT/getHauteur();
-
+                x = j * 1.0 * SCENE_WIDTH  / getLargeur();
+                y = i * 1.0 * SCENE_HEIGHT / getHauteur();
                 switch (t.charAt(j)) {
                     case '1':
                         plateau[larg * i + j] = new Wall(x, y, WALL_WIDTH, WALL_HEIGHT);
                         break;
                     case 'p':
-                        plateau[larg * i + j] = new PacGomme(x + WALL_WIDTH/2 - PERSONNAGE_SIZE/4/2, y + WALL_HEIGHT/2 - PERSONNAGE_SIZE/4/2);
+                        plateau[larg * i + j] = new PacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_SIZE / 4 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_SIZE / 4 / 2);
                         break;
                     case 's':
-                        plateau[larg * i + j] = new SuperPacGomme(x + WALL_WIDTH/2 - PERSONNAGE_SIZE/2/2, y + WALL_HEIGHT/2 - PERSONNAGE_SIZE/2/2);
+                        plateau[larg * i + j] = new SuperPacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_SIZE / 2 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_SIZE / 2 / 2);
                         break;
                     case 'I':
                         plateau[larg * i + j] = new Inky(x, y, GHOST_SPEED);
@@ -78,26 +73,19 @@ public class Plateau {
                         break;
                 }
 
-                
-
-                /*if (t.charAt(j) == '1') {
-                    plateau[larg * j + i] = new Wall(x, y);
-                } else if (t.charAt(j) != '0') {
-                    if (t.charAt(j) == 'p')
-                        plateau[larg * j + i] = new PacGomme(x, y);
-                    else
-                        plateau[larg * j + i] = new SuperPacGomme(x, y);
-                } else {
-                    plateau[larg * j + i] = new Entity(x, y, 1, 1);
-                }*/
-
             }
 
         }
 
-        for (int i = 1; i < plateau.length-1; i++) {
-            if (plateau[i] instanceof Wall)
-                ((Wall) plateau[i]).setImg(defineWallImage(plateau[i-1], i-larg >= 0 ? plateau[i-larg] : null, plateau[i+1], i+larg < plateau.length ? plateau[i+larg] : null, i-larg+1 >= 0 ? plateau[i-larg+1] : null,i+larg+1 < plateau.length ? plateau[i+larg+1] : null,i+larg-1 < plateau.length ? plateau[i+larg-1] : null,i-larg-1 >= 0 ? plateau[i-larg-1] : null,i));
+        for (int i = 0; i < plateau.length; i++) {
+            if (plateau[i] instanceof Wall){
+                ((Wall) plateau[i]).setImg(defineWallImage(
+                        (i + 1 < plateau.length && (i + 1)/larg == i/larg) ? plateau[i + 1] : new Entity(0, 0, 0, 0),
+                        i - larg >= 0 ? plateau[i - larg] : new Entity(0, 0, 0, 0),
+                        (i - 1 >= 0 && (i - 1)/larg == i/larg) ? plateau[i - 1] : new Entity(0, 0, 0, 0),
+                        i + larg < plateau.length ? plateau[i + larg] : new Entity(0, 0, 0, 0)
+                ));
+            }
         }
 
 
@@ -119,31 +107,41 @@ public class Plateau {
         return plateau;
     }
 
-    private Image defineWallImage(Entity l, Entity t, Entity r, Entity d, Entity NE, Entity SE, Entity SO, Entity NO,int i) {
-        Image img = null;       //O         N         E         S
-        if (!(l == null || t == null || r == null || d == null || NE == null || SE == null || SO == null || NO == null || i%larg==0 || (i+1)%larg==0)){
-            if ( (l instanceof Wall) && !(t instanceof Wall) && !(r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-End-E.png");
-            if ( !(l instanceof Wall) && (t instanceof Wall) && !(r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-End-S.png");
-            if ( !(l instanceof Wall) && !(t instanceof Wall) && (r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-End-O.png");
-            if ( !(l instanceof Wall) && !(t instanceof Wall) && !(r instanceof Wall) && (d instanceof Wall) ) img = new Image("img/walls/Wall-End-N.png");
-            if ( (l instanceof Wall) && !(t instanceof Wall) && (r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-Horizontal.png");
-            if ( !(l instanceof Wall) && (t instanceof Wall) && !(r instanceof Wall) && (d instanceof Wall) ) img = new Image("img/walls/Wall-Vertical.png");
-            if ( (l instanceof Wall) && (t instanceof Wall) && !(r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-Angle-NO.png");
-            if ( !(l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && !(d instanceof Wall) ) img = new Image("img/walls/Wall-Angle-NE.png");
-            if ( !(l instanceof Wall) && !(t instanceof Wall) && (r instanceof Wall) && (d instanceof Wall) ) img = new Image("img/walls/Wall-Angle-SE.png");
-            if ( (l instanceof Wall) && !(t instanceof Wall) && !(r instanceof Wall) && (d instanceof Wall) ) img = new Image("img/walls/Wall-Angle-SO.png");
+    private Image defineWallImage(Entity E, Entity N, Entity W, Entity S) {
+        Image img = null;
 
-            if ( (l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && (d instanceof Wall) ) img = new Image("img/walls/Fond.png");
-            if ( (l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && (d instanceof Wall) && !(SE instanceof Wall) && !(SO instanceof Wall) ) img = new Image("img/walls/Wall-T-S.png");
-            if ( (l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && !(d instanceof Wall) && !(NE instanceof Wall) && !(NO instanceof Wall) )  img = new Image("img/walls/Wall-T-N.png");
-            if ( (l instanceof Wall) && (t instanceof Wall) && !(r instanceof Wall) && (d instanceof Wall) && !(SO instanceof Wall) && !(NO instanceof Wall) ) img = new Image("img/walls/Wall-T-O.png");
-            if ( !(l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && (d instanceof Wall) && !(NE instanceof Wall) && !(SE instanceof Wall)) img = new Image("img/walls/Wall-T-E.png");
 
-            if ( !(l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && (d instanceof Wall) && (NE instanceof Wall) && (SE instanceof Wall)) img = new Image("img/walls/Wall-Vertical.png");
-            if ( (l instanceof Wall) && (t instanceof Wall) && !(r instanceof Wall) && (d instanceof Wall) && (NO instanceof Wall) && (SO instanceof Wall)) img = new Image("img/walls/Wall-Vertical.png");
-            if ( (l instanceof Wall) && (t instanceof Wall) && (r instanceof Wall) && !(d instanceof Wall) && (NE instanceof Wall) && (NO instanceof Wall)) img = new Image("img/walls/Wall-Horizontal.png");
-            if ( (l instanceof Wall) && !(t instanceof Wall) && (r instanceof Wall) && (d instanceof Wall) && (SE instanceof Wall) && (SO instanceof Wall)) img = new Image("img/walls/Wall-Horizontal.png");
-        }
+        if ((E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
+            img = new Image("img/walls/Wall-T-S.png");
+        if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
+            img = new Image("img/walls/Wall-T-N.png");
+        if (!(E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
+            img = new Image("img/walls/Wall-T-O.png");
+        if ((E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
+            img = new Image("img/walls/Wall-T-E.png");
+
+        if (!(E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
+            img = new Image("img/walls/Wall-End-E.png");
+        if (!(E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
+            img = new Image("img/walls/Wall-End-S.png");
+        if ((E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
+            img = new Image("img/walls/Wall-End-O.png");
+        if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
+            img = new Image("img/walls/Wall-End-N.png");
+
+        if (!(E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
+            img = new Image("img/walls/Wall-Vertical.png");
+        if ((E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
+            img = new Image("img/walls/Wall-Horizontal.png");
+
+        if (!(E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
+            img = new Image("img/walls/Wall-Angle-NO.png");
+        if ((E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
+            img = new Image("img/walls/Wall-Angle-NE.png");
+        if ((E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
+            img = new Image("img/walls/Wall-Angle-SE.png");
+        if (!(E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
+            img = new Image("img/walls/Wall-Angle-SO.png");
 
         return img;
     }
