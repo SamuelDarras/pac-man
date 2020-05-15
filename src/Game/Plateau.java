@@ -143,6 +143,9 @@ public class Plateau {
         if (!(E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
             img = new Image("img/walls/Wall-Angle-SO.png");
 
+        if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
+            img = new Image("img/walls/Wall-X.png");
+
         return img;
     }
 
