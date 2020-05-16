@@ -17,6 +17,8 @@ public class Partie {
     }
 
     public void tick(double dt) {
+        pacman.move(dt / 10000000.0, pla);
+        pacman.manger(this);
         for (Entity e : pla.getPlateau()) {
             if (e instanceof Ghost)
                 ((Ghost) e).move(dt, pla);

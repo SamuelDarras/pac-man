@@ -23,7 +23,6 @@ import java.nio.file.Paths;
 import static Utils.Constants.*;
 
 public class Window extends Application {
-    Partie partie;
     Direction dir = Direction.RIGHT;
 
     double margin = 1.1;
@@ -38,8 +37,7 @@ public class Window extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
-        partie = new Partie("src/levels/level1V2.txt");
+    public void start(Stage stage) {
 
         stage.setTitle("toto");
 
@@ -55,32 +53,51 @@ public class Window extends Application {
 
         iv.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             root.getChildren().remove(iv);
-            //AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
 
-            new AnimationTimer() {
-                long prevtime;
+            try {
 
-                long deltaTime;
+                new AnimationTimer() {
+                    long prevtime;
+                    long deltaTime;
 
-                public void handle(long currentNanoTime) {
+                    Partie partie = new Partie("src/levels/level1V2.txt");
 
-                    deltaTime = currentNanoTime - prevtime;
+                    AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
 
-                    //if (!chomp.isPlaying())
-                    //    chomp.play();
+                    public void handle(long currentNanoTime) {
 
-                    //partie.tick(deltaTime / 10000000.0);
+                        deltaTime = currentNanoTime - prevtime;
 
-                    partie.getPacman().changeDir(dir);
-                    partie.getPacman().move(deltaTime / 10000000.0, partie.getPlateau());
+                        //if (!chomp.isPlaying())
+                            //chomp.play();
 
-                    partie.getPacman().manger(partie);
+                        partie.getPacman().changeDir(dir);
+                        partie.tick(deltaTime);
 
-                    drawShapes(gc);
 
-                    prevtime = currentNanoTime;
-                }
-            }.start();
+                        drawShapes(gc);
+
+                        prevtime = currentNanoTime;
+                    }
+
+                    public void drawShapes(GraphicsContext gc) {
+                        gc.clearRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT * margin);
+
+                        for (Entity e : partie.getPlateau().getPlateau()) {
+                            e.draw(gc);
+                            e.drawHitbox(gc);
+
+                            //String type = e.getClass().toString().substring(13);
+                            //System.out.println(type);
+                        }
+                        gc.setFill(Color.WHITE);
+                        gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
+                    }
+                }.start();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
         final Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT * margin, Color.BLACK);
@@ -110,27 +127,13 @@ public class Window extends Application {
 //        AudioClip son = Window.openAudio("src/music/pacman_beginning.wav");
 //       son.play();
 
-
         stage.show();
     }
 
-    public void drawShapes(GraphicsContext gc) {
-        gc.clearRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT * margin);
 
-        for (Entity e : partie.getPlateau().getPlateau()) {
 
-            e.draw(gc);
-            e.drawHitbox(gc);
-//            String type = e.getClass().toString().substring(13);
-//            System.out.println(type);
-
-        }
-        gc.setFill(Color.WHITE);
-        gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
+    public static AudioClip openAudio(String path) {
+        return new AudioClip(Paths.get(path).toUri().toString());
     }
-
-    //public static AudioClip openAudio(String path) {
-    //    return new AudioClip(Paths.get(path).toUri().toString());
-    //}
 
 }
