@@ -119,68 +119,14 @@ public class Window extends Application {
 
         for (Entity e : partie.getPlateau().getPlateau()) {
 
-            String type = e.getClass().toString().substring(13);
-            double x = e.getPos().getX();
-            double y = e.getPos().getY();
-
-            switch (type) {
-                /*case "Inky":
-                    gc.setFill(Color.DARKBLUE);
-                    gc.fillOval(x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
-                    break;
-                case "Blinky":
-                    gc.setFill(Color.RED);
-                    gc.fillOval(x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
-                    break;
-                case "Clyde":
-                    gc.setFill(Color.ORANGE);
-                    gc.fillOval(x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
-                    break;
-                case "Pinky":
-                    gc.setFill(Color.PINK);
-                    gc.fillOval(x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
-                    break;*/
-                case "Wall":
-                    if (((Wall) e).getImg() != null)
-                        gc.drawImage(((Wall) e).getImg(), x, y, WALL_WIDTH, WALL_HEIGHT);
-                    else {
-                        gc.setFill(Color.DARKBLUE);
-                        gc.fillRect(x, y, WALL_WIDTH, WALL_HEIGHT);
-                    }
-                    break;
-                case "PacGomme":
-                    gc.setFill(Color.WHEAT);
-                    gc.fillOval(x, y, PERSONNAGE_SIZE / 4, PERSONNAGE_SIZE / 4);
-                    break;
-                case "SuperPacGomme":
-                    gc.setFill(Color.WHEAT);
-                    gc.fillOval(x, y, PERSONNAGE_SIZE / 2, PERSONNAGE_SIZE / 2);
-                    break;
-                case "Pacman":
-                    switch (dir) {
-                        case RIGHT:
-                            gc.drawImage(imR, x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
-                            break;
-                        case LEFT:
-                            gc.drawImage(imL, x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
-                            break;
-                        case UP:
-                            gc.drawImage(imU, x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
-                            break;
-                        case DOWN:
-                            gc.drawImage(imD, x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
-                            break;
-                        default:
-                            break;
-                    }
-                default:
-                    break;
-            }
-            gc.setFill(Color.WHITE);
-            gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
-
+            e.draw(gc);
+            e.drawHitbox(gc);
+//            String type = e.getClass().toString().substring(13);
+//            System.out.println(type);
 
         }
+        gc.setFill(Color.WHITE);
+        gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
     }
 
     //public static AudioClip openAudio(String path) {

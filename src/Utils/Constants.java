@@ -10,6 +10,10 @@ public class Constants {
     public static int SCENE_WIDTH       = 600;
 
     public static double PERSONNAGE_SIZE;
+    public static double ITEM_DEFAULT_SIZE;
+
+    public static double PACMAN_SPEED;
+    public static double GHOST_SPEED;
 
     public static void Init(int l, int h) {
         larg = l;
@@ -20,12 +24,15 @@ public class Constants {
 
         PERSONNAGE_SIZE = ((double) SCENE_WIDTH / (double) larg) * .7;
 
-        System.out.println(WALL_WIDTH + " ; " + WALL_HEIGHT + " ; " + PERSONNAGE_SIZE);
+        ITEM_DEFAULT_SIZE = PERSONNAGE_SIZE/4;
+        PACMAN_SPEED      = 1.0*SCENE_WIDTH/400;
+
+        GHOST_SPEED       = PACMAN_SPEED * .9;
+
+        System.out.println(WALL_WIDTH + " ; " + WALL_HEIGHT + " ; " + PERSONNAGE_SIZE/4);
     }
 
-    public static int ITEM_DEFAULT_SIZE = (int) PERSONNAGE_SIZE/4;
-    public static int FRUIT_SIZE        = 2;
-    public static double PACMAN_SPEED   = 1.0*SCENE_WIDTH/400;
-    public static double GHOST_SPEED    = PACMAN_SPEED * .9;
+    public static int FRUIT_SIZE           = 2;
+
 
 }

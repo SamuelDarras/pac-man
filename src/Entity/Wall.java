@@ -2,7 +2,12 @@ package Entity;
 
 import Utils.Position;
 import Utils.Constants;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+
+import static Utils.Constants.WALL_HEIGHT;
+import static Utils.Constants.WALL_WIDTH;
 
 public class Wall extends Entity{
 
@@ -29,5 +34,18 @@ public class Wall extends Entity{
 
     public Image getImg() {
         return img;
+    }
+
+    public void draw(GraphicsContext gc) {
+        if (img != null)
+            gc.drawImage(img, getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);
+        else {
+            Color prev = (Color) gc.getFill();
+
+            gc.setFill(Color.DARKBLUE);
+            gc.fillRect(getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);
+
+            gc.setFill(prev);
+        }
     }
 }

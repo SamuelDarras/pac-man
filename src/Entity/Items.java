@@ -10,6 +10,10 @@ public class Items extends Entity{
         super(x, y, Constants.ITEM_DEFAULT_SIZE, Constants.ITEM_DEFAULT_SIZE);
         this.score = score;
     }
+    public Items(int score, double x, double y, double w, double h){
+        super(x, y, w, h);
+        this.score = score;
+    }
 
     public int getScore() {
         return score;

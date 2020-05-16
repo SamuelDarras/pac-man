@@ -1,6 +1,10 @@
 package Entity;
 
 import Utils.Position;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+
 
 public class Entity {
     private Position<Double> pos;
@@ -17,6 +21,16 @@ public class Entity {
     public Entity(Position<Double> p, double[] h) {
         pos = p.copy();
         hitbox = h;
+    }
+
+    public void draw(GraphicsContext gc) {
+
+    }
+
+    public void drawHitbox(GraphicsContext gc) {
+        Paint previous = gc.getStroke();
+        gc.setStroke(Color.RED);
+        gc.strokeRect(getPos().getX(), getPos().getY(), hitbox[0], hitbox[1]);
     }
 
 

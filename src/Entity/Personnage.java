@@ -90,5 +90,9 @@ public class Personnage extends Entity{
   public double getSpeed() { return speed; }
   public double getBaseSpeed() { return baseSpeed; }
 
+  public Direction getDir() {
+    return dir;
+  }
+
   public String toString() { return "(x: " + getPos().getX() + " ; y: " + getPos().getY() + ") | speed: " + speed + " | Direction: " + dir; }
 }
