@@ -4,13 +4,13 @@ public class Constants {
     public static int larg;
     public static int haut;
 
-    public static double WALL_HEIGHT, WALL_WIDTH;
 
     public static int SCENE_HEIGHT      = 700;
-    public static int SCENE_WIDTH       = 600;
+    public static int SCENE_WIDTH       = 700;
 
-    public static double PERSONNAGE_SIZE;
-    public static double ITEM_DEFAULT_SIZE;
+    public static double WALL_HEIGHT, WALL_WIDTH;
+    public static double PERSONNAGE_WIDTH, PERSONNAGE_HEIGHT;
+    public static double ITEM_DEFAULT_WIDTH, ITEM_DEFAULT_HEIGHT;
 
     public static double PACMAN_SPEED;
     public static double GHOST_SPEED;
@@ -20,16 +20,16 @@ public class Constants {
         haut = h;
 
         WALL_HEIGHT     = (double) SCENE_HEIGHT / (double) haut;
-        WALL_WIDTH      = (double) SCENE_WIDTH  / (double) larg;
+        WALL_WIDTH      = (double)  SCENE_WIDTH / (double) larg;
 
-        PERSONNAGE_SIZE = ((double) SCENE_WIDTH / (double) larg) * .7;
+        PERSONNAGE_WIDTH = ((double)  SCENE_WIDTH / (double) larg) * .9;
+        PERSONNAGE_HEIGHT = ((double) SCENE_HEIGHT / (double) haut) * .9;
 
-        ITEM_DEFAULT_SIZE = PERSONNAGE_SIZE/4;
+        ITEM_DEFAULT_WIDTH  =  PERSONNAGE_WIDTH / 4;
+        ITEM_DEFAULT_HEIGHT = PERSONNAGE_HEIGHT / 4;
         PACMAN_SPEED      = 1.0*SCENE_WIDTH/400;
 
         GHOST_SPEED       = PACMAN_SPEED * .9;
-
-        System.out.println(WALL_WIDTH + " ; " + WALL_HEIGHT + " ; " + PERSONNAGE_SIZE/4);
     }
 
     public static int FRUIT_SIZE           = 2;

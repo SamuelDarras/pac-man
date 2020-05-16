@@ -1,15 +1,11 @@
 package Entity;
 
 import Utils.*;
-import Entity.*;
 import Game.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 
-import static Utils.Constants.PERSONNAGE_SIZE;
 
 public class Pacman extends Personnage{
 
@@ -50,16 +46,16 @@ public class Pacman extends Personnage{
 
 	    switch (getDir()) {
             case RIGHT:
-                gc.drawImage(imR, x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
+                gc.drawImage(imR, x, y, Constants.PERSONNAGE_WIDTH, Constants.PERSONNAGE_HEIGHT);
                 break;
             case LEFT:
-                gc.drawImage(imL, x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
+                gc.drawImage(imL, x, y, Constants.PERSONNAGE_WIDTH, Constants.PERSONNAGE_HEIGHT);
                 break;
             case UP:
-                gc.drawImage(imU, x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
+                gc.drawImage(imU, x, y, Constants.PERSONNAGE_WIDTH, Constants.PERSONNAGE_HEIGHT);
                 break;
             case DOWN:
-                gc.drawImage(imD, x, y, PERSONNAGE_SIZE, PERSONNAGE_SIZE);
+                gc.drawImage(imD, x, y, Constants.PERSONNAGE_WIDTH, Constants.PERSONNAGE_HEIGHT);
                 break;
             default:
                 break;

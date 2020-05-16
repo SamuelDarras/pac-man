@@ -10,7 +10,7 @@ public class PacGomme extends Items{
 
 
     public PacGomme(double x, double y){
-        super(10, x, y, Constants.ITEM_DEFAULT_SIZE, Constants.ITEM_DEFAULT_SIZE);
+        super(10, x, y, Constants.ITEM_DEFAULT_WIDTH, Constants.ITEM_DEFAULT_HEIGHT);
     }
 
     public boolean isAfficheScore() {

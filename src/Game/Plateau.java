@@ -44,13 +44,13 @@ public class Plateau {
                 y = i * 1.0 * SCENE_HEIGHT / getHauteur();
                 switch (t.charAt(j)) {
                     case '1':
-                        plateau[larg * i + j] = new Wall(x, y, WALL_WIDTH, WALL_HEIGHT);
+                        plateau[larg * i + j] = new Wall(x, y);
                         break;
                     case 'p':
-                        plateau[larg * i + j] = new PacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_SIZE / 4 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_SIZE / 4 / 2);
+                        plateau[larg * i + j] = new PacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 4 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 4 / 2);
                         break;
                     case 's':
-                        plateau[larg * i + j] = new SuperPacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_SIZE / 2 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_SIZE / 2 / 2);
+                        plateau[larg * i + j] = new SuperPacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 2 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 2 / 2);
                         break;
                     case 'I':
                         plateau[larg * i + j] = new Inky(x, y, GHOST_SPEED);
