@@ -3,6 +3,8 @@ package Entity;
 import Game.Plateau;
 import Utils.*;
 
+import static Utils.Constants.*;
+
 public class Personnage extends Entity{
 
   private double baseSpeed;
@@ -12,7 +14,7 @@ public class Personnage extends Entity{
   private Direction dir = Direction.RIGHT;
 
   public Personnage (double _x, double _y, double _baseSpeed) {
-    super(_x, _y, Constants.PERSONNAGE_SIZE, Constants.PERSONNAGE_SIZE);
+    super(_x, _y, PERSONNAGE_WIDTH, PERSONNAGE_HEIGHT);
     baseSpeed = _baseSpeed;
     speed = baseSpeed;
   }
@@ -44,17 +46,20 @@ public class Personnage extends Entity{
         break;
     }
 
-    x %= Constants.SCENE_WIDTH;
-    y %= Constants.SCENE_HEIGHT;
-    x = x < 0 ? Constants.SCENE_WIDTH  : x;
-    y = y < 0 ? Constants.SCENE_HEIGHT : y;
+    x %= SCENE_WIDTH;
+    y %= SCENE_HEIGHT;
+    x = x < 0 ? SCENE_WIDTH  : x;
+    y = y < 0 ? SCENE_HEIGHT : y;
 
     if (dir == Direction.RIGHT || dir == Direction.LEFT) {
-      y = Math.round( y / Constants.WALL_HEIGHT) + .21;
-      y *= Constants.WALL_HEIGHT;
+      y = Math.round( y / WALL_HEIGHT);
+      System.out.println(y);
+      y *= WALL_HEIGHT;
+      y += (WALL_HEIGHT- PERSONNAGE_HEIGHT)/2;
     } else {
-      x = Math.round( x / Constants.WALL_WIDTH ) + .21;
-      x *= Constants.WALL_WIDTH;
+      x = Math.round( x / WALL_WIDTH );
+      x *= WALL_WIDTH;
+      x += (WALL_WIDTH- PERSONNAGE_WIDTH)/2;
     }
 
     setPos(new Position<>(x, y));
