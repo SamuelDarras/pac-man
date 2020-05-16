@@ -22,8 +22,8 @@ public class Constants {
         WALL_HEIGHT     = (double) SCENE_HEIGHT / (double) haut;
         WALL_WIDTH      = (double)  SCENE_WIDTH / (double) larg;
 
-        PERSONNAGE_WIDTH = ((double)  SCENE_WIDTH / (double) larg) * .9;
-        PERSONNAGE_HEIGHT = ((double) SCENE_HEIGHT / (double) haut) * .9;
+        PERSONNAGE_WIDTH  = ((double)  SCENE_WIDTH / (double) larg) * .99;
+        PERSONNAGE_HEIGHT = ((double) SCENE_HEIGHT / (double) haut) * .99;
 
         ITEM_DEFAULT_WIDTH  =  PERSONNAGE_WIDTH / 4;
         ITEM_DEFAULT_HEIGHT = PERSONNAGE_HEIGHT / 4;
@@ -32,7 +32,7 @@ public class Constants {
         GHOST_SPEED       = PACMAN_SPEED * .9;
     }
 
-    public static int FRUIT_SIZE           = 2;
+    public static int FRUIT_SIZE = 2;
 
 
 }

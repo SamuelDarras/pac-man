@@ -5,6 +5,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 
 public class Entity {
     private Position<Double> pos;
@@ -28,9 +31,12 @@ public class Entity {
     }
 
     public void drawHitbox(GraphicsContext gc) {
-        Paint previous = gc.getStroke();
-        gc.setStroke(Color.RED);
+        Paint prev = gc.getStroke();
+
+        gc.setStroke(Color.BLUE);
         gc.strokeRect(getPos().getX(), getPos().getY(), hitbox[0], hitbox[1]);
+
+        gc.setStroke(prev);
     }
 
 
