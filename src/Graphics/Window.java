@@ -4,7 +4,9 @@ import Entity.Entity;
 
 import Game.Partie;
 import Utils.Direction;
+import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -16,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.nio.file.Paths;
 
@@ -41,12 +44,30 @@ public class Window extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         root.getChildren().add(canvas);
 
-        Image img = new Image("img/menu1.png", SCENE_WIDTH, SCENE_HEIGHT, false, false);
+        Image img = new Image("img/menu1Animate.png", SCENE_WIDTH, SCENE_HEIGHT, false, false);
         ImageView iv = new ImageView(img);
         root.getChildren().add(iv);
 
+        Image fantomes = new Image("img/fantomes.png", 350, 150, false, false);
+        ImageView ivFtmes = new ImageView(fantomes);
+        ivFtmes.preserveRatioProperty();
+        ivFtmes.setX(-375);
+        ivFtmes.setY(SCENE_HEIGHT - SCENE_HEIGHT/6.0);
+
+        TranslateTransition transition = new TranslateTransition();
+        transition.setDuration(Duration.seconds(6));
+        transition.setToX(1200);
+        transition.setToY(0);
+        transition.setAutoReverse(false);
+        transition.setCycleCount(Animation.INDEFINITE);
+        transition.setNode(ivFtmes);
+        transition.play();
+
+        root.getChildren().add(ivFtmes);
+
         iv.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             root.getChildren().remove(iv);
+            root.getChildren().remove((ivFtmes));
 
             try {
 
@@ -67,7 +88,6 @@ public class Window extends Application {
 
                         partie.getPacman().changeDir(dir);
                         partie.tick(deltaTime);
-
 
                         drawShapes(gc);
 
@@ -94,7 +114,7 @@ public class Window extends Application {
             }
         });
 
-        final Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT * margin, Color.BLACK);
+        Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT * margin, Color.BLACK);
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -121,6 +141,7 @@ public class Window extends Application {
 //        AudioClip son = Window.openAudio("src/music/pacman_beginning.wav");
 //       son.play();
 
+        stage.setResizable(false);
         stage.show();
     }
 
