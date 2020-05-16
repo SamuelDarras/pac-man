@@ -1,7 +1,6 @@
 package Graphics;
 
 import Entity.Entity;
-import Entity.Wall;
 
 import Game.Partie;
 import Utils.Direction;
@@ -26,11 +25,6 @@ public class Window extends Application {
     Direction dir = Direction.RIGHT;
 
     double margin = 1.1;
-
-    private static final Image imR = new Image("img/pacManR.png");
-    private static final Image imD = new Image("img/pacManD.png", false);
-    private static final Image imL = new Image("img/pacManL.png", false);
-    private static final Image imU = new Image("img/pacManU.png", false);
 
     public static void main(String[] args) {
         launch(args);

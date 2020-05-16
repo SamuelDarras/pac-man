@@ -1,6 +1,5 @@
 package Entity;
 
-import Utils.Position;
 import Utils.Constants;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -16,10 +15,6 @@ public class Wall extends Entity{
 
     public void setImg(Image img) {
         this.img = img;
-    }
-
-    public Image getImg() {
-        return img;
     }
 
     public void draw(GraphicsContext gc) {

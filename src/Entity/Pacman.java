@@ -16,9 +16,6 @@ public class Pacman extends Personnage{
 
 	private boolean superPacman = false;
 
-	public Pacman(){
-        super(0, 0, Constants.PACMAN_SPEED);
-	}
 	public Pacman(double x, double y, double speed){
 	    super(x, y, speed);
     }

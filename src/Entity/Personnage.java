@@ -71,10 +71,6 @@ public class Personnage extends Entity{
 
   }
 
-  public void tp(double n_x, double n_y) {
-    setPos(new Position<>(n_x, n_y));
-  }
-
   public void changeDir(Direction n_dir) {
     dir = n_dir;
   }

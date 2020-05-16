@@ -99,10 +99,6 @@ public class Plateau {
         read.close();
     }
 
-    public Entity getIndex(int index) {
-        return plateau[index];
-    }
-
     public Entity[] getPlateau() {
         return plateau;
     }
