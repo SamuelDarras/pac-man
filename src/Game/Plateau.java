@@ -142,7 +142,11 @@ public class Plateau {
         if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
             img = new Image("img/walls/Wall-X.png");
 
-        return img;
+        if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
+            img = new Image("img/walls/Wall-O.png");
+
+
+            return img;
     }
 
     public int getLargeur() {
