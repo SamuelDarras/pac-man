@@ -146,7 +146,7 @@ public class Plateau {
             img = new Image("img/walls/Wall-O.png");
 
 
-            return img;
+        return img;
     }
 
     public int getLargeur() {
