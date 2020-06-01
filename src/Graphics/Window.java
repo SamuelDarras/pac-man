@@ -1,6 +1,6 @@
 package Graphics;
 
-import Entity.Entity;
+import Entity.*;
 
 import Game.Partie;
 import Utils.Direction;
@@ -75,7 +75,7 @@ public class Window extends Application {
                     long prevtime;
                     long deltaTime;
 
-                    Partie partie = new Partie("src/levels/level1V2.txt");
+                    Partie partie = new Partie("src/levels/test.txt");
 
                     AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
 
@@ -99,7 +99,10 @@ public class Window extends Application {
 
                         for (Entity e : partie.getPlateau().getPlateau()) {
                             e.draw(gc);
-                            e.drawHitbox(gc);
+                            //e.drawHitbox(gc);
+
+                            if (e instanceof Ghost)
+                                ((Ghost) e).move(partie.getPacman());
 
                             //String type = e.getClass().toString().substring(13);
                             //System.out.println(type);
@@ -141,7 +144,7 @@ public class Window extends Application {
 //        AudioClip son = Window.openAudio("src/music/pacman_beginning.wav");
 //       son.play();
 
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.show();
     }
 
