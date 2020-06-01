@@ -21,7 +21,7 @@ public class Partie {
         pacman.manger(this);
         for (Entity e : pla.getPlateau()) {
             if (e instanceof Ghost)
-                ((Ghost) e).move(dt, pla);
+                ((Ghost) e).move(dt / 10000000.0, pla);
         }
     }
 
