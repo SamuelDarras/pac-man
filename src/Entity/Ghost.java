@@ -10,4 +10,8 @@ public abstract class Ghost extends Personnage{
     public abstract void tick(double dt, Plateau plateau);
 
     public abstract void AI();
+
+    public void move(Pacman p) {
+        changeDir(p.getDir());
+    }
 }
