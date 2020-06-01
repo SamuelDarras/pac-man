@@ -1,8 +1,12 @@
 package Entity;
 
 import Game.Plateau;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 
 public class Clyde extends Ghost {
+  Image img = new Image("img/ClydeGhost.png");
+
   public Clyde(double x, double y, double speed) {
     super(x, y, speed);
   }
@@ -10,6 +14,10 @@ public class Clyde extends Ghost {
   public void tick(double dt, Plateau p) {
     AI();
     super.move(dt, p);
+  }
+
+  public void draw(GraphicsContext gc) {
+    gc.drawImage(img, getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);
   }
 
   public void AI() {
