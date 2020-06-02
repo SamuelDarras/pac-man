@@ -8,6 +8,7 @@ import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -15,6 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -66,7 +68,9 @@ public class Window extends Application {
         root.getChildren().add(ivFtmes);
 
         iv.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            root.getChildren().remove(iv);
+
+            stage.setScene(menu());
+            /*root.getChildren().remove(iv);
             root.getChildren().remove((ivFtmes));
 
             try {
@@ -114,7 +118,7 @@ public class Window extends Application {
 
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
         });
 
         Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT * margin, Color.BLACK);
@@ -148,7 +152,90 @@ public class Window extends Application {
         stage.show();
     }
 
+    private Scene menu() {
+        System.out.println("azertyuiop");
+        Image demo = new Image("img/demo.png",300,100,false,false);
+        System.out.println(demo.getUrl());
+        ImageView ivDemo = new ImageView(demo);
+        ivDemo.preserveRatioProperty();
 
+        Image mdj = new Image("img/mdj.png",700,100,false,false);
+        ImageView ivMdj = new ImageView(mdj);
+        ivDemo.preserveRatioProperty();
+
+        Image custo = new Image("img/custo.png",700,100,false,false);
+        ImageView ivCusto = new ImageView(custo);
+        ivDemo.preserveRatioProperty();
+
+        Image options = new Image("img/options.png",500,100,false,false);
+        ImageView ivOption = new ImageView(options);
+        ivDemo.preserveRatioProperty();
+
+        Image soundOn = new Image("img/son-on.png", 200, 100, false, false);
+        ImageView ivSoundOn = new ImageView(soundOn);
+        ivSoundOn.preserveRatioProperty();
+        ivSoundOn.setX(0);
+        ivSoundOn.setY(800);
+
+        Image soundOff = new Image("img/son-off.png", 200, 100, false, false);
+        ImageView ivSoundOff = new ImageView(soundOff);
+        ivSoundOff.preserveRatioProperty();
+        ivSoundOff.setX(0);
+        ivSoundOff.setY(800);
+
+        Group root = new Group();
+
+        VBox vbox=new VBox();
+        vbox.setSpacing(90.);
+        vbox.setAlignment(Pos.TOP_CENTER);
+        vbox.getChildren().addAll(ivDemo,ivMdj,ivCusto,ivOption);
+
+        Canvas c = new Canvas(800,900);
+        GraphicsContext bg = c.getGraphicsContext2D();
+        Image image = new Image("img/bg.png");
+        bg.drawImage(image, 0, 0, 800,900);
+
+        root.getChildren().add(c);
+        root.getChildren().add(vbox);
+        root.getChildren().add(ivSoundOn);
+
+        ivDemo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            System.out.println("demo");
+        });
+
+        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            System.out.println("mdj");
+        });
+
+        ivCusto.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            System.out.println("custo");
+        });
+
+        ivOption.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            System.out.println("option");
+        });
+
+        ivSoundOn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            root.getChildren().add(ivSoundOff);
+            root.getChildren().remove(ivSoundOn);
+        });
+
+        ivSoundOff.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            root.getChildren().add(ivSoundOn);
+            root.getChildren().remove(ivSoundOff);
+        });
+
+        return new Scene(root,800,900);
+    }
+
+    private Scene jeu() {
+        final Group root = new Group();
+
+        Canvas canvas = new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        root.getChildren().add(canvas);
+        return new Scene(root);
+    }
 
     public static AudioClip openAudio(String path) {
         return new AudioClip(Paths.get(path).toUri().toString());
