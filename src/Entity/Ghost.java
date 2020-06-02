@@ -14,4 +14,6 @@ public abstract class Ghost extends Personnage{
     public void move(Pacman p) {
         changeDir(p.getDir());
     }
+    
+
 }

@@ -48,8 +48,9 @@ public class Personnage extends Entity{
 
     x %= SCENE_WIDTH;
     y %= SCENE_HEIGHT;
-    x = x < 0 ? SCENE_WIDTH  : x;
-    y = y < 0 ? SCENE_HEIGHT : y;
+
+    x = x < -getHitbox()[0] ? SCENE_WIDTH  : x;
+    y = y < -getHitbox()[1] ? SCENE_HEIGHT : y;
 
     if (dir == Direction.RIGHT || dir == Direction.LEFT) {
       y = Math.round( y / WALL_HEIGHT);
