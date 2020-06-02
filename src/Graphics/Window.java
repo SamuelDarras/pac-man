@@ -75,7 +75,7 @@ public class Window extends Application {
                     long prevtime;
                     long deltaTime;
 
-                    Partie partie = new Partie("src/levels/test.txt");
+                    Partie partie = new Partie("src/levels/level1V2.txt");
 
                     AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
 
