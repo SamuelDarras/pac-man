@@ -304,7 +304,7 @@ public class Window extends Application {
             e.printStackTrace();
         }
     }
-
+/*
     private void custo(Stage stage) {
         HBox popVbox=new HBox();
 
@@ -377,7 +377,7 @@ public class Window extends Application {
         stage.setScene(popUp);
         stage.show();
     }
-
+*/
     public static AudioClip openAudio(String path) {
         return new AudioClip(Paths.get(path).toUri().toString());
     }
