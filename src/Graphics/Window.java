@@ -4,6 +4,7 @@ import Entity.*;
 
 import Game.Partie;
 import Utils.Direction;
+import com.sun.prism.Graphics;
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
@@ -25,12 +26,14 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.nio.file.Paths;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static Utils.Constants.*;
 
 public class Window extends Application {
     Direction dir = Direction.RIGHT;
     String wallsColor = "blue";
+    boolean sound = true;
 
     Partie partie;
 
@@ -72,59 +75,7 @@ public class Window extends Application {
 
         root.getChildren().add(ivFtmes);
 
-        iv.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-
-            menu(stage);
-            /*root.getChildren().remove(iv);
-            root.getChildren().remove((ivFtmes));
-
-            try {
-
-                new AnimationTimer() {
-                    long prevtime;
-                    long deltaTime;
-
-                    Partie partie = new Partie("src/levels/level1V2.txt");
-
-                    AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
-
-                    public void handle(long currentNanoTime) {
-
-                        deltaTime = currentNanoTime - prevtime;
-
-                        //if (!chomp.isPlaying())
-                            //chomp.play();
-
-                        partie.getPacman().changeDir(dir);
-                        partie.tick(deltaTime);
-
-                        drawShapes(gc);
-
-                        prevtime = currentNanoTime;
-                    }
-
-                    public void drawShapes(GraphicsContext gc) {
-                        gc.clearRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT * margin);
-
-                        for (Entity e : partie.getPlateau().getPlateau()) {
-                            e.draw(gc);
-                            //e.drawHitbox(gc);
-
-                            if (e instanceof Ghost)
-                                ((Ghost) e).move(partie.getPacman());
-
-                            //String type = e.getClass().toString().substring(13);
-                            //System.out.println(type);
-                        }
-                        gc.setFill(Color.WHITE);
-                        gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
-                    }
-                }.start();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
-        });
+        iv.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> menu(stage));
 
         Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT * margin, Color.BLACK);
 
@@ -204,6 +155,7 @@ public class Window extends Application {
     }
 
     private void jeu(Stage stage) {
+        AtomicBoolean menu = new AtomicBoolean(false);
         final Group root = new Group();
 
         Canvas canvas = new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin);
@@ -224,10 +176,14 @@ public class Window extends Application {
                 case LEFT:
                     dir = Direction.LEFT;
                     break;
+                case ESCAPE:
+                    menu.set(!menu.get());
+                    break;
                 default:
                     break;
             }
         });
+
         stage.setScene(scene);
 
         try {
@@ -244,13 +200,18 @@ public class Window extends Application {
 
                     deltaTime = currentNanoTime - prevtime;
 
-                    //if (!chomp.isPlaying())
-                    //chomp.play();
+                    if (!menu.get() && sound && !chomp.isPlaying())
+                    chomp.play();
 
-                    partie.getPacman().changeDir(dir);
-                    partie.tick(deltaTime);
+                    if (!menu.get()) {
+                        partie.getPacman().changeDir(dir);
+                        partie.tick(deltaTime);
+                    }
 
                     drawShapes(gc);
+
+                    if (menu.get())
+                        drawMenu(gc);
 
                     prevtime = currentNanoTime;
                 }
@@ -266,11 +227,15 @@ public class Window extends Application {
                         if (e instanceof Ghost)
                             ((Ghost) e).move(partie.getPacman());
 
-                        //String type = e.getClass().toString().substring(13);
-                        //System.out.println(type);
                     }
                     gc.setFill(Color.WHITE);
                     gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
+                }
+                public void drawMenu(GraphicsContext gc) {
+                    gc.setFill(new Color(0, 0, 0, .5));
+                    gc.fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT);
+                    gc.setFill(Color.WHITE);
+                    gc.fillText("Pause", (1.0*SCENE_WIDTH-50)/2, 1.0*SCENE_HEIGHT/2, 200);
                 }
             }.start();
 
@@ -373,13 +338,13 @@ public class Window extends Application {
         ImageView ivSoundOn = new ImageView(soundOn);
         ivSoundOn.preserveRatioProperty();
         ivSoundOn.setX(1.0*SCENE_WIDTH/2 - 100);
-        ivSoundOn.setY(SCENE_HEIGHT/4);
+        ivSoundOn.setY(1.0*SCENE_HEIGHT/4);
 
         Image soundOff = new Image("img/son-off.png", 200, 100, false, false);
         ImageView ivSoundOff = new ImageView(soundOff);
         ivSoundOff.preserveRatioProperty();
         ivSoundOff.setX(1.0*SCENE_WIDTH/2 - 100);
-        ivSoundOff.setY(SCENE_HEIGHT/4);
+        ivSoundOff.setY(1.0*SCENE_HEIGHT/4);
 
         Group root = new Group();
         Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
@@ -391,11 +356,14 @@ public class Window extends Application {
         root.getChildren().add(back);
 
         ivSoundOn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            sound = false;
             root.getChildren().add(ivSoundOff);
             root.getChildren().remove(ivSoundOn);
         });
 
         ivSoundOff.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            sound = true;
+
             root.getChildren().add(ivSoundOn);
             root.getChildren().remove(ivSoundOff);
         });
