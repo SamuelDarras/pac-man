@@ -78,16 +78,7 @@ public class Plateau {
 
         }
 
-        for (int i = 0; i < plateau.length; i++) {
-            if (plateau[i] instanceof Wall){
-                ((Wall) plateau[i]).setImg(defineWallImage(
-                        (i + 1 < plateau.length && (i + 1)/larg == i/larg) ? plateau[i + 1] : new Entity(0, 0, 0, 0),
-                        i - larg >= 0 ? plateau[i - larg] : new Entity(0, 0, 0, 0),
-                        (i - 1 >= 0 && (i - 1)/larg == i/larg) ? plateau[i - 1] : new Entity(0, 0, 0, 0),
-                        i + larg < plateau.length ? plateau[i + larg] : new Entity(0, 0, 0, 0)
-                ));
-            }
-        }
+        setWalls("blue");
 
 
         /*int[] parsedLst = new int[lst.length];
@@ -100,6 +91,20 @@ public class Plateau {
         read.close();
     }
 
+    public void setWalls(String color) {
+        for (int i = 0; i < plateau.length; i++) {
+            if (plateau[i] instanceof Wall){
+                ((Wall) plateau[i]).setImg(defineWallImage(
+                        (i + 1 < plateau.length && (i + 1)/larg == i/larg) ? plateau[i + 1] : new Entity(0, 0, 0, 0),
+                        i - larg >= 0 ? plateau[i - larg] : new Entity(0, 0, 0, 0),
+                        (i - 1 >= 0 && (i - 1)/larg == i/larg) ? plateau[i - 1] : new Entity(0, 0, 0, 0),
+                        i + larg < plateau.length ? plateau[i + larg] : new Entity(0, 0, 0, 0),
+                        color
+                ));
+            }
+        }
+    }
+
     public Entity[] getPlateau() {
         return plateau;
     }
@@ -108,47 +113,47 @@ public class Plateau {
         return getPlateau()[x%larg + y * larg];
     }
 
-    private Image defineWallImage(Entity E, Entity N, Entity W, Entity S) {
+    private Image defineWallImage(Entity E, Entity N, Entity W, Entity S, String color) {
         Image img = null;
 
 
         if ((E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-T-S.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"T-down.png");
         if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-T-N.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"T-up.png");
         if (!(E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-T-O.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"T-left.png");
         if ((E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-T-E.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"T-right.png");
 
         if (!(E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-End-E.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"End-right.png");
         if (!(E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-End-S.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"End-down.png");
         if ((E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-End-O.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"End-left.png");
         if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-End-N.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"End-up.png");
 
         if (!(E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-Vertical.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"Vertical.png");
         if ((E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-Horizontal.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"Horizontal.png");
 
         if (!(E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-Angle-NO.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"Corner-bottom-right.png");
         if ((E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-Angle-NE.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"Corner-bottom-left.png");
         if ((E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-Angle-SE.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"Corner-top-left.png");
         if (!(E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-Angle-SO.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"Corner-top-right.png");
 
         if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-X.png");
+            img = new Image("img/walls/"+color+"/Walls-"+color+"T-full.png");
 
-        if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-O.png");
+        /*if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
+            img = new Image("img/walls/"+color+"/Walls-"+color+"O.png");*/
 
 
         return img;

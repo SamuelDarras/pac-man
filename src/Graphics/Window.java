@@ -30,6 +30,8 @@ import static Utils.Constants.*;
 public class Window extends Application {
     Direction dir = Direction.RIGHT;
 
+    Partie partie;
+
     double margin = 1.1;
 
     public static void main(String[] args) {
@@ -209,7 +211,7 @@ public class Window extends Application {
         });
 
         ivCusto.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            System.out.println("custo");
+            custo(stage);
         });
 
         ivOption.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -257,12 +259,12 @@ public class Window extends Application {
         stage.setScene(scene);
 
         try {
-
+            partie = new Partie("src/levels/level1V2.txt");
             new AnimationTimer() {
                 long prevtime;
                 long deltaTime;
 
-                Partie partie = new Partie("src/levels/level1V2.txt");
+
 
                 AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
 
@@ -310,64 +312,70 @@ public class Window extends Application {
 
         Group pop = new Group();
 
-        Image blueWall = new Image("file:img/wall/blue/BBP.png", 200, 200, false, false);
+        Image blueWall = new Image("img/wall/blue/BBP.png", 200, 200, false, false);
         ImageView ivBlueWall = new ImageView(blueWall);
 
         popVbox.getChildren().add(ivBlueWall);
 
         ivBlueWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("blue");
-            stage.setScene(scene);
+            partie.getPlateau().setWalls("blue");
+            menu(stage);
         });
 
-        Image greenWall = new Image("file:img/wall/green/GBP.png", 200, 200, false, false);
+        Image greenWall = new Image("img/wall/green/GBP.png", 200, 200, false, false);
         ImageView ivGreenWall = new ImageView(greenWall);
 
         popVbox.getChildren().add(ivGreenWall);
 
         ivGreenWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("green");
-            stage.setScene(scene);
+            partie.getPlateau().setWalls("green");
+            menu(stage);
         });
 
-        Image orangeWall = new Image("file:img/wall/orange/OBP.png", 200, 200, false, false);
+        Image orangeWall = new Image("img/wall/orange/OBP.png", 200, 200, false, false);
         ImageView ivorangeWall = new ImageView(orangeWall);
 
         popVbox.getChildren().add(ivorangeWall);
 
         ivorangeWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("orange");
-            stage.setScene(scene);
+            partie.getPlateau().setWalls("orange");
+            menu(stage);
         });
 
-        Image purpleWall = new Image("file:img/wall/purple/PBP.png", 200, 200, false, false);
+        Image purpleWall = new Image("img/wall/purple/PBP.png", 200, 200, false, false);
         ImageView ivpurpleWall = new ImageView(purpleWall);
 
         popVbox.getChildren().add(ivpurpleWall);
 
         ivpurpleWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("purple");
-            stage.setScene(scene);
+            partie.getPlateau().setWalls("purple");
+            menu(stage);
         });
 
-        Image redWall = new Image("file:img/wall/red/RBP.png", 200, 200, false, false);
+        Image redWall = new Image("img/wall/red/RBP.png", 200, 200, false, false);
         ImageView ivredWall = new ImageView(redWall);
 
         popVbox.getChildren().add(ivredWall);
 
         ivredWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("red");
-            stage.setScene(scene);
+            partie.getPlateau().setWalls("red");
+            menu(stage);
         });
 
-        Image yellowWall = new Image("file:img/wall/yellow/YBP.png", 200, 200, false, false);
+        Image yellowWall = new Image("img/wall/yellow/YBP.png", 200, 200, false, false);
         ImageView ivyellowWall = new ImageView(yellowWall);
 
         popVbox.getChildren().add(ivyellowWall);
 
         ivyellowWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("yellow");
-            stage.setScene(scene);
+            partie.getPlateau().setWalls("yellow");
+            menu(stage);
         });
 
         pop.getChildren().add(popVbox);
