@@ -9,6 +9,7 @@ import java.io.FileReader;
 import static Utils.Constants.*;
 
 public class Plateau {
+    String wallsColor = "";
     int idxFruit = 0;
     int larg;
     int haut;

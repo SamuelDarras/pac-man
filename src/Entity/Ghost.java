@@ -1,8 +1,11 @@
 package Entity;
 
 import Game.Plateau;
+import Utils.Direction;
 
 public abstract class Ghost extends Personnage{
+    private Direction prevdir = Direction.LEFT;
+
     public Ghost(double x, double y, double baseSpeed) {
         super(x, y, baseSpeed);
     }
@@ -12,8 +15,9 @@ public abstract class Ghost extends Personnage{
     public abstract void AI();
 
     public void move(Pacman p) {
-        changeDir(p.getDir());
+        if (p.getDir() != prevdir) {
+            changeDir(Direction.values()[(int)(Math.random()*4)]);
+            prevdir = p.getDir();
+        }
     }
-    
-
 }
