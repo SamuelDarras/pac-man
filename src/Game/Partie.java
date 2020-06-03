@@ -10,9 +10,9 @@ public class Partie {
     private Pacman pacman;
 
 
-    public Partie(String levelPath) throws Exception {
+    public Partie(String levelPath, String wallsColor) throws Exception {
         score = new Score();
-        pla = new Plateau(levelPath);
+        pla = new Plateau(levelPath, wallsColor);
         pacman = pla.getPacman();
     }
 
