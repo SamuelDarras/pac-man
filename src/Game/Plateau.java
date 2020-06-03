@@ -9,6 +9,7 @@ import java.io.FileReader;
 import static Utils.Constants.*;
 
 public class Plateau {
+    String wallsColor = "";
     int idxFruit = 0;
     int larg;
     int haut;
@@ -101,6 +102,10 @@ public class Plateau {
 
     public Entity[] getPlateau() {
         return plateau;
+    }
+
+    public Entity getCell(int x, int y) {
+        return getPlateau()[x%larg + y * larg];
     }
 
     private Image defineWallImage(Entity E, Entity N, Entity W, Entity S) {
