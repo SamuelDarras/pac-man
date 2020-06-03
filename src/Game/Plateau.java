@@ -103,6 +103,10 @@ public class Plateau {
         return plateau;
     }
 
+    public Entity getCell(int x, int y) {
+        return getPlateau()[x%larg + y * larg];
+    }
+
     private Image defineWallImage(Entity E, Entity N, Entity W, Entity S) {
         Image img = null;
 
