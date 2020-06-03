@@ -211,7 +211,7 @@ public class Window extends Application {
         });
 
         ivCusto.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            custo(stage);
+            //custo(stage);
         });
 
         ivOption.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
