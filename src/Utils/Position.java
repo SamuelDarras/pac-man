@@ -23,6 +23,10 @@ public class Position<N> {
   public N getX() { return x; }
   public N getY() { return y; }
 
+  public boolean equals(Position<N> other) {
+    return (N) other.getX() == (N) getX() && (N) other.getY() == (N) getY();
+  }
+
   public Position<N> copy() { return new Position<>(x, y); }
 
   public String toString() { return "x: " + x + "; y: " + y; }

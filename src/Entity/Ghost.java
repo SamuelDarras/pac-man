@@ -91,7 +91,7 @@ public abstract class Ghost extends Personnage{
 
             System.out.println();
 
-            Direction best = mostLikely(pac);
+            Direction best = mostLikely(plat);
 
             for (Direction d : possibles)
                 System.out.println(d);
@@ -105,8 +105,8 @@ public abstract class Ghost extends Personnage{
 
         }
     }
-    private Direction mostLikely(Pacman p) {
-        double dx = p.getPos().getX() - getPos().getX();
+    private Direction mostLikely(Plateau p) {
+        /*double dx = p.getPos().getX() - getPos().getX();
         double dy = p.getPos().getY() - getPos().getY();
 
         if (Math.abs(dy) >= Math.abs(dx)) {
@@ -118,18 +118,30 @@ public abstract class Ghost extends Personnage{
             if (dx >= 0)
                 return Direction.RIGHT;
             return Direction.LEFT;
-        }
+        }*/
+        ArrayList<Position> path = bestPath(new Position(1, 1), new Position(4, 4), p);
+
+        for (Position pos : path)
+            System.out.println(pos);
 
         return getDir();
     }
 
-    /*public ArrayList<Position> path(Position start, Position dest, Plateau p) {
+    public ArrayList<Position> bestPath(Position start, Position dest, Plateau p) {
+        System.out.println();
         Position current = start.copy();
         ArrayList<Position> tested = new ArrayList<>();
-        ArrayList<Position> neighbours = new ArrayList<>();
+        tested.add(current);
+        ArrayList<Position> neighbours;
 
-        while (current.getX() != dest.getX() && current.getY() != dest.getY()) {
-            neighbours.clear();
+        ArrayList<Position> path = new ArrayList<>();
+
+        while (((int) current.getX() != (int) dest.getX()) && ((int) current.getY() != (int) dest.getY())) {
+            //System.out.println(current);
+            neighbours = new ArrayList<>();
+            int gridx = (int) current.getX();
+            int gridy = (int) current.getY();
+
             if ( gridx-1 >= 0 &&  !(p.getCell(gridx-1, gridy) instanceof Wall))
                 neighbours.add(new Position(gridx-1, gridy));
             if (gridx+1 < p.getLargeur() && !(p.getCell(gridx+1, gridy) instanceof Wall))
@@ -139,9 +151,43 @@ public abstract class Ghost extends Personnage{
             if (gridy-1 >= 0 && !(p.getCell(gridx, gridy-1) instanceof Wall))
                 neighbours.add(new Position(gridx, gridy-1));
 
-                ArrayList<int[]> scores = new ArrayList();
-            for (Position pos : neighbours) {
+            int bestIdx = 0;
+            int best = -1;
+
+            if (neighbours.size() == 1) {
+                path.add(neighbours.get(0).copy());
+                current = neighbours.get(0).copy();
+                continue;
             }
+
+            for (int i = 0; i < neighbours.size(); i++) {
+                if (in(tested, neighbours.get(i).copy())) {
+                    continue;
+                }
+                int score = Math.abs((int) dest.getX() - (int)neighbours.get(i).getX()) + Math.abs((int) dest.getY() - (int)neighbours.get(i).getX());
+                if (score < best || best == -1) {
+                    bestIdx = i;
+                    best = score;
+                }
+            }
+
+            for (int i = 0; i < neighbours.size(); i++) {
+                if (i != bestIdx) {
+                    tested.add(neighbours.get(i).copy());
+                    //for (Position tpos : tested)
+                        //System.out.println("\t" + tpos);
+                }
+            }
+            current = neighbours.get(bestIdx).copy();
+            path.add(current.copy());
         }
-    }*/
+        return path;
+    }
+
+    private boolean in(ArrayList<Position> a, Position b) {
+        for (Position p : a)
+            if (p.getX() == b.getX() && p.getY() == b.getY())
+                return true;
+        return false;
+    }
 }
