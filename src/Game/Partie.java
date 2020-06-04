@@ -2,6 +2,7 @@ package Game;
 
 
 import Entity.*;
+import Graphics.Window;
 
 public class Partie {
     private Score score;
@@ -9,15 +10,20 @@ public class Partie {
     private Plateau pla;
     private Pacman pacman;
 
+    private Window win;
 
-    public Partie(String levelPath, String wallsColor) throws Exception {
+    public Partie(String levelPath, String wallsColor, Window window) throws Exception {
         score = new Score();
         pla = new Plateau(levelPath, wallsColor);
         pacman = pla.getPacman();
+        win = window;
     }
 
     public void tick(double dt) {
         pacman.move(dt / 10000000.0, pla);
+        if (pacman.isDead(pla)) {
+            pacman.resetPos();
+        }
         pacman.manger(this);
         for (Entity e : pla.getPlateau()) {
             if (e instanceof Ghost)
@@ -40,16 +46,5 @@ public class Partie {
     public Score getScore() {
         return score;
     }
-    /*interface Callback {
-        void call();
-    }
-    private void doSomethingAt(long timing, Callback callback) {
-        if (action && total == timing) {
-            callback.call();
-            action = false;
-        }
-        if (!action && total >= timing + 5)
-            action = true;
-    }*/
 }
 

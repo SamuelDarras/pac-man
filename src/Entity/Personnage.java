@@ -54,7 +54,6 @@ public class Personnage extends Entity{
 
     if (dir == Direction.RIGHT || dir == Direction.LEFT) {
       y = Math.round( y / WALL_HEIGHT);
-      System.out.println(y);
       y *= WALL_HEIGHT;
       y += (WALL_HEIGHT- PERSONNAGE_HEIGHT)/2;
     } else {
@@ -86,6 +85,9 @@ public class Personnage extends Entity{
       speed = speedLimits[0];
     }
   }
+  public Position getGridPos() {
+    return new Position((int) Math.round(getPos().getX()/WALL_WIDTH), (int) Math.round(getPos().getY()/WALL_HEIGHT));
+  }
   public void resetSpeed() {
     speed = baseSpeed;
   }
@@ -93,7 +95,7 @@ public class Personnage extends Entity{
   public double getBaseSpeed() { return baseSpeed; }
 
   public Direction getDir() {
-    return dir;
+      return dir;
   }
 
   public String toString() { return "(x: " + getPos().getX() + " ; y: " + getPos().getY() + ") | speed: " + speed + " | Direction: " + dir; }

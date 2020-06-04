@@ -31,6 +31,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static Utils.Constants.*;
 
 public class Window extends Application {
+    public Stage currentStage;
+
     Direction dir = Direction.RIGHT;
     String wallsColor = "blue";
     boolean sound = true;
@@ -98,7 +100,7 @@ public class Window extends Application {
             }
         });
 
-
+        currentStage = stage;
         stage.setScene(scene);
 
 //        AudioClip son = Window.openAudio("src/music/pacman_beginning.wav");
@@ -108,7 +110,8 @@ public class Window extends Application {
         stage.show();
     }
 
-    private void menu(Stage stage) {
+    public void menu(Stage stage) {
+        partie = null;
         Image demo = new Image("img/demo.png",300,100,false,false);
         System.out.println(demo.getUrl());
         ImageView ivDemo = new ImageView(demo);
@@ -154,7 +157,7 @@ public class Window extends Application {
         stage.setScene(new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin));
     }
 
-    private void jeu(Stage stage) {
+    public void jeu(Stage stage) {
         AtomicBoolean menu = new AtomicBoolean(false);
         final Group root = new Group();
 
@@ -187,7 +190,7 @@ public class Window extends Application {
         stage.setScene(scene);
 
         try {
-            partie = new Partie("src/levels/level1V2.txt", wallsColor);
+            partie = new Partie("src/levels/test.txt", wallsColor, this);
             new AnimationTimer() {
                 long prevtime;
                 long deltaTime;
@@ -197,11 +200,15 @@ public class Window extends Application {
                 AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
 
                 public void handle(long currentNanoTime) {
+                    if (partie.getPacman().getLife() <= 0) {
+                        this.stop();
+                        menu(stage);
+                    }
 
                     deltaTime = currentNanoTime - prevtime;
 
                     if (!menu.get() && sound && !chomp.isPlaying())
-                    chomp.play();
+                        chomp.play();
 
                     if (!menu.get()) {
                         partie.getPacman().changeDir(dir);
@@ -225,7 +232,7 @@ public class Window extends Application {
                         //e.drawHitbox(gc);
 
                         if (e instanceof Ghost)
-                            ((Ghost) e).move(partie.getPacman());
+                            ((Ghost) e).move(partie.getPacman(), partie.getPlateau());
 
                     }
                     gc.setFill(Color.WHITE);
@@ -244,7 +251,7 @@ public class Window extends Application {
         }
     }
 
-    private void custo(Stage stage) {
+    public void custo(Stage stage) {
         HBox popVbox=new HBox();
 
         Group pop = new Group();
