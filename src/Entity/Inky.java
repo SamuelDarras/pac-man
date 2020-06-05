@@ -12,16 +12,23 @@ public class Inky extends Ghost {
     super(x, y, speed);
   }
 
-  public void tick(double dt, Plateau p) {
-    AI();
-    super.move(dt, p);
+  public void draw(GraphicsContext gc) {
+    if (getDir() == Direction.LEFT)
+      gc.drawImage(img, getPos().getX() + getHitbox()[0], getPos().getY(), -getHitbox()[0], getHitbox()[1]);
+    else
+      gc.drawImage(img, getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);
   }
 
-  public void draw(GraphicsContext gc) {
-      if (getDir() == Direction.LEFT)
-        gc.drawImage(img, getPos().getX() + getHitbox()[0], getPos().getY(), -getHitbox()[0], getHitbox()[1]);
-      else
-        gc.drawImage(img, getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);
+  public void move(Pacman pac, Plateau p) {
+    path = BreadthFirst(getGridPos(), pac.getGridPos(), p);
+
+        /*System.out.print("" + getGridPos() + ": ");
+        for (Position t : path) {
+            System.out.print("[" + t + "] -> ");
+        }
+        System.out.println("\n" + getDir());*/
+
+    changeDir(getDirectionAccordingToPath(path));
   }
 
   public void AI() {

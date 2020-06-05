@@ -190,7 +190,7 @@ public class Window extends Application {
         stage.setScene(scene);
 
         try {
-            partie = new Partie("src/levels/test.txt", wallsColor, this);
+            partie = new Partie("src/levels/level1V2.txt", wallsColor, this);
             new AnimationTimer() {
                 long prevtime;
                 long deltaTime;
@@ -220,6 +220,8 @@ public class Window extends Application {
                     if (menu.get())
                         drawMenu(gc);
 
+                    gc.fillText("" + (1_000_000_000/deltaTime), 20, 20);
+
                     prevtime = currentNanoTime;
                 }
 
@@ -231,8 +233,14 @@ public class Window extends Application {
                         e.draw(gc);
                         //e.drawHitbox(gc);
 
-                        if (e instanceof Ghost)
-                            ((Ghost) e).move(partie.getPacman(), partie.getPlateau());
+                        if (e instanceof Inky)
+                            ((Inky) e).move(partie.getPacman(), partie.getPlateau());
+                        if (e instanceof Pinky)
+                            ((Pinky) e).move(partie.getPacman(), partie.getPlateau());
+                        if (e instanceof Blinky)
+                            ((Blinky) e).move(partie.getPacman(), partie.getPlateau());
+                        if (e instanceof Clyde)
+                            ((Clyde) e).move(partie.getPacman(), partie.getPlateau());
 
                     }
                     gc.setFill(Color.WHITE);

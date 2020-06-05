@@ -9,6 +9,7 @@ import java.io.FileReader;
 import static Utils.Constants.*;
 
 public class Plateau {
+    int[][] maze;
     String wallsColor;
     int idxFruit = 0;
     int larg;
@@ -31,6 +32,8 @@ public class Plateau {
         haut = Integer.parseInt(lst[0]);
         larg = Integer.parseInt(lst[1]);
 
+        maze = new int[haut][larg];
+
         System.out.print(haut);
         System.out.println("; " + larg);
 
@@ -47,31 +50,40 @@ public class Plateau {
                 switch (t.charAt(j)) {
                     case '1':
                         plateau[larg * i + j] = new Wall(x, y);
+                        maze[i][j] = 100;
                         break;
                     case 'p':
                         plateau[larg * i + j] = new PacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 4 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 4 / 2);
+                        maze[i][j] = 0;
                         break;
                     case 's':
                         plateau[larg * i + j] = new SuperPacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 2 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 2 / 2);
+                        maze[i][j] = 0;
                         break;
                     case 'I':
                         plateau[larg * i + j] = new Inky(x, y, GHOST_SPEED);
+                        maze[i][j] = 0;
                         break;
                     case 'P':
                         plateau[larg * i + j] = new Pinky(x, y, GHOST_SPEED);
+                        maze[i][j] = 0;
                         break;
                     case 'B':
                         plateau[larg * i + j] = new Blinky(x, y, GHOST_SPEED);
+                        maze[i][j] = 0;
                         break;
                     case 'C':
                         plateau[larg * i + j] = new Clyde(x, y, GHOST_SPEED);
+                        maze[i][j] = 0;
                         break;
                     case 'M':
                         pacman = new Pacman(x, y, PACMAN_SPEED);
                         plateau[larg * i + j] = pacman;
+                        maze[i][j] = 0;
                         break;
                     default:
                         plateau[larg * i + j] = new Entity(x, y, 1, 1);
+                        maze[i][j] = 0;
                         break;
                 }
 
@@ -109,8 +121,10 @@ public class Plateau {
         return plateau;
     }
 
+    public int[][] getMaze() { return maze; }
+
     public Entity getCell(int x, int y) {
-        return getPlateau()[x%larg + y * larg];
+        return getPlateau()[(x%larg + y * larg)%getPlateau().length];
     }
 
     private Image defineWallImage(Entity E, Entity N, Entity W, Entity S) {
