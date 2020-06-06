@@ -2,8 +2,11 @@ package Entity;
 
 import Game.Plateau;
 import Utils.Direction;
+import Utils.Position;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+
+import java.util.ArrayList;
 
 public class Blinky extends Ghost {
   Image img = new Image("img/BlinkyGhost.png");
@@ -12,12 +15,9 @@ public class Blinky extends Ghost {
     super(x, y, speed);
   }
 
-  public void tick(double dt, Plateau p) {
-    AI();
-    super.move(dt, p);
-  }
-
   public void draw(GraphicsContext gc) {
+    super.draw(gc);
+
     if (getDir() == Direction.LEFT)
       gc.drawImage(img, getPos().getX() + getHitbox()[0], getPos().getY(), -getHitbox()[0], getHitbox()[1]);
     else

@@ -9,8 +9,7 @@ import java.io.FileReader;
 import static Utils.Constants.*;
 
 public class Plateau {
-    int[][] maze;
-    String wallsColor;
+    String wallsColor = "blue";
     int idxFruit = 0;
     int larg;
     int haut;
@@ -19,6 +18,7 @@ public class Plateau {
 
     Entity[] plateau;
 
+    private Plateau() {}
     public Plateau(String levelPath, String wallsColor) throws Exception {
             this.wallsColor = wallsColor;
         remplirPlateau(levelPath);
@@ -31,8 +31,6 @@ public class Plateau {
 
         haut = Integer.parseInt(lst[0]);
         larg = Integer.parseInt(lst[1]);
-
-        maze = new int[haut][larg];
 
         System.out.print(haut);
         System.out.println("; " + larg);
@@ -50,40 +48,31 @@ public class Plateau {
                 switch (t.charAt(j)) {
                     case '1':
                         plateau[larg * i + j] = new Wall(x, y);
-                        maze[i][j] = 100;
                         break;
                     case 'p':
                         plateau[larg * i + j] = new PacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 4 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 4 / 2);
-                        maze[i][j] = 0;
                         break;
                     case 's':
                         plateau[larg * i + j] = new SuperPacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 2 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 2 / 2);
-                        maze[i][j] = 0;
                         break;
                     case 'I':
                         plateau[larg * i + j] = new Inky(x, y, GHOST_SPEED);
-                        maze[i][j] = 0;
                         break;
                     case 'P':
                         plateau[larg * i + j] = new Pinky(x, y, GHOST_SPEED);
-                        maze[i][j] = 0;
                         break;
                     case 'B':
                         plateau[larg * i + j] = new Blinky(x, y, GHOST_SPEED);
-                        maze[i][j] = 0;
                         break;
                     case 'C':
                         plateau[larg * i + j] = new Clyde(x, y, GHOST_SPEED);
-                        maze[i][j] = 0;
                         break;
                     case 'M':
                         pacman = new Pacman(x, y, PACMAN_SPEED);
                         plateau[larg * i + j] = pacman;
-                        maze[i][j] = 0;
                         break;
                     default:
                         plateau[larg * i + j] = new Entity(x, y, 1, 1);
-                        maze[i][j] = 0;
                         break;
                 }
 
@@ -92,7 +81,6 @@ public class Plateau {
         }
 
         setWalls("blue");
-
 
         /*int[] parsedLst = new int[lst.length];
         for (int i = 0; i < parsedLst.length; i++) {
@@ -121,10 +109,15 @@ public class Plateau {
         return plateau;
     }
 
-    public int[][] getMaze() { return maze; }
-
     public Entity getCell(int x, int y) {
-        return getPlateau()[(x%larg + y * larg)%getPlateau().length];
+        int idx = (x%larg + y * larg)%getPlateau().length;
+        if (idx < 0)
+            idx = 0;
+        return getPlateau()[idx];
+    }
+    public void setCell(Entity e, int x, int y) {
+        int idx = (x%larg + y * larg)%getPlateau().length;
+        plateau[idx] = e;
     }
 
     private Image defineWallImage(Entity E, Entity N, Entity W, Entity S) {
@@ -165,48 +158,6 @@ public class Plateau {
         if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
             img = new Image("img/wall/"+wallsColor+"/Wall-"+wallsColor+"-T-full.png");
 
-        /*if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/wall/"+wallsColor+"/Wall-"+wallsColor+"-O.png");*/
-
-        /*if ((E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-T-S.png");
-        if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-T-N.png");
-        if (!(E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-T-O.png");
-        if ((E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-T-E.png");
-
-        if (!(E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-End-E.png");
-        if (!(E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-End-S.png");
-        if ((E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-End-O.png");
-        if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-End-N.png");
-
-        if (!(E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-Vertical.png");
-        if ((E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-Horizontal.png");
-
-        if (!(E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-Angle-NO.png");
-        if ((E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-Angle-NE.png");
-        if ((E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-Angle-SE.png");
-        if (!(E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-Angle-SO.png");
-
-        if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-X.png");
-
-        if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-O.png");*/
-
-
         return img;
     }
 
@@ -226,12 +177,13 @@ public class Plateau {
         return idxFruit;
     }
 
-    public void removeIndex(int index) {
-        plateau[index] = null;
-    }
+    public Plateau simpleCopy() {
+        Plateau ret = new Plateau();
+        ret.plateau = this.plateau.clone();
+        ret.larg = this.larg;
+        ret.haut = this.haut;
 
-    public void setIndex(int idx, Entity e) {
-        this.plateau[idx] = e;
+        return ret;
     }
 
     public void remove(Entity ent) {

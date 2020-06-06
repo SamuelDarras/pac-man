@@ -2,6 +2,7 @@ package Entity;
 
 import Game.Plateau;
 import Utils.Direction;
+import Utils.Position;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -13,6 +14,8 @@ public class Inky extends Ghost {
   }
 
   public void draw(GraphicsContext gc) {
+    super.draw(gc);
+
     if (getDir() == Direction.LEFT)
       gc.drawImage(img, getPos().getX() + getHitbox()[0], getPos().getY(), -getHitbox()[0], getHitbox()[1]);
     else
@@ -20,15 +23,18 @@ public class Inky extends Ghost {
   }
 
   public void move(Pacman pac, Plateau p) {
-    path = BreadthFirst(getGridPos(), pac.getGridPos(), p);
+    int xoff = 0;
+    int yoff = 0;
 
-        /*System.out.print("" + getGridPos() + ": ");
-        for (Position t : path) {
-            System.out.print("[" + t + "] -> ");
-        }
-        System.out.println("\n" + getDir());*/
+    int curpac_x = (int) pac.getGridPos().getX();
+    int curpac_y = (int) pac.getGridPos().getY();
 
-    changeDir(getDirectionAccordingToPath(path));
+    Position gotoPos = new Position(curpac_x, curpac_y);
+
+    path = BreadthFirst(getGridPos(), gotoPos, p);
+
+    Direction n_dir = getDirectionAccordingToPath(path);
+    changeDir(n_dir);
   }
 
   public void AI() {

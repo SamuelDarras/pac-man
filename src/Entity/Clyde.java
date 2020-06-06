@@ -13,12 +13,9 @@ public class Clyde extends Ghost {
     super(x, y, speed);
   }
 
-  public void tick(double dt, Plateau p) {
-    AI();
-    super.move(dt, p);
-  }
-
   public void draw(GraphicsContext gc) {
+    super.draw(gc);
+
     if (getDir() == Direction.LEFT)
       gc.drawImage(img, getPos().getX() + getHitbox()[0], getPos().getY(), -getHitbox()[0], getHitbox()[1]);
     else
@@ -32,25 +29,14 @@ public class Clyde extends Ghost {
     int curpac_x = (int) pac.getGridPos().getX();
     int curpac_y = (int) pac.getGridPos().getY();
 
-    if (pac.getDir() == Direction.RIGHT) {
-      while (curpac_x < p.getLargeur() && p.getCell(curpac_x + 4 - xoff, curpac_y) instanceof Wall) xoff++;
-    } else if (pac.getDir() == Direction.LEFT) {
-      while (curpac_x > 0 && p.getCell(curpac_x - 4 - xoff, curpac_y) instanceof Wall) xoff--;
-    } else if (pac.getDir() == Direction.DOWN) {
-      while (curpac_y < p.getHauteur() && p.getCell(curpac_x, curpac_y + 4 - yoff) instanceof Wall) yoff++;
-    } else if (pac.getDir() == Direction.UP) {
-      while (curpac_y > 0 && p.getCell(curpac_x, curpac_y - 4 - yoff) instanceof Wall) yoff--;
-    }
-    Position gotoPos = new Position(curpac_x + xoff, curpac_y + yoff);
+    Position gotoPos = new Position(1, 1);
+    if (((int) getGridPos().getX() - curpac_x)*((int) getGridPos().getX() - curpac_x) + ((int) getGridPos().getY() - curpac_y)*((int) getGridPos().getY() - curpac_y) > 8<<3)
+      gotoPos = new Position(curpac_x + xoff, curpac_y + yoff);
+
     path = BreadthFirst(getGridPos(), gotoPos, p);
 
-        /*System.out.print("" + getGridPos() + ": ");
-        for (Position t : path) {
-            System.out.print("[" + t + "] -> ");
-        }
-        System.out.println("\n" + getDir());*/
-
-    changeDir(getDirectionAccordingToPath(path));
+    Direction n_dir = getDirectionAccordingToPath(path);
+    changeDir(n_dir);
   }
 
   public void AI() {

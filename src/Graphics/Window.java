@@ -190,7 +190,7 @@ public class Window extends Application {
         stage.setScene(scene);
 
         try {
-            partie = new Partie("src/levels/level1V2.txt", wallsColor, this);
+            partie = new Partie("src/levels/test.txt", wallsColor, this);
             new AnimationTimer() {
                 long prevtime;
                 long deltaTime;
@@ -210,7 +210,7 @@ public class Window extends Application {
                     if (!menu.get() && sound && !chomp.isPlaying())
                         chomp.play();
 
-                    if (!menu.get()) {
+                    if (!menu.get() && deltaTime < 1_000_000_000/5) {
                         partie.getPacman().changeDir(dir);
                         partie.tick(deltaTime);
                     }
@@ -219,8 +219,6 @@ public class Window extends Application {
 
                     if (menu.get())
                         drawMenu(gc);
-
-                    gc.fillText("" + (1_000_000_000/deltaTime), 20, 20);
 
                     prevtime = currentNanoTime;
                 }
