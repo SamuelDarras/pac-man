@@ -31,6 +31,13 @@ public class Inky extends Ghost {
 
     Position gotoPos = new Position(curpac_x, curpac_y);
 
+    /* TODO: démerde toi pour faire cette merde :
+     * - il faut passer à Inky la postion de Blinky
+     * - définir le vecteur de Blinky à deux cases devant Pacman
+     * - doubler ce veteur
+     */
+
+
     path = BreadthFirst(getGridPos(), gotoPos, p);
 
     Direction n_dir = getDirectionAccordingToPath(path);
