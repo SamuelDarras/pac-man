@@ -107,14 +107,12 @@ public abstract class Ghost extends Personnage {
                 break;
 
             for (Position next : getNeighbours(current, platCpy)) {
-                System.out.println("\t-> " + next);
                 if (!in(came_from_to, next)) {
                     frontier.add(next);
                     came_from_to.add(next.copy());
                     came_from_from.add(current.copy());
                 }
             }
-            System.out.println();
         }
 
         current = end;
