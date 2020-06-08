@@ -26,17 +26,7 @@ public class Blinky extends Ghost {
 
   public void move(Pacman pac, Plateau p) {
     path = BreadthFirst(getGridPos(), pac.getGridPos(), p);
-
-        /*System.out.print("" + getGridPos() + ": ");
-        for (Position t : path) {
-            System.out.print("[" + t + "] -> ");
-        }
-        System.out.println("\n" + getDir());*/
-
     changeDir(getDirectionAccordingToPath(path));
-  }
-
-  public void AI() {
-
+    super.move(pac, p);
   }
 }

@@ -4,9 +4,9 @@ import Game.Plateau;
 import Utils.Direction;
 import Utils.Position;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class Ghost extends Personnage {
     ArrayList<Position> path;
@@ -14,8 +14,6 @@ public abstract class Ghost extends Personnage {
     public Ghost(double x, double y, double baseSpeed) {
         super(x, y, baseSpeed);
     }
-
-    public abstract void AI();
 
     int curx = -1;
     int cury = -1;
@@ -25,12 +23,6 @@ public abstract class Ghost extends Personnage {
             curx = (int) getGridPos().getX();
             cury = (int) getGridPos().getY();
         }
-
-        /*System.out.print(getGridPos());
-        for (int i = path.size() - 1; i > 0; i--) {
-            System.out.println(" -> [" + path.get(i) + "]");
-        }
-        System.out.println();*/
 
         if ((curx != getPos().getX() || cury != getPos().getY()) && path.size() > 0) {
             int p0x = (int) path.get(path.size() - 1).getX();
@@ -52,24 +44,24 @@ public abstract class Ghost extends Personnage {
     }
 
     public void draw(GraphicsContext gc) {
-        double curx = getPos().getX() + getHitbox()[0] / 2;
-        double cury = getPos().getY() + getHitbox()[1] / 2;
+    }
 
-        /*gc.setFill(Color.RED);
-        switch (getDir()) {
-            case LEFT:
-                gc.fillOval(curx - 20, cury, 10, 10);
-                break;
-            case RIGHT:
-                gc.fillOval(curx + 20, cury, 10, 10);
-                break;
-            case DOWN:
-                gc.fillOval(curx, cury + 20, 10, 10);
-                break;
-            case UP:
-                gc.fillOval(curx, cury - 20, 10, 10);
-                break;
-        }*/
+    public void move(Pacman pac, Plateau plat) {
+        if (pac.superPacman) {
+            int x = (int) (Math.random()*plat.getLargeur());
+            int y = (int) (Math.random()*plat.getLargeur());
+            while (plat.getCell(x, y) instanceof Wall) {
+                x = (int) (Math.random()*plat.getLargeur());
+                y = (int) (Math.random()*plat.getHauteur());
+                System.out.println("" + x + " ; " + y);
+            }
+            Position gotoPos = new Position(x, y);
+
+            path.addAll(BreadthFirst(getGridPos(), gotoPos, plat));
+
+            Direction n_dir = getDirectionAccordingToPath(path);
+            changeDir(n_dir);
+        }
     }
 
     public ArrayList<Position> BreadthFirst(Position start, Position end, Plateau plat) {
