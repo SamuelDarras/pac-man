@@ -380,7 +380,12 @@ public class Window extends Application {
         stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
     }
     public void select(Stage stage) {
-        VBox popVbox=new VBox();
+        double width = 1.0*SCENE_WIDTH/4;
+        double height = 1.0*SCENE_HEIGHT/4;
+
+        HBox popVbox=new HBox();
+        popVbox.setSpacing(30.);
+        popVbox.setAlignment(Pos.TOP_CENTER);
 
         Group pop = new Group();
 
@@ -390,36 +395,43 @@ public class Window extends Application {
 
         pop.getChildren().add(main);
 
-        Button back = new Button("Back");
-        back.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
+        Image iback = new Image("img/back.png", width/2, height/2, false, false);
+        ImageView ivback = new ImageView(iback);
+        ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
+        popVbox.getChildren().add(ivback);
 
-        Button blvl1 = new Button("Level 1");
-        popVbox.getChildren().add(blvl1);
+        Image ilvl1 = new Image("img/0002_Level-1.png", width, height, false, false);
+        ImageView ivlvl1 = new ImageView(ilvl1);
 
-        blvl1.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+        popVbox.getChildren().add(ivlvl1);
+
+        ivlvl1.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("level 1");
             levelPath="src/levels/level1V2.txt";
             menu(stage);
         });
 
-        Button blvl1Pres = new Button("Level 1 Presentation");
-        popVbox.getChildren().add(blvl1Pres);
+        Image ilvl2 = new Image("img/0001_presentation1.2.png", width, height, false, false);
+        ImageView ivlvl2 = new ImageView(ilvl2);
 
-        blvl1Pres.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+        popVbox.getChildren().add(ivlvl2);
+
+        ivlvl2.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("level 1 Pres");
             levelPath="src/levels/level1Pres.txt";
             menu(stage);
         });
 
-        Button blvl2Pres = new Button("Level 2 Presentation");
-        popVbox.getChildren().add(blvl2Pres);
+        Image ilvl3 = new Image("img/0000_presentation-2.png", width, height, false, false);
+        ImageView ivlvl3 = new ImageView(ilvl3);
 
-        blvl2Pres.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+        popVbox.getChildren().add(ivlvl3);
+
+        ivlvl3.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("level 2 Pres");
             levelPath="src/levels/level2Pres.txt";
             menu(stage);
         });
-
 
         pop.getChildren().add(popVbox);
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
