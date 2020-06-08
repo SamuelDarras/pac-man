@@ -36,7 +36,7 @@ public class Window extends Application {
 
     Direction dir = Direction.RIGHT;
     String wallsColor = "blue";
-    String levelPath ="src/levels/test.txt";
+    String levelPath ="";
     boolean sound = true;
 
     Partie partie;
@@ -114,6 +114,11 @@ public class Window extends Application {
 
     public void menu(Stage stage) {
         partie = null;
+
+        Image jouer = new Image("img/0001_pacman.png",300,100,false,false);
+        ImageView ivJouer = new ImageView(jouer);
+        ivJouer.preserveRatioProperty();
+
         Image demo = new Image("img/demo.png",300,100,false,false);
         System.out.println(demo.getUrl());
         ImageView ivDemo = new ImageView(demo);
@@ -134,9 +139,9 @@ public class Window extends Application {
         Group root = new Group();
 
         VBox vbox=new VBox();
-        vbox.setSpacing(50.);
+        vbox.setSpacing(20.);
         vbox.setAlignment(Pos.TOP_CENTER);
-        vbox.getChildren().addAll(ivDemo,ivMdj,ivCusto,ivOption);
+        vbox.getChildren().addAll(ivJouer,ivDemo,ivMdj,ivCusto,ivOption);
 
         Canvas c = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
         GraphicsContext bg = c.getGraphicsContext2D();
@@ -146,9 +151,14 @@ public class Window extends Application {
         root.getChildren().add(c);
         root.getChildren().add(vbox);
 
-        ivDemo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> jeu(stage));
+        ivJouer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> select(stage));
 
-        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> select(stage));
+        ivDemo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            levelPath="src/levels/test.txt";
+            jeu(stage);
+        });
+
+        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.out.println(mdj));
 
         ivCusto.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> custo(stage));
 
@@ -340,8 +350,9 @@ public class Window extends Application {
     }
 
     public void settings(Stage stage) {
-        Button back = new Button("Back");
-        back.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
+        Image iback = new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false);
+        ImageView ivback = new ImageView(iback);
+        ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
 
         Image soundOn = new Image("img/son-on.png", 200, 100, false, false);
         ImageView ivSoundOn = new ImageView(soundOn);
@@ -362,7 +373,7 @@ public class Window extends Application {
 
         root.getChildren().add(main);
         root.getChildren().add(ivSoundOn);
-        root.getChildren().add(back);
+        root.getChildren().add(ivback);
 
         ivSoundOn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             sound = false;
@@ -408,7 +419,7 @@ public class Window extends Application {
         ivlvl1.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("level 1");
             levelPath="src/levels/level1V2.txt";
-            menu(stage);
+            jeu(stage);
         });
 
         Image ilvl2 = new Image("img/0001_presentation1.2.png", width, height, false, false);
@@ -419,7 +430,7 @@ public class Window extends Application {
         ivlvl2.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("level 1 Pres");
             levelPath="src/levels/level1Pres.txt";
-            menu(stage);
+            jeu(stage);
         });
 
         Image ilvl3 = new Image("img/0000_presentation-2.png", width, height, false, false);
@@ -430,7 +441,7 @@ public class Window extends Application {
         ivlvl3.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("level 2 Pres");
             levelPath="src/levels/level2Pres.txt";
-            menu(stage);
+            jeu(stage);
         });
 
         pop.getChildren().add(popVbox);
