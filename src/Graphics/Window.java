@@ -22,10 +22,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javax.swing.*;
 import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -36,6 +36,7 @@ public class Window extends Application {
 
     Direction dir = Direction.RIGHT;
     String wallsColor = "blue";
+    String levelPath ="src/levels/test.txt";
     boolean sound = true;
 
     Partie partie;
@@ -49,7 +50,7 @@ public class Window extends Application {
     @Override
     public void start(Stage stage) {
 
-        stage.setTitle("pac man");
+        stage.setTitle("toto");
 
         final Group root = new Group();
 
@@ -107,7 +108,7 @@ public class Window extends Application {
 //        AudioClip son = Window.openAudio("src/music/pacman_beginning.wav");
 //       son.play();
 
-        stage.setResizable(true);
+        stage.setResizable(false);
         stage.show();
     }
 
@@ -147,37 +148,13 @@ public class Window extends Application {
 
         ivDemo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> jeu(stage));
 
-        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.out.println("mdj"));
+        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> select(stage));
 
         ivCusto.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> custo(stage));
 
         ivOption.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> settings(stage));
 
 
-
-        stage.setScene(new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin));
-    }
-
-    public void finJeu(Stage stage){
-        Image retour = new Image("img/back.png",300,200,false,false);
-        ImageView ivRetour = new ImageView(retour);
-
-        Image bg = new Image("img/bgBlack.png",700,800,false,false);
-        ImageView ivbg = new ImageView(bg);
-
-        Image text = new Image("img/lose.png",1300,1500,false,false);
-        ImageView ivtext = new ImageView(text);
-
-        Group root = new Group();
-
-        ivRetour.setY(1.0*SCENE_HEIGHT - 100);
-
-        VBox vbox=new VBox();
-        vbox.getChildren().addAll(ivRetour, ivtext);
-
-        root.getChildren().addAll(ivbg, vbox);
-
-        ivRetour.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> menu(stage));
 
         stage.setScene(new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin));
     }
@@ -215,7 +192,7 @@ public class Window extends Application {
         stage.setScene(scene);
 
         try {
-            partie = new Partie("src/levels/test.txt", wallsColor, this);
+            partie = new Partie(levelPath, wallsColor, this);
             new AnimationTimer() {
                 long prevtime;
                 long deltaTime;
@@ -227,7 +204,7 @@ public class Window extends Application {
                 public void handle(long currentNanoTime) {
                     if (partie.getPacman().getLife() <= 0) {
                         this.stop();
-                        finJeu(stage);
+                        menu(stage);
                     }
 
                     deltaTime = currentNanoTime - prevtime;
@@ -235,7 +212,7 @@ public class Window extends Application {
                     if (!menu.get() && sound && !chomp.isPlaying())
                         chomp.play();
 
-                    if (!menu.get() && deltaTime < 1_000_000_000/5) {
+                    if (!menu.get()) {
                         partie.getPacman().changeDir(dir);
                         partie.tick(deltaTime);
                     }
@@ -256,14 +233,8 @@ public class Window extends Application {
                         e.draw(gc);
                         //e.drawHitbox(gc);
 
-                        if (e instanceof Inky)
-                            ((Inky) e).move(partie.getPacman(), partie.getPlateau());
-                        if (e instanceof Pinky)
-                            ((Pinky) e).move(partie.getPacman(), partie.getPlateau());
-                        if (e instanceof Blinky)
-                            ((Blinky) e).move(partie.getPacman(), partie.getPlateau());
-                        if (e instanceof Clyde)
-                            ((Clyde) e).move(partie.getPacman(), partie.getPlateau());
+                        if (e instanceof Ghost)
+                            ((Ghost) e).move(partie.getPacman(), partie.getPlateau());
 
                     }
                     gc.setFill(Color.WHITE);
@@ -293,18 +264,14 @@ public class Window extends Application {
 
         pop.getChildren().add(main);
 
+        Image blueWall = new Image("img/wall/blue/Wall-blue-Block.png", 1.0*SCENE_WIDTH/6, 1.0*SCENE_HEIGHT/6, false, false);
+        ImageView ivBlueWall = new ImageView(blueWall);
 
+        popVbox.getChildren().add(ivBlueWall);
 
         double width = 1.0*SCENE_WIDTH/6;
         double height = 1.0*SCENE_HEIGHT/6;
 
-        Image back = new Image("img/back.png", 100, 100, false, false);
-        ImageView ivBack = new ImageView(back);
-        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
-
-        Image blueWall = new Image("img/wall/blue/Wall-blue-Block.png", 1.0*SCENE_WIDTH/6, 1.0*SCENE_HEIGHT/6, false, false);
-        ImageView ivBlueWall = new ImageView(blueWall);
-        popVbox.getChildren().add(ivBlueWall);
         ivBlueWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("blue");
             wallsColor = "blue";
@@ -313,7 +280,9 @@ public class Window extends Application {
 
         Image greenWall = new Image("img/wall/green/Wall-green-Block.png", width, height, false, false);
         ImageView ivGreenWall = new ImageView(greenWall);
+
         popVbox.getChildren().add(ivGreenWall);
+
         ivGreenWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("green");
             wallsColor = "green";
@@ -322,7 +291,9 @@ public class Window extends Application {
 
         Image orangeWall = new Image("img/wall/orange/Wall-orange-Block.png", width, height, false, false);
         ImageView ivorangeWall = new ImageView(orangeWall);
+
         popVbox.getChildren().add(ivorangeWall);
+
         ivorangeWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("orange");
             wallsColor = "orange";
@@ -331,7 +302,9 @@ public class Window extends Application {
 
         Image purpleWall = new Image("img/wall/purple/Wall-purple-Block.png", width, height, false, false);
         ImageView ivpurpleWall = new ImageView(purpleWall);
+
         popVbox.getChildren().add(ivpurpleWall);
+
         ivpurpleWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("purple");
             wallsColor = "purple";
@@ -340,7 +313,9 @@ public class Window extends Application {
 
         Image redWall = new Image("img/wall/red/Wall-red-Block.png", width, height, false, false);
         ImageView ivredWall = new ImageView(redWall);
+
         popVbox.getChildren().add(ivredWall);
+
         ivredWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("red");
             wallsColor = "red";
@@ -349,7 +324,9 @@ public class Window extends Application {
 
         Image yellowWall = new Image("img/wall/yellow/Wall-yellow-Block.png", width, height, false, false);
         ImageView ivyellowWall = new ImageView(yellowWall);
+
         popVbox.getChildren().add(ivyellowWall);
+
         ivyellowWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("yellow");
             wallsColor = "yellow";
@@ -357,14 +334,14 @@ public class Window extends Application {
         });
 
         pop.getChildren().add(popVbox);
-        ivBack.setY(1.0*SCENE_HEIGHT - 100);
-        pop.getChildren().add(ivBack);
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(popUp);
         stage.show();
     }
 
     public void settings(Stage stage) {
+        Button back = new Button("Back");
+        back.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
 
         Image soundOn = new Image("img/son-on.png", 200, 100, false, false);
         ImageView ivSoundOn = new ImageView(soundOn);
@@ -378,11 +355,6 @@ public class Window extends Application {
         ivSoundOff.setX(1.0*SCENE_WIDTH/2 - 100);
         ivSoundOff.setY(1.0*SCENE_HEIGHT/4);
 
-        Image back = new Image("img/back.png", 100, 100, false, false);
-        ImageView ivBack = new ImageView(back);
-        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
-        ivBack.setY(1.0*SCENE_HEIGHT - 100);
-
         Group root = new Group();
         Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
         main.getGraphicsContext2D().setFill(Color.BLACK);
@@ -390,7 +362,7 @@ public class Window extends Application {
 
         root.getChildren().add(main);
         root.getChildren().add(ivSoundOn);
-        root.getChildren().add(ivBack);
+        root.getChildren().add(back);
 
         ivSoundOn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             sound = false;
@@ -406,6 +378,53 @@ public class Window extends Application {
         });
 
         stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
+    }
+    public void select(Stage stage) {
+        VBox popVbox=new VBox();
+
+        Group pop = new Group();
+
+        Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
+        main.getGraphicsContext2D().setFill(Color.BLACK);
+        main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);
+
+        pop.getChildren().add(main);
+
+        Button back = new Button("Back");
+        back.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
+
+        Button blvl1 = new Button("Level 1");
+        popVbox.getChildren().add(blvl1);
+
+        blvl1.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            System.out.println("level 1");
+            levelPath="src/levels/level1V2.txt";
+            menu(stage);
+        });
+
+        Button blvl1Pres = new Button("Level 1 Presentation");
+        popVbox.getChildren().add(blvl1Pres);
+
+        blvl1Pres.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            System.out.println("level 1 Pres");
+            levelPath="src/levels/level1Pres.txt";
+            menu(stage);
+        });
+
+        Button blvl2Pres = new Button("Level 2 Presentation");
+        popVbox.getChildren().add(blvl2Pres);
+
+        blvl2Pres.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            System.out.println("level 2 Pres");
+            levelPath="src/levels/level2Pres.txt";
+            menu(stage);
+        });
+
+
+        pop.getChildren().add(popVbox);
+        Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
+        stage.setScene(popUp);
+        stage.show();
     }
 
     public static AudioClip openAudio(String path) {
