@@ -49,7 +49,7 @@ public class Window extends Application {
     @Override
     public void start(Stage stage) {
 
-        stage.setTitle("toto");
+        stage.setTitle("pac man");
 
         final Group root = new Group();
 
