@@ -1,6 +1,7 @@
 package Game;
 
 import Entity.*;
+import Utils.Position;
 import javafx.scene.image.Image;
 
 import java.io.BufferedReader;
@@ -13,6 +14,8 @@ public class Plateau {
     int idxFruit = 0;
     int larg;
     int haut;
+
+    Position house = new Position(0, 0);
 
     Pacman pacman;
 
@@ -71,6 +74,8 @@ public class Plateau {
                         pacman = new Pacman(x, y, PACMAN_SPEED);
                         plateau[larg * i + j] = pacman;
                         break;
+                    case 'H':
+                        house = new Position(j, i);
                     default:
                         plateau[larg * i + j] = new Entity(x, y, 1, 1);
                         break;
@@ -195,4 +200,7 @@ public class Plateau {
         }
     }
 
+    public Position getHouse() {
+        return house;
+    }
 }

@@ -11,6 +11,8 @@ import java.util.Random;
 public abstract class Ghost extends Personnage {
     ArrayList<Position> path;
 
+    Position definedDestination;
+
     public Ghost(double x, double y, double baseSpeed) {
         super(x, y, baseSpeed);
     }
@@ -43,10 +45,20 @@ public abstract class Ghost extends Personnage {
         return getDir();
     }
 
+    public void go(Position pos) {
+        definedDestination = pos.copy();
+    }
+
     public void draw(GraphicsContext gc) {
     }
 
     public void move(Pacman pac, Plateau plat) {
+        if (definedDestination != null) {
+            path.addAll(BreadthFirst(getGridPos(), definedDestination, plat));
+
+            Direction n_dir = getDirectionAccordingToPath(path);
+            changeDir(n_dir);
+        }
         if (pac.superPacman) {
             int x = (int) (Math.random()*plat.getLargeur());
             int y = (int) (Math.random()*plat.getLargeur());
