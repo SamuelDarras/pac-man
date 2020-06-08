@@ -37,9 +37,6 @@ public class Clyde extends Ghost {
 
     Direction n_dir = getDirectionAccordingToPath(path);
     changeDir(n_dir);
-  }
-
-  public void AI() {
-
+    super.move(pac, p);
   }
 }

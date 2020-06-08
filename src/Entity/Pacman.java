@@ -17,7 +17,7 @@ public class Pacman extends Personnage{
     private static final Image imL = new Image("img/pacManL.png", false);
     private static final Image imU = new Image("img/pacManU.png", false);
 
-	private boolean superPacman = false;
+	boolean superPacman = false;
 
 	public Pacman(double x, double y, double speed){
 	    super(x, y, speed);
@@ -43,6 +43,9 @@ public class Pacman extends Personnage{
 	public void manger(Partie partie){
         for (Entity e : partie.getPlateau().getPlateau()) {
             if(e instanceof Items && e.hit(this)) {
+                if (e instanceof SuperPacGomme) {
+                    superPacman = true;
+                }
                 partie.scoreAdd(((Items) e).getScore());
                 partie.getPlateau().remove(e);
             }
