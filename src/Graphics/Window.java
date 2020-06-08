@@ -36,6 +36,7 @@ public class Window extends Application {
 
     Direction dir = Direction.RIGHT;
     String wallsColor = "blue";
+    String levelPath ="src/levels/test.txt";
     boolean sound = true;
 
     Partie partie;
@@ -147,7 +148,7 @@ public class Window extends Application {
 
         ivDemo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> jeu(stage));
 
-        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.out.println("mdj"));
+        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> select(stage));
 
         ivCusto.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> custo(stage));
 
@@ -215,7 +216,7 @@ public class Window extends Application {
         stage.setScene(scene);
 
         try {
-            partie = new Partie("src/levels/test.txt", wallsColor, this);
+            partie = new Partie(levelPath, wallsColor, this);
             new AnimationTimer() {
                 long prevtime;
                 long deltaTime;
@@ -406,6 +407,53 @@ public class Window extends Application {
         });
 
         stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
+    }
+    public void select(Stage stage) {
+        VBox popVbox=new VBox();
+
+        Group pop = new Group();
+
+        Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
+        main.getGraphicsContext2D().setFill(Color.BLACK);
+        main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);
+
+        pop.getChildren().add(main);
+
+        Button back = new Button("Back");
+        back.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
+
+        Button blvl1 = new Button("Level 1");
+        popVbox.getChildren().add(blvl1);
+
+        blvl1.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            System.out.println("level 1");
+            levelPath="src/levels/level1V2.txt";
+            menu(stage);
+        });
+
+        Button blvl1Pres = new Button("Level 1 Presentation");
+        popVbox.getChildren().add(blvl1Pres);
+
+        blvl1Pres.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            System.out.println("level 1 Pres");
+            levelPath="src/levels/level1Pres.txt";
+            menu(stage);
+        });
+
+        Button blvl2Pres = new Button("Level 2 Presentation");
+        popVbox.getChildren().add(blvl2Pres);
+
+        blvl2Pres.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            System.out.println("level 2 Pres");
+            levelPath="src/levels/level2Pres.txt";
+            menu(stage);
+        });
+
+
+        pop.getChildren().add(popVbox);
+        Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
+        stage.setScene(popUp);
+        stage.show();
     }
 
     public static AudioClip openAudio(String path) {
