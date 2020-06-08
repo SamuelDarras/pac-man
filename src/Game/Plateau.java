@@ -9,7 +9,7 @@ import java.io.FileReader;
 import static Utils.Constants.*;
 
 public class Plateau {
-    String wallsColor;
+    String wallsColor = "blue";
     int idxFruit = 0;
     int larg;
     int haut;
@@ -18,6 +18,7 @@ public class Plateau {
 
     Entity[] plateau;
 
+    private Plateau() {}
     public Plateau(String levelPath, String wallsColor) throws Exception {
             this.wallsColor = wallsColor;
         remplirPlateau(levelPath);
@@ -81,7 +82,6 @@ public class Plateau {
 
         setWalls("blue");
 
-
         /*int[] parsedLst = new int[lst.length];
         for (int i = 0; i < parsedLst.length; i++) {
             parsedLst[i] = Integer.parseInt(lst[i]);
@@ -110,7 +110,14 @@ public class Plateau {
     }
 
     public Entity getCell(int x, int y) {
-        return getPlateau()[x%larg + y * larg];
+        int idx = (x%larg + y * larg)%getPlateau().length;
+        if (idx < 0)
+            idx = 0;
+        return getPlateau()[idx];
+    }
+    public void setCell(Entity e, int x, int y) {
+        int idx = (x%larg + y * larg)%getPlateau().length;
+        plateau[idx] = e;
     }
 
     private Image defineWallImage(Entity E, Entity N, Entity W, Entity S) {
@@ -151,48 +158,6 @@ public class Plateau {
         if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
             img = new Image("img/wall/"+wallsColor+"/Wall-"+wallsColor+"-T-full.png");
 
-        /*if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/wall/"+wallsColor+"/Wall-"+wallsColor+"-O.png");*/
-
-        /*if ((E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-T-S.png");
-        if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-T-N.png");
-        if (!(E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-T-O.png");
-        if ((E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-T-E.png");
-
-        if (!(E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-End-E.png");
-        if (!(E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-End-S.png");
-        if ((E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-End-O.png");
-        if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-End-N.png");
-
-        if (!(E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-Vertical.png");
-        if ((E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-Horizontal.png");
-
-        if (!(E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-Angle-NO.png");
-        if ((E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-Angle-NE.png");
-        if ((E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-Angle-SE.png");
-        if (!(E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-Angle-SO.png");
-
-        if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
-            img = new Image("img/walls/Wall-X.png");
-
-        if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
-            img = new Image("img/walls/Wall-O.png");*/
-
-
         return img;
     }
 
@@ -212,12 +177,13 @@ public class Plateau {
         return idxFruit;
     }
 
-    public void removeIndex(int index) {
-        plateau[index] = null;
-    }
+    public Plateau simpleCopy() {
+        Plateau ret = new Plateau();
+        ret.plateau = this.plateau.clone();
+        ret.larg = this.larg;
+        ret.haut = this.haut;
 
-    public void setIndex(int idx, Entity e) {
-        this.plateau[idx] = e;
+        return ret;
     }
 
     public void remove(Entity ent) {

@@ -66,4 +66,8 @@ public class Entity {
         return x < o_x + o_w && x + w > o_x && y < o_y + o_h && y + h > o_y;
 
     }
+
+    public Entity copy() {
+        return new Entity(getPos().getX(), getPos().getY(), hitbox[0], hitbox[1]);
+    }
 }

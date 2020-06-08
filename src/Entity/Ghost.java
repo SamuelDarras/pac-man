@@ -3,21 +3,13 @@ package Entity;
 import Game.Plateau;
 import Utils.Direction;
 import Utils.Position;
-import javafx.geometry.Pos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
-public abstract class Ghost extends Personnage{
-    int gridx;
-    int gridy;
-
-    int pac_prev_gridx;
-    int pac_prev_gridy;
-    private Direction prevdir = Direction.LEFT;
+public abstract class Ghost extends Personnage {
+    ArrayList<Position> path;
 
     public Ghost(double x, double y, double baseSpeed) {
         super(x, y, baseSpeed);
@@ -25,169 +17,142 @@ public abstract class Ghost extends Personnage{
 
     public abstract void AI();
 
-    public void move(Pacman pac, Plateau plat) {
+    int curx = -1;
+    int cury = -1;
+    public Direction getDirectionAccordingToPath(ArrayList<Position> path) {
 
-        if (    (int) getGridPos().getX() == gridx || (int) getGridPos().getY() == gridy ||
-                (int) getGridPos().getX() != gridx || (int) getGridPos().getY() != gridy) {
-        //if (true) {
-            pac_prev_gridx = (int) pac.getGridPos().getX();
-            pac_prev_gridy = (int) pac.getGridPos().getY();
-
-            gridx = (int) getGridPos().getX();
-            gridy = (int) getGridPos().getY();
-
-            gridx %= plat.getLargeur();
-            gridy %= plat.getHauteur();
-
-            plat.getCell(gridx, gridy);
-            ArrayList<Direction> possibles = new ArrayList<>();
-
-            if ( gridx-1 >= 0 &&  !(plat.getCell(gridx-1, gridy) instanceof Wall))
-                possibles.add(Direction.LEFT);
-            if (gridx+1 < plat.getLargeur() && !(plat.getCell(gridx+1, gridy) instanceof Wall))
-                possibles.add(Direction.RIGHT);
-            if (gridy+1 < plat.getHauteur() && !(plat.getCell(gridx, gridy+1) instanceof Wall))
-                possibles.add(Direction.UP);
-            if (gridy-1 >= 0 && !(plat.getCell(gridx, gridy-1) instanceof Wall))
-                possibles.add(Direction.DOWN);
-
-/*            switch (getDir()) {
-                case UP:
-                    if (gridy+2 < plat.getHauteur() && !(plat.getCell(gridx, gridy+2) instanceof Wall))
-                        possibles.add(Direction.UP);
-                    if (gridy+1 < plat.getHauteur() && gridx-1 >= 0 && !(plat.getCell(gridx-1, gridy+1) instanceof Wall))
-                        possibles.add(Direction.LEFT);
-                    if (gridy+1 < plat.getHauteur() && gridx+1 < plat.getLargeur() && !(plat.getCell(gridx+1, gridy+1) instanceof Wall))
-                        possibles.add(Direction.RIGHT);
-                    break;
-                case DOWN:
-                    if (gridy-2 >= 0 && !(plat.getCell(gridx, gridy-2) instanceof Wall))
-                        possibles.add(Direction.DOWN);
-                    if (gridy-1 >= 0 && gridx-1 >= 0 && !(plat.getCell(gridx-1, gridy-1) instanceof Wall))
-                        possibles.add(Direction.LEFT);
-                    if (gridy-1 >= 0 && gridx+1 < plat.getLargeur() && !(plat.getCell(gridx+1, gridy-1) instanceof Wall))
-                        possibles.add(Direction.RIGHT);
-                    break;
-                case LEFT:
-                    if (gridx-2 >= 0 && !(plat.getCell(gridx-2, gridy) instanceof Wall))
-                        possibles.add(Direction.LEFT);
-                    if (gridy+1 < plat.getHauteur() && gridx-1 >= 0 && !(plat.getCell(gridx-1, gridy+1) instanceof Wall))
-                        possibles.add(Direction.UP);
-                    if (gridy-1 >= 0 && gridx-1 >= 0 && !(plat.getCell(gridx-1, gridy-1) instanceof Wall))
-                        possibles.add(Direction.DOWN);
-                    break;
-                case RIGHT:
-                    if (gridx+2 < plat.getLargeur() && !(plat.getCell(gridx+2, gridy) instanceof Wall))
-                        possibles.add(Direction.RIGHT);
-                    if (gridy+1 < plat.getHauteur() && gridx+1 >= plat.getLargeur() && !(plat.getCell(gridx+1, gridy+1) instanceof Wall))
-                        possibles.add(Direction.UP);
-                    if (gridy-1 >= 0 && gridx+1 >= plat.getLargeur() && !(plat.getCell(gridx+1, gridy-1) instanceof Wall))
-                        possibles.add(Direction.DOWN);
-                    break;
-            }*/
-
-            if (possibles.size() < 1)
-                return;
-
-            System.out.println();
-
-            Direction best = mostLikely(plat);
-
-            for (Direction d : possibles)
-                System.out.println(d);
-
-            if (possibles.contains(best)) {
-                changeDir(best);
-                System.out.println("\t-> " + best);
-                return;
-            }
-            changeDir(possibles.get( (int) Math.random()*possibles.size() ));
-
+        if (curx == -1 || cury == -1) {
+            curx = (int) getGridPos().getX();
+            cury = (int) getGridPos().getY();
         }
-    }
-    private Direction mostLikely(Plateau p) {
-        /*double dx = p.getPos().getX() - getPos().getX();
-        double dy = p.getPos().getY() - getPos().getY();
 
-        if (Math.abs(dy) >= Math.abs(dx)) {
-            if (dy >= 0)
-                return Direction.DOWN;
-            return Direction.UP;
+        /*System.out.print(getGridPos());
+        for (int i = path.size() - 1; i > 0; i--) {
+            System.out.println(" -> [" + path.get(i) + "]");
         }
-        if (Math.abs(dx) >= Math.abs(dy)) {
-            if (dx >= 0)
+        System.out.println();*/
+
+        if ((curx != getPos().getX() || cury != getPos().getY()) && path.size() > 0) {
+            int p0x = (int) path.get(path.size() - 1).getX();
+            int p0y = (int) path.get(path.size() - 1).getY();
+
+            curx = (int) getGridPos().getX();
+            cury = (int) getGridPos().getY();
+
+            if (curx > p0x && getDir() != Direction.RIGHT)
+                return Direction.LEFT;
+            if (curx < p0x && getDir() != Direction.LEFT)
                 return Direction.RIGHT;
-            return Direction.LEFT;
-        }*/
-        ArrayList<Position> path = bestPath(new Position(1, 1), new Position(4, 4), p);
-
-        for (Position pos : path)
-            System.out.println(pos);
-
+            if (cury > p0y && getDir() != Direction.DOWN)
+                return Direction.UP;
+            if (cury < p0y && getDir() != Direction.UP)
+                return Direction.DOWN;
+        }
         return getDir();
     }
 
-    public ArrayList<Position> bestPath(Position start, Position dest, Plateau p) {
-        System.out.println();
-        Position current = start.copy();
-        ArrayList<Position> tested = new ArrayList<>();
-        tested.add(current);
-        ArrayList<Position> neighbours;
+    public void draw(GraphicsContext gc) {
+        double curx = getPos().getX() + getHitbox()[0] / 2;
+        double cury = getPos().getY() + getHitbox()[1] / 2;
 
+        /*gc.setFill(Color.RED);
+        switch (getDir()) {
+            case LEFT:
+                gc.fillOval(curx - 20, cury, 10, 10);
+                break;
+            case RIGHT:
+                gc.fillOval(curx + 20, cury, 10, 10);
+                break;
+            case DOWN:
+                gc.fillOval(curx, cury + 20, 10, 10);
+                break;
+            case UP:
+                gc.fillOval(curx, cury - 20, 10, 10);
+                break;
+        }*/
+    }
+
+    public ArrayList<Position> BreadthFirst(Position start, Position end, Plateau plat) {
+        ArrayList<Position> frontier = new ArrayList<>();
+        frontier.add(start);
+
+        ArrayList<Position> came_from_from = new ArrayList<>();
+        ArrayList<Position> came_from_to = new ArrayList<>();
+
+        Position current;
+
+        Plateau platCpy = plat.simpleCopy();
+        int curx = (int) getGridPos().getX();
+        int cury = (int) getGridPos().getY();
+        switch (getDir()) {
+            case UP:
+                platCpy.setCell(new Wall(platCpy.getCell(curx, cury + 1).getPos().getX(), platCpy.getCell(curx, cury + 1).getPos().getY()), curx, cury + 1);
+                break;
+            case DOWN:
+                platCpy.setCell(new Wall(platCpy.getCell(curx, cury - 1).getPos().getX(), platCpy.getCell(curx, cury - 1).getPos().getY()), curx, cury - 1);
+                break;
+            case LEFT:
+                platCpy.setCell(new Wall(platCpy.getCell(curx + 1, cury).getPos().getX(), platCpy.getCell(curx + 1, cury).getPos().getY()), curx + 1, cury);
+                break;
+            case RIGHT:
+                platCpy.setCell(new Wall(platCpy.getCell(curx - 1, cury).getPos().getX(), platCpy.getCell(curx - 1, cury).getPos().getY()), curx - 1, cury);
+                break;
+        }
+
+        while (frontier.size() > 0) {
+            current = frontier.get(0);
+            frontier.remove(0);
+
+            if (current.equals(end))
+                break;
+
+            for (Position next : getNeighbours(current, platCpy)) {
+                if (!in(came_from_to, next)) {
+                    frontier.add(next);
+                    came_from_to.add(next.copy());
+                    came_from_from.add(current.copy());
+                }
+            }
+        }
+
+        current = end;
         ArrayList<Position> path = new ArrayList<>();
-
-        while (((int) current.getX() != (int) dest.getX()) && ((int) current.getY() != (int) dest.getY())) {
-            //System.out.println(current);
-            neighbours = new ArrayList<>();
-            int gridx = (int) current.getX();
-            int gridy = (int) current.getY();
-
-            if ( gridx-1 >= 0 &&  !(p.getCell(gridx-1, gridy) instanceof Wall))
-                neighbours.add(new Position(gridx-1, gridy));
-            if (gridx+1 < p.getLargeur() && !(p.getCell(gridx+1, gridy) instanceof Wall))
-                neighbours.add(new Position(gridx+1, gridy));
-            if (gridy+1 < p.getHauteur() && !(p.getCell(gridx, gridy+1) instanceof Wall))
-                neighbours.add(new Position(gridx, gridy+1));
-            if (gridy-1 >= 0 && !(p.getCell(gridx, gridy-1) instanceof Wall))
-                neighbours.add(new Position(gridx, gridy-1));
-
-            int bestIdx = 0;
-            int best = -1;
-
-            if (neighbours.size() == 1) {
-                path.add(neighbours.get(0).copy());
-                current = neighbours.get(0).copy();
-                continue;
-            }
-
-            for (int i = 0; i < neighbours.size(); i++) {
-                if (in(tested, neighbours.get(i).copy())) {
-                    continue;
-                }
-                int score = Math.abs((int) dest.getX() - (int)neighbours.get(i).getX()) + Math.abs((int) dest.getY() - (int)neighbours.get(i).getX());
-                if (score < best || best == -1) {
-                    bestIdx = i;
-                    best = score;
-                }
-            }
-
-            for (int i = 0; i < neighbours.size(); i++) {
-                if (i != bestIdx) {
-                    tested.add(neighbours.get(i).copy());
-                    //for (Position tpos : tested)
-                        //System.out.println("\t" + tpos);
-                }
-            }
-            current = neighbours.get(bestIdx).copy();
+        while (!current.equals(start)) {
             path.add(current.copy());
+            if (index(came_from_to, current) == -1)
+                return new ArrayList<>();
+            current = came_from_from.get(index(came_from_to, current));
         }
         return path;
     }
 
+    private ArrayList<Position> getNeighbours(Position current, Plateau plat) {
+        ArrayList<Position> ret = new ArrayList<>();
+        int curx = (int) current.getX();
+        int cury = (int) current.getY();
+        if (curx - 1 >= 0 && !(plat.getCell(curx - 1, cury) instanceof Wall))
+            ret.add(new Position(curx - 1, cury));
+        if (cury - 1 >= 0 && !(plat.getCell(curx, cury - 1) instanceof Wall))
+            ret.add(new Position(curx, cury - 1));
+        if (curx + 1 < plat.getLargeur() && !(plat.getCell(curx + 1, cury) instanceof Wall))
+            ret.add(new Position(curx + 1, cury));
+        if (cury + 1 < plat.getHauteur() && !(plat.getCell(curx, cury + 1) instanceof Wall))
+            ret.add(new Position(curx, cury + 1));
+        return ret;
+    }
+
     private boolean in(ArrayList<Position> a, Position b) {
         for (Position p : a)
-            if (p.getX() == b.getX() && p.getY() == b.getY())
+            if (b != null && p.equals(b))
                 return true;
         return false;
+    }
+
+    private int index(ArrayList<Position> a, Position b) {
+        for (int i = 0; i < a.size(); i++) {
+            if (a.get(i).equals(b))
+                return i;
+        }
+        return -1;
     }
 }

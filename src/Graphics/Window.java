@@ -212,7 +212,7 @@ public class Window extends Application {
                     if (!menu.get() && sound && !chomp.isPlaying())
                         chomp.play();
 
-                    if (!menu.get()) {
+                    if (!menu.get() && deltaTime < 1_000_000_000/5) {
                         partie.getPacman().changeDir(dir);
                         partie.tick(deltaTime);
                     }
@@ -233,8 +233,14 @@ public class Window extends Application {
                         e.draw(gc);
                         //e.drawHitbox(gc);
 
-                        if (e instanceof Ghost)
-                            ((Ghost) e).move(partie.getPacman(), partie.getPlateau());
+                        if (e instanceof Inky)
+                            ((Inky) e).move(partie.getPacman(), partie.getPlateau());
+                        if (e instanceof Pinky)
+                            ((Pinky) e).move(partie.getPacman(), partie.getPlateau());
+                        if (e instanceof Blinky)
+                            ((Blinky) e).move(partie.getPacman(), partie.getPlateau());
+                        if (e instanceof Clyde)
+                            ((Clyde) e).move(partie.getPacman(), partie.getPlateau());
 
                     }
                     gc.setFill(Color.WHITE);
@@ -264,14 +270,18 @@ public class Window extends Application {
 
         pop.getChildren().add(main);
 
-        Image blueWall = new Image("img/wall/blue/Wall-blue-Block.png", 1.0*SCENE_WIDTH/6, 1.0*SCENE_HEIGHT/6, false, false);
-        ImageView ivBlueWall = new ImageView(blueWall);
 
-        popVbox.getChildren().add(ivBlueWall);
 
         double width = 1.0*SCENE_WIDTH/6;
         double height = 1.0*SCENE_HEIGHT/6;
 
+        Image back = new Image("img/back.png", 100, 100, false, false);
+        ImageView ivBack = new ImageView(back);
+        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
+
+        Image blueWall = new Image("img/wall/blue/Wall-blue-Block.png", 1.0*SCENE_WIDTH/6, 1.0*SCENE_HEIGHT/6, false, false);
+        ImageView ivBlueWall = new ImageView(blueWall);
+        popVbox.getChildren().add(ivBlueWall);
         ivBlueWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("blue");
             wallsColor = "blue";
@@ -280,9 +290,7 @@ public class Window extends Application {
 
         Image greenWall = new Image("img/wall/green/Wall-green-Block.png", width, height, false, false);
         ImageView ivGreenWall = new ImageView(greenWall);
-
         popVbox.getChildren().add(ivGreenWall);
-
         ivGreenWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("green");
             wallsColor = "green";
@@ -291,9 +299,7 @@ public class Window extends Application {
 
         Image orangeWall = new Image("img/wall/orange/Wall-orange-Block.png", width, height, false, false);
         ImageView ivorangeWall = new ImageView(orangeWall);
-
         popVbox.getChildren().add(ivorangeWall);
-
         ivorangeWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("orange");
             wallsColor = "orange";
@@ -302,9 +308,7 @@ public class Window extends Application {
 
         Image purpleWall = new Image("img/wall/purple/Wall-purple-Block.png", width, height, false, false);
         ImageView ivpurpleWall = new ImageView(purpleWall);
-
         popVbox.getChildren().add(ivpurpleWall);
-
         ivpurpleWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("purple");
             wallsColor = "purple";
@@ -313,9 +317,7 @@ public class Window extends Application {
 
         Image redWall = new Image("img/wall/red/Wall-red-Block.png", width, height, false, false);
         ImageView ivredWall = new ImageView(redWall);
-
         popVbox.getChildren().add(ivredWall);
-
         ivredWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("red");
             wallsColor = "red";
@@ -324,9 +326,7 @@ public class Window extends Application {
 
         Image yellowWall = new Image("img/wall/yellow/Wall-yellow-Block.png", width, height, false, false);
         ImageView ivyellowWall = new ImageView(yellowWall);
-
         popVbox.getChildren().add(ivyellowWall);
-
         ivyellowWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("yellow");
             wallsColor = "yellow";
@@ -334,14 +334,14 @@ public class Window extends Application {
         });
 
         pop.getChildren().add(popVbox);
+        ivBack.setY(1.0*SCENE_HEIGHT - 100);
+        pop.getChildren().add(ivBack);
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(popUp);
         stage.show();
     }
 
     public void settings(Stage stage) {
-        Button back = new Button("Back");
-        back.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
 
         Image soundOn = new Image("img/son-on.png", 200, 100, false, false);
         ImageView ivSoundOn = new ImageView(soundOn);
@@ -355,6 +355,11 @@ public class Window extends Application {
         ivSoundOff.setX(1.0*SCENE_WIDTH/2 - 100);
         ivSoundOff.setY(1.0*SCENE_HEIGHT/4);
 
+        Image back = new Image("img/back.png", 100, 100, false, false);
+        ImageView ivBack = new ImageView(back);
+        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
+        ivBack.setY(1.0*SCENE_HEIGHT - 100);
+
         Group root = new Group();
         Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
         main.getGraphicsContext2D().setFill(Color.BLACK);
@@ -362,7 +367,7 @@ public class Window extends Application {
 
         root.getChildren().add(main);
         root.getChildren().add(ivSoundOn);
-        root.getChildren().add(back);
+        root.getChildren().add(ivBack);
 
         ivSoundOn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             sound = false;

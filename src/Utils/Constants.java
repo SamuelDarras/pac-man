@@ -29,7 +29,7 @@ public class Constants {
         ITEM_DEFAULT_HEIGHT = PERSONNAGE_HEIGHT / 4;
         PACMAN_SPEED      = 1.0*SCENE_WIDTH/400;
 
-        GHOST_SPEED       = PACMAN_SPEED * .9;
+        GHOST_SPEED       = PACMAN_SPEED * .5;
     }
 
     public static int FRUIT_SIZE = 2;
