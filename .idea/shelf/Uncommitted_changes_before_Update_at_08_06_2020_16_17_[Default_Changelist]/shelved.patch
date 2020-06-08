@@ -1,0 +1,419 @@
+Index: src/Graphics/Window.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package Graphics;\r\n\r\nimport Entity.*;\r\n\r\nimport Game.Partie;\r\nimport Utils.Direction;\r\nimport com.sun.prism.Graphics;\r\nimport javafx.animation.Animation;\r\nimport javafx.animation.AnimationTimer;\r\nimport javafx.animation.TranslateTransition;\r\nimport javafx.application.Application;\r\nimport javafx.geometry.Pos;\r\nimport javafx.scene.Group;\r\nimport javafx.scene.Scene;\r\nimport javafx.scene.canvas.Canvas;\r\nimport javafx.scene.canvas.GraphicsContext;\r\nimport javafx.scene.control.Button;\r\nimport javafx.scene.image.Image;\r\nimport javafx.scene.image.ImageView;\r\nimport javafx.scene.input.MouseEvent;\r\nimport javafx.scene.layout.HBox;\r\nimport javafx.scene.layout.VBox;\r\nimport javafx.scene.media.AudioClip;\r\nimport javafx.scene.paint.Color;\r\nimport javafx.scene.text.Text;\r\nimport javafx.stage.Stage;\r\nimport javafx.util.Duration;\r\n\r\nimport java.nio.file.Paths;\r\nimport java.util.concurrent.atomic.AtomicBoolean;\r\n\r\nimport static Utils.Constants.*;\r\n\r\npublic class Window extends Application {\r\n    public Stage currentStage;\r\n\r\n    Direction dir = Direction.RIGHT;\r\n    String wallsColor = \"blue\";\r\n    boolean sound = true;\r\n\r\n    Partie partie;\r\n\r\n    double margin = 1.1;\r\n\r\n    public static void main(String[] args) {\r\n        launch(args);\r\n    }\r\n\r\n    @Override\r\n    public void start(Stage stage) {\r\n\r\n        stage.setTitle(\"pac man\");\r\n\r\n        final Group root = new Group();\r\n\r\n        Canvas canvas = new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin);\r\n        GraphicsContext gc = canvas.getGraphicsContext2D();\r\n        root.getChildren().add(canvas);\r\n\r\n        Image img = new Image(\"img/menu1Animate.png\", SCENE_WIDTH, SCENE_HEIGHT, false, false);\r\n        ImageView iv = new ImageView(img);\r\n        root.getChildren().add(iv);\r\n\r\n        Image fantomes = new Image(\"img/fantomes.png\", 350, 150, false, false);\r\n        ImageView ivFtmes = new ImageView(fantomes);\r\n        ivFtmes.preserveRatioProperty();\r\n        ivFtmes.setX(-375);\r\n        ivFtmes.setY(SCENE_HEIGHT - SCENE_HEIGHT/6.0);\r\n\r\n        TranslateTransition transition = new TranslateTransition();\r\n        transition.setDuration(Duration.seconds(6));\r\n        transition.setToX(1200);\r\n        transition.setToY(0);\r\n        transition.setAutoReverse(false);\r\n        transition.setCycleCount(Animation.INDEFINITE);\r\n        transition.setNode(ivFtmes);\r\n        transition.play();\r\n\r\n        root.getChildren().add(ivFtmes);\r\n\r\n        iv.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> menu(stage));\r\n\r\n        Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT * margin, Color.BLACK);\r\n\r\n        scene.setOnKeyPressed(event -> {\r\n            switch (event.getCode()) {\r\n                case UP:\r\n                    dir = Direction.UP;\r\n                    break;\r\n                case RIGHT:\r\n                    dir = Direction.RIGHT;\r\n                    break;\r\n                case DOWN:\r\n                    dir = Direction.DOWN;\r\n                    break;\r\n                case LEFT:\r\n                    dir = Direction.LEFT;\r\n                    break;\r\n                default:\r\n                    break;\r\n            }\r\n        });\r\n\r\n        currentStage = stage;\r\n        stage.setScene(scene);\r\n\r\n//        AudioClip son = Window.openAudio(\"src/music/pacman_beginning.wav\");\r\n//       son.play();\r\n\r\n        stage.setResizable(true);\r\n        stage.show();\r\n    }\r\n\r\n    public void menu(Stage stage) {\r\n        partie = null;\r\n        Image demo = new Image(\"img/demo.png\",300,100,false,false);\r\n        System.out.println(demo.getUrl());\r\n        ImageView ivDemo = new ImageView(demo);\r\n        ivDemo.preserveRatioProperty();\r\n\r\n        Image mdj = new Image(\"img/mdj.png\",700,100,false,false);\r\n        ImageView ivMdj = new ImageView(mdj);\r\n        ivDemo.preserveRatioProperty();\r\n\r\n        Image custo = new Image(\"img/custo.png\",700,100,false,false);\r\n        ImageView ivCusto = new ImageView(custo);\r\n        ivDemo.preserveRatioProperty();\r\n\r\n        Image options = new Image(\"img/options.png\",500,100,false,false);\r\n        ImageView ivOption = new ImageView(options);\r\n        ivDemo.preserveRatioProperty();\r\n\r\n        Group root = new Group();\r\n\r\n        VBox vbox=new VBox();\r\n        vbox.setSpacing(50.);\r\n        vbox.setAlignment(Pos.TOP_CENTER);\r\n        vbox.getChildren().addAll(ivDemo,ivMdj,ivCusto,ivOption);\r\n\r\n        Canvas c = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);\r\n        GraphicsContext bg = c.getGraphicsContext2D();\r\n        Image image = new Image(\"img/bg.png\");\r\n        bg.drawImage(image, 0, 0, SCENE_WIDTH,SCENE_HEIGHT*margin);\r\n\r\n        root.getChildren().add(c);\r\n        root.getChildren().add(vbox);\r\n\r\n        ivDemo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> jeu(stage));\r\n\r\n        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.out.println(\"mdj\"));\r\n\r\n        ivCusto.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> custo(stage));\r\n\r\n        ivOption.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> settings(stage));\r\n\r\n\r\n\r\n        stage.setScene(new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin));\r\n    }\r\n\r\n    public void finJeu(Stage stage){\r\n        Image retour = new Image(\"img/back.png\",300,200,false,false);\r\n        ImageView ivRetour = new ImageView(retour);\r\n\r\n        Image bg = new Image(\"img/bgBlack.png\",700,800,false,false);\r\n        ImageView ivbg = new ImageView(bg);\r\n\r\n        Image text = new Image(\"img/lose.png\",1300,1500,false,false);\r\n        ImageView ivtext = new ImageView(text);\r\n\r\n        Group root = new Group();\r\n\r\n        ivRetour.setY(1.0*SCENE_HEIGHT - 100);\r\n\r\n        VBox vbox=new VBox();\r\n        vbox.getChildren().addAll(ivRetour, ivtext);\r\n\r\n        root.getChildren().addAll(ivbg, vbox);\r\n\r\n        ivRetour.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> menu(stage));\r\n\r\n        stage.setScene(new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin));\r\n    }\r\n\r\n    public void jeu(Stage stage) {\r\n        AtomicBoolean menu = new AtomicBoolean(false);\r\n        final Group root = new Group();\r\n\r\n        Canvas canvas = new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin);\r\n        GraphicsContext gc = canvas.getGraphicsContext2D();\r\n        root.getChildren().add(canvas);\r\n        Scene scene = new Scene(root);\r\n        scene.setOnKeyPressed(event -> {\r\n            switch (event.getCode()) {\r\n                case UP:\r\n                    dir = Direction.UP;\r\n                    break;\r\n                case RIGHT:\r\n                    dir = Direction.RIGHT;\r\n                    break;\r\n                case DOWN:\r\n                    dir = Direction.DOWN;\r\n                    break;\r\n                case LEFT:\r\n                    dir = Direction.LEFT;\r\n                    break;\r\n                case ESCAPE:\r\n                    menu.set(!menu.get());\r\n                    break;\r\n                default:\r\n                    break;\r\n            }\r\n        });\r\n\r\n        stage.setScene(scene);\r\n\r\n        try {\r\n            partie = new Partie(\"src/levels/test.txt\", wallsColor, this);\r\n            new AnimationTimer() {\r\n                long prevtime;\r\n                long deltaTime;\r\n\r\n\r\n\r\n                AudioClip chomp = Window.openAudio(\"src/music/pacman_chomp.wav\");\r\n\r\n                public void handle(long currentNanoTime) {\r\n                    if (partie.getPacman().getLife() <= 0) {\r\n                        this.stop();\r\n                        finJeu(stage);\r\n                    }\r\n\r\n                    deltaTime = currentNanoTime - prevtime;\r\n\r\n                    if (!menu.get() && sound && !chomp.isPlaying())\r\n                        chomp.play();\r\n\r\n                    if (!menu.get() && deltaTime < 1_000_000_000/5) {\r\n                        partie.getPacman().changeDir(dir);\r\n                        partie.tick(deltaTime);\r\n                    }\r\n\r\n                    drawShapes(gc);\r\n\r\n                    if (menu.get())\r\n                        drawMenu(gc);\r\n\r\n                    prevtime = currentNanoTime;\r\n                }\r\n\r\n                public void drawShapes(GraphicsContext gc) {\r\n                    gc.setFill(Color.BLACK);\r\n                    gc.fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT * margin);\r\n\r\n                    for (Entity e : partie.getPlateau().getPlateau()) {\r\n                        e.draw(gc);\r\n                        //e.drawHitbox(gc);\r\n\r\n                        if (e instanceof Inky)\r\n                            ((Inky) e).move(partie.getPacman(), partie.getPlateau());\r\n                        if (e instanceof Pinky)\r\n                            ((Pinky) e).move(partie.getPacman(), partie.getPlateau());\r\n                        if (e instanceof Blinky)\r\n                            ((Blinky) e).move(partie.getPacman(), partie.getPlateau());\r\n                        if (e instanceof Clyde)\r\n                            ((Clyde) e).move(partie.getPacman(), partie.getPlateau());\r\n\r\n                    }\r\n                    gc.setFill(Color.WHITE);\r\n                    gc.fillText(\"Score : \" + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);\r\n                }\r\n                public void drawMenu(GraphicsContext gc) {\r\n                    gc.setFill(new Color(0, 0, 0, .5));\r\n                    gc.fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT);\r\n                    gc.setFill(Color.WHITE);\r\n                    gc.fillText(\"Pause\", (1.0*SCENE_WIDTH-50)/2, 1.0*SCENE_HEIGHT/2, 200);\r\n                }\r\n            }.start();\r\n\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    public void custo(Stage stage) {\r\n        HBox popVbox=new HBox();\r\n\r\n        Group pop = new Group();\r\n\r\n        Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);\r\n        main.getGraphicsContext2D().setFill(Color.BLACK);\r\n        main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);\r\n\r\n        pop.getChildren().add(main);\r\n\r\n\r\n\r\n        double width = 1.0*SCENE_WIDTH/6;\r\n        double height = 1.0*SCENE_HEIGHT/6;\r\n\r\n        Image back = new Image(\"img/back.png\", 100, 100, false, false);\r\n        ImageView ivBack = new ImageView(back);\r\n        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));\r\n\r\n        Image blueWall = new Image(\"img/wall/blue/Wall-blue-Block.png\", 1.0*SCENE_WIDTH/6, 1.0*SCENE_HEIGHT/6, false, false);\r\n        ImageView ivBlueWall = new ImageView(blueWall);\r\n        popVbox.getChildren().add(ivBlueWall);\r\n        ivBlueWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {\r\n            System.out.println(\"blue\");\r\n            wallsColor = \"blue\";\r\n            menu(stage);\r\n        });\r\n\r\n        Image greenWall = new Image(\"img/wall/green/Wall-green-Block.png\", width, height, false, false);\r\n        ImageView ivGreenWall = new ImageView(greenWall);\r\n        popVbox.getChildren().add(ivGreenWall);\r\n        ivGreenWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {\r\n            System.out.println(\"green\");\r\n            wallsColor = \"green\";\r\n            menu(stage);\r\n        });\r\n\r\n        Image orangeWall = new Image(\"img/wall/orange/Wall-orange-Block.png\", width, height, false, false);\r\n        ImageView ivorangeWall = new ImageView(orangeWall);\r\n        popVbox.getChildren().add(ivorangeWall);\r\n        ivorangeWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {\r\n            System.out.println(\"orange\");\r\n            wallsColor = \"orange\";\r\n            menu(stage);\r\n        });\r\n\r\n        Image purpleWall = new Image(\"img/wall/purple/Wall-purple-Block.png\", width, height, false, false);\r\n        ImageView ivpurpleWall = new ImageView(purpleWall);\r\n        popVbox.getChildren().add(ivpurpleWall);\r\n        ivpurpleWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {\r\n            System.out.println(\"purple\");\r\n            wallsColor = \"purple\";\r\n            menu(stage);\r\n        });\r\n\r\n        Image redWall = new Image(\"img/wall/red/Wall-red-Block.png\", width, height, false, false);\r\n        ImageView ivredWall = new ImageView(redWall);\r\n        popVbox.getChildren().add(ivredWall);\r\n        ivredWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {\r\n            System.out.println(\"red\");\r\n            wallsColor = \"red\";\r\n            menu(stage);\r\n        });\r\n\r\n        Image yellowWall = new Image(\"img/wall/yellow/Wall-yellow-Block.png\", width, height, false, false);\r\n        ImageView ivyellowWall = new ImageView(yellowWall);\r\n        popVbox.getChildren().add(ivyellowWall);\r\n        ivyellowWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {\r\n            System.out.println(\"yellow\");\r\n            wallsColor = \"yellow\";\r\n            menu(stage);\r\n        });\r\n\r\n        pop.getChildren().add(popVbox);\r\n        ivBack.setY(1.0*SCENE_HEIGHT - 100);\r\n        pop.getChildren().add(ivBack);\r\n        Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);\r\n        stage.setScene(popUp);\r\n        stage.show();\r\n    }\r\n\r\n    public void settings(Stage stage) {\r\n\r\n        Image soundOn = new Image(\"img/son-on.png\", 200, 100, false, false);\r\n        ImageView ivSoundOn = new ImageView(soundOn);\r\n        ivSoundOn.preserveRatioProperty();\r\n        ivSoundOn.setX(1.0*SCENE_WIDTH/2 - 100);\r\n        ivSoundOn.setY(1.0*SCENE_HEIGHT/4);\r\n\r\n        Image soundOff = new Image(\"img/son-off.png\", 200, 100, false, false);\r\n        ImageView ivSoundOff = new ImageView(soundOff);\r\n        ivSoundOff.preserveRatioProperty();\r\n        ivSoundOff.setX(1.0*SCENE_WIDTH/2 - 100);\r\n        ivSoundOff.setY(1.0*SCENE_HEIGHT/4);\r\n\r\n        Image back = new Image(\"img/back.png\", 100, 100, false, false);\r\n        ImageView ivBack = new ImageView(back);\r\n        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));\r\n        ivBack.setY(1.0*SCENE_HEIGHT - 100);\r\n\r\n        Group root = new Group();\r\n        Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);\r\n        main.getGraphicsContext2D().setFill(Color.BLACK);\r\n        main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);\r\n\r\n        root.getChildren().add(main);\r\n        root.getChildren().add(ivSoundOn);\r\n        root.getChildren().add(ivBack);\r\n\r\n        ivSoundOn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {\r\n            sound = false;\r\n            root.getChildren().add(ivSoundOff);\r\n            root.getChildren().remove(ivSoundOn);\r\n        });\r\n\r\n        ivSoundOff.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {\r\n            sound = true;\r\n\r\n            root.getChildren().add(ivSoundOn);\r\n            root.getChildren().remove(ivSoundOff);\r\n        });\r\n\r\n        stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));\r\n    }\r\n\r\n    public static AudioClip openAudio(String path) {\r\n        return new AudioClip(Paths.get(path).toUri().toString());\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/Graphics/Window.java	(revision 4756fdb0e857008ff3bf2e8e7d61817894416a45)
++++ src/Graphics/Window.java	(date 1591625685863)
+@@ -22,10 +22,10 @@
+ import javafx.scene.layout.VBox;
+ import javafx.scene.media.AudioClip;
+ import javafx.scene.paint.Color;
+-import javafx.scene.text.Text;
+ import javafx.stage.Stage;
+ import javafx.util.Duration;
+ 
++import javax.swing.*;
+ import java.nio.file.Paths;
+ import java.util.concurrent.atomic.AtomicBoolean;
+ 
+@@ -36,6 +36,7 @@
+ 
+     Direction dir = Direction.RIGHT;
+     String wallsColor = "blue";
++    String levelPath ="src/levels/test.txt";
+     boolean sound = true;
+ 
+     Partie partie;
+@@ -49,7 +50,7 @@
+     @Override
+     public void start(Stage stage) {
+ 
+-        stage.setTitle("pac man");
++        stage.setTitle("toto");
+ 
+         final Group root = new Group();
+ 
+@@ -107,7 +108,7 @@
+ //        AudioClip son = Window.openAudio("src/music/pacman_beginning.wav");
+ //       son.play();
+ 
+-        stage.setResizable(true);
++        stage.setResizable(false);
+         stage.show();
+     }
+ 
+@@ -147,7 +148,7 @@
+ 
+         ivDemo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> jeu(stage));
+ 
+-        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.out.println("mdj"));
++        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> select(stage));
+ 
+         ivCusto.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> custo(stage));
+ 
+@@ -158,30 +159,6 @@
+         stage.setScene(new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin));
+     }
+ 
+-    public void finJeu(Stage stage){
+-        Image retour = new Image("img/back.png",300,200,false,false);
+-        ImageView ivRetour = new ImageView(retour);
+-
+-        Image bg = new Image("img/bgBlack.png",700,800,false,false);
+-        ImageView ivbg = new ImageView(bg);
+-
+-        Image text = new Image("img/lose.png",1300,1500,false,false);
+-        ImageView ivtext = new ImageView(text);
+-
+-        Group root = new Group();
+-
+-        ivRetour.setY(1.0*SCENE_HEIGHT - 100);
+-
+-        VBox vbox=new VBox();
+-        vbox.getChildren().addAll(ivRetour, ivtext);
+-
+-        root.getChildren().addAll(ivbg, vbox);
+-
+-        ivRetour.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> menu(stage));
+-
+-        stage.setScene(new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin));
+-    }
+-
+     public void jeu(Stage stage) {
+         AtomicBoolean menu = new AtomicBoolean(false);
+         final Group root = new Group();
+@@ -215,7 +192,7 @@
+         stage.setScene(scene);
+ 
+         try {
+-            partie = new Partie("src/levels/test.txt", wallsColor, this);
++            partie = new Partie(levelPath, wallsColor, this);
+             new AnimationTimer() {
+                 long prevtime;
+                 long deltaTime;
+@@ -227,7 +204,7 @@
+                 public void handle(long currentNanoTime) {
+                     if (partie.getPacman().getLife() <= 0) {
+                         this.stop();
+-                        finJeu(stage);
++                        menu(stage);
+                     }
+ 
+                     deltaTime = currentNanoTime - prevtime;
+@@ -235,7 +212,7 @@
+                     if (!menu.get() && sound && !chomp.isPlaying())
+                         chomp.play();
+ 
+-                    if (!menu.get() && deltaTime < 1_000_000_000/5) {
++                    if (!menu.get()) {
+                         partie.getPacman().changeDir(dir);
+                         partie.tick(deltaTime);
+                     }
+@@ -256,14 +233,8 @@
+                         e.draw(gc);
+                         //e.drawHitbox(gc);
+ 
+-                        if (e instanceof Inky)
+-                            ((Inky) e).move(partie.getPacman(), partie.getPlateau());
+-                        if (e instanceof Pinky)
+-                            ((Pinky) e).move(partie.getPacman(), partie.getPlateau());
+-                        if (e instanceof Blinky)
+-                            ((Blinky) e).move(partie.getPacman(), partie.getPlateau());
+-                        if (e instanceof Clyde)
+-                            ((Clyde) e).move(partie.getPacman(), partie.getPlateau());
++                        if (e instanceof Ghost)
++                            ((Ghost) e).move(partie.getPacman(), partie.getPlateau());
+ 
+                     }
+                     gc.setFill(Color.WHITE);
+@@ -293,18 +264,14 @@
+ 
+         pop.getChildren().add(main);
+ 
+-
+-
+-        double width = 1.0*SCENE_WIDTH/6;
+-        double height = 1.0*SCENE_HEIGHT/6;
+-
+-        Image back = new Image("img/back.png", 100, 100, false, false);
+-        ImageView ivBack = new ImageView(back);
+-        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
+-
+         Image blueWall = new Image("img/wall/blue/Wall-blue-Block.png", 1.0*SCENE_WIDTH/6, 1.0*SCENE_HEIGHT/6, false, false);
+         ImageView ivBlueWall = new ImageView(blueWall);
++
+         popVbox.getChildren().add(ivBlueWall);
++
++        double width = 1.0*SCENE_WIDTH/6;
++        double height = 1.0*SCENE_HEIGHT/6;
++
+         ivBlueWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+             System.out.println("blue");
+             wallsColor = "blue";
+@@ -313,7 +280,9 @@
+ 
+         Image greenWall = new Image("img/wall/green/Wall-green-Block.png", width, height, false, false);
+         ImageView ivGreenWall = new ImageView(greenWall);
++
+         popVbox.getChildren().add(ivGreenWall);
++
+         ivGreenWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+             System.out.println("green");
+             wallsColor = "green";
+@@ -322,7 +291,9 @@
+ 
+         Image orangeWall = new Image("img/wall/orange/Wall-orange-Block.png", width, height, false, false);
+         ImageView ivorangeWall = new ImageView(orangeWall);
++
+         popVbox.getChildren().add(ivorangeWall);
++
+         ivorangeWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+             System.out.println("orange");
+             wallsColor = "orange";
+@@ -331,7 +302,9 @@
+ 
+         Image purpleWall = new Image("img/wall/purple/Wall-purple-Block.png", width, height, false, false);
+         ImageView ivpurpleWall = new ImageView(purpleWall);
++
+         popVbox.getChildren().add(ivpurpleWall);
++
+         ivpurpleWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+             System.out.println("purple");
+             wallsColor = "purple";
+@@ -340,7 +313,9 @@
+ 
+         Image redWall = new Image("img/wall/red/Wall-red-Block.png", width, height, false, false);
+         ImageView ivredWall = new ImageView(redWall);
++
+         popVbox.getChildren().add(ivredWall);
++
+         ivredWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+             System.out.println("red");
+             wallsColor = "red";
+@@ -349,7 +324,9 @@
+ 
+         Image yellowWall = new Image("img/wall/yellow/Wall-yellow-Block.png", width, height, false, false);
+         ImageView ivyellowWall = new ImageView(yellowWall);
++
+         popVbox.getChildren().add(ivyellowWall);
++
+         ivyellowWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+             System.out.println("yellow");
+             wallsColor = "yellow";
+@@ -357,14 +334,14 @@
+         });
+ 
+         pop.getChildren().add(popVbox);
+-        ivBack.setY(1.0*SCENE_HEIGHT - 100);
+-        pop.getChildren().add(ivBack);
+         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
+         stage.setScene(popUp);
+         stage.show();
+     }
+ 
+     public void settings(Stage stage) {
++        Button back = new Button("Back");
++        back.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
+ 
+         Image soundOn = new Image("img/son-on.png", 200, 100, false, false);
+         ImageView ivSoundOn = new ImageView(soundOn);
+@@ -378,11 +355,6 @@
+         ivSoundOff.setX(1.0*SCENE_WIDTH/2 - 100);
+         ivSoundOff.setY(1.0*SCENE_HEIGHT/4);
+ 
+-        Image back = new Image("img/back.png", 100, 100, false, false);
+-        ImageView ivBack = new ImageView(back);
+-        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
+-        ivBack.setY(1.0*SCENE_HEIGHT - 100);
+-
+         Group root = new Group();
+         Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
+         main.getGraphicsContext2D().setFill(Color.BLACK);
+@@ -390,7 +362,7 @@
+ 
+         root.getChildren().add(main);
+         root.getChildren().add(ivSoundOn);
+-        root.getChildren().add(ivBack);
++        root.getChildren().add(back);
+ 
+         ivSoundOn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+             sound = false;
+@@ -407,6 +379,53 @@
+ 
+         stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
+     }
++    public void select(Stage stage) {
++        VBox popVbox=new VBox();
++
++        Group pop = new Group();
++
++        Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
++        main.getGraphicsContext2D().setFill(Color.BLACK);
++        main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);
++
++        pop.getChildren().add(main);
++
++        Button back = new Button("Back");
++        back.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
++
++        Button blvl1 = new Button("Level 1");
++        popVbox.getChildren().add(blvl1);
++
++        blvl1.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
++            System.out.println("level 1");
++            levelPath="src/levels/level1V2.txt";
++            menu(stage);
++        });
++
++        Button blvl1Pres = new Button("Level 1 Presentation");
++        popVbox.getChildren().add(blvl1Pres);
++
++        blvl1Pres.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
++            System.out.println("level 1 Pres");
++            levelPath="src/levels/level1Pres.txt";
++            menu(stage);
++        });
++
++        Button blvl2Pres = new Button("Level 2 Presentation");
++        popVbox.getChildren().add(blvl2Pres);
++
++        blvl2Pres.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
++            System.out.println("level 2 Pres");
++            levelPath="src/levels/level2Pres.txt";
++            menu(stage);
++        });
++
++
++        pop.getChildren().add(popVbox);
++        Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
++        stage.setScene(popUp);
++        stage.show();
++    }
+ 
+     public static AudioClip openAudio(String path) {
+         return new AudioClip(Paths.get(path).toUri().toString());
+Index: src/Entity/Ghost.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package Entity;\r\n\r\nimport Game.Plateau;\r\nimport Utils.Direction;\r\nimport Utils.Position;\r\nimport javafx.scene.canvas.GraphicsContext;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.Random;\r\n\r\npublic abstract class Ghost extends Personnage {\r\n    ArrayList<Position> path;\r\n\r\n    public Ghost(double x, double y, double baseSpeed) {\r\n        super(x, y, baseSpeed);\r\n    }\r\n\r\n    int curx = -1;\r\n    int cury = -1;\r\n    public Direction getDirectionAccordingToPath(ArrayList<Position> path) {\r\n\r\n        if (curx == -1 || cury == -1) {\r\n            curx = (int) getGridPos().getX();\r\n            cury = (int) getGridPos().getY();\r\n        }\r\n\r\n        if ((curx != getPos().getX() || cury != getPos().getY()) && path.size() > 0) {\r\n            int p0x = (int) path.get(path.size() - 1).getX();\r\n            int p0y = (int) path.get(path.size() - 1).getY();\r\n\r\n            curx = (int) getGridPos().getX();\r\n            cury = (int) getGridPos().getY();\r\n\r\n            if (curx > p0x && getDir() != Direction.RIGHT)\r\n                return Direction.LEFT;\r\n            if (curx < p0x && getDir() != Direction.LEFT)\r\n                return Direction.RIGHT;\r\n            if (cury > p0y && getDir() != Direction.DOWN)\r\n                return Direction.UP;\r\n            if (cury < p0y && getDir() != Direction.UP)\r\n                return Direction.DOWN;\r\n        }\r\n        return getDir();\r\n    }\r\n\r\n    public void draw(GraphicsContext gc) {\r\n    }\r\n\r\n    public void move(Pacman pac, Plateau plat) {\r\n        if (pac.superPacman) {\r\n            int x = (int) (Math.random()*plat.getLargeur());\r\n            int y = (int) (Math.random()*plat.getLargeur());\r\n            while (plat.getCell(x, y) instanceof Wall) {\r\n                x = (int) (Math.random()*plat.getLargeur());\r\n                y = (int) (Math.random()*plat.getHauteur());\r\n                System.out.println(\"\" + x + \" ; \" + y);\r\n            }\r\n            Position gotoPos = new Position(x, y);\r\n\r\n            path.addAll(BreadthFirst(getGridPos(), gotoPos, plat));\r\n\r\n            Direction n_dir = getDirectionAccordingToPath(path);\r\n            changeDir(n_dir);\r\n        }\r\n    }\r\n\r\n    public ArrayList<Position> BreadthFirst(Position start, Position end, Plateau plat) {\r\n        ArrayList<Position> frontier = new ArrayList<>();\r\n        frontier.add(start);\r\n\r\n        ArrayList<Position> came_from_from = new ArrayList<>();\r\n        ArrayList<Position> came_from_to = new ArrayList<>();\r\n\r\n        Position current;\r\n\r\n        Plateau platCpy = plat.simpleCopy();\r\n        int curx = (int) getGridPos().getX();\r\n        int cury = (int) getGridPos().getY();\r\n        switch (getDir()) {\r\n            case UP:\r\n                platCpy.setCell(new Wall(platCpy.getCell(curx, cury + 1).getPos().getX(), platCpy.getCell(curx, cury + 1).getPos().getY()), curx, cury + 1);\r\n                break;\r\n            case DOWN:\r\n                platCpy.setCell(new Wall(platCpy.getCell(curx, cury - 1).getPos().getX(), platCpy.getCell(curx, cury - 1).getPos().getY()), curx, cury - 1);\r\n                break;\r\n            case LEFT:\r\n                platCpy.setCell(new Wall(platCpy.getCell(curx + 1, cury).getPos().getX(), platCpy.getCell(curx + 1, cury).getPos().getY()), curx + 1, cury);\r\n                break;\r\n            case RIGHT:\r\n                platCpy.setCell(new Wall(platCpy.getCell(curx - 1, cury).getPos().getX(), platCpy.getCell(curx - 1, cury).getPos().getY()), curx - 1, cury);\r\n                break;\r\n        }\r\n\r\n        while (frontier.size() > 0) {\r\n            current = frontier.get(0);\r\n            frontier.remove(0);\r\n\r\n            if (current.equals(end))\r\n                break;\r\n\r\n            for (Position next : getNeighbours(current, platCpy)) {\r\n                if (!in(came_from_to, next)) {\r\n                    frontier.add(next);\r\n                    came_from_to.add(next.copy());\r\n                    came_from_from.add(current.copy());\r\n                }\r\n            }\r\n        }\r\n\r\n        current = end;\r\n        ArrayList<Position> path = new ArrayList<>();\r\n        while (!current.equals(start)) {\r\n            path.add(current.copy());\r\n            if (index(came_from_to, current) == -1)\r\n                return new ArrayList<>();\r\n            current = came_from_from.get(index(came_from_to, current));\r\n        }\r\n        return path;\r\n    }\r\n\r\n    private ArrayList<Position> getNeighbours(Position current, Plateau plat) {\r\n        ArrayList<Position> ret = new ArrayList<>();\r\n        int curx = (int) current.getX();\r\n        int cury = (int) current.getY();\r\n        if (curx - 1 >= 0 && !(plat.getCell(curx - 1, cury) instanceof Wall))\r\n            ret.add(new Position(curx - 1, cury));\r\n        if (cury - 1 >= 0 && !(plat.getCell(curx, cury - 1) instanceof Wall))\r\n            ret.add(new Position(curx, cury - 1));\r\n        if (curx + 1 < plat.getLargeur() && !(plat.getCell(curx + 1, cury) instanceof Wall))\r\n            ret.add(new Position(curx + 1, cury));\r\n        if (cury + 1 < plat.getHauteur() && !(plat.getCell(curx, cury + 1) instanceof Wall))\r\n            ret.add(new Position(curx, cury + 1));\r\n        return ret;\r\n    }\r\n\r\n    private boolean in(ArrayList<Position> a, Position b) {\r\n        for (Position p : a)\r\n            if (b != null && p.equals(b))\r\n                return true;\r\n        return false;\r\n    }\r\n\r\n    private int index(ArrayList<Position> a, Position b) {\r\n        for (int i = 0; i < a.size(); i++) {\r\n            if (a.get(i).equals(b))\r\n                return i;\r\n        }\r\n        return -1;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/Entity/Ghost.java	(revision 4756fdb0e857008ff3bf2e8e7d61817894416a45)
++++ src/Entity/Ghost.java	(date 1591624708388)
+@@ -11,6 +11,8 @@
+ public abstract class Ghost extends Personnage {
+     ArrayList<Position> path;
+ 
++    Position definedDestination;
++
+     public Ghost(double x, double y, double baseSpeed) {
+         super(x, y, baseSpeed);
+     }
+@@ -43,10 +45,20 @@
+         return getDir();
+     }
+ 
++    public void go(Position pos) {
++        definedDestination = pos.copy();
++    }
++
+     public void draw(GraphicsContext gc) {
+     }
+ 
+     public void move(Pacman pac, Plateau plat) {
++        if (definedDestination != null) {
++            path.addAll(BreadthFirst(getGridPos(), definedDestination, plat));
++
++            Direction n_dir = getDirectionAccordingToPath(path);
++            changeDir(n_dir);
++        }
+         if (pac.superPacman) {
+             int x = (int) (Math.random()*plat.getLargeur());
+             int y = (int) (Math.random()*plat.getLargeur());
+Index: src/Game/Plateau.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package Game;\r\n\r\nimport Entity.*;\r\nimport javafx.scene.image.Image;\r\n\r\nimport java.io.BufferedReader;\r\nimport java.io.FileReader;\r\n\r\nimport static Utils.Constants.*;\r\n\r\npublic class Plateau {\r\n    String wallsColor = \"blue\";\r\n    int idxFruit = 0;\r\n    int larg;\r\n    int haut;\r\n\r\n    Pacman pacman;\r\n\r\n    Entity[] plateau;\r\n\r\n    private Plateau() {}\r\n    public Plateau(String levelPath, String wallsColor) throws Exception {\r\n            this.wallsColor = wallsColor;\r\n        remplirPlateau(levelPath);\r\n    }\r\n\r\n    public void remplirPlateau(String levelPath) throws Exception {\r\n        BufferedReader read = new BufferedReader(new FileReader(levelPath));\r\n        String t = read.readLine();\r\n        String[] lst = t.split(\"[. ]\");\r\n\r\n        haut = Integer.parseInt(lst[0]);\r\n        larg = Integer.parseInt(lst[1]);\r\n\r\n        System.out.print(haut);\r\n        System.out.println(\"; \" + larg);\r\n\r\n        Init(larg, haut);\r\n\r\n        plateau = new Entity[larg * haut];\r\n        double x;\r\n        double y;\r\n        for (int i = 0; i < haut; i++) {\r\n            t = read.readLine();\r\n            for (int j = 0; j < larg; j++) {\r\n                x = j * 1.0 * SCENE_WIDTH  / getLargeur();\r\n                y = i * 1.0 * SCENE_HEIGHT / getHauteur();\r\n                switch (t.charAt(j)) {\r\n                    case '1':\r\n                        plateau[larg * i + j] = new Wall(x, y);\r\n                        break;\r\n                    case 'p':\r\n                        plateau[larg * i + j] = new PacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 4 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 4 / 2);\r\n                        break;\r\n                    case 's':\r\n                        plateau[larg * i + j] = new SuperPacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 2 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 2 / 2);\r\n                        break;\r\n                    case 'I':\r\n                        plateau[larg * i + j] = new Inky(x, y, GHOST_SPEED);\r\n                        break;\r\n                    case 'P':\r\n                        plateau[larg * i + j] = new Pinky(x, y, GHOST_SPEED);\r\n                        break;\r\n                    case 'B':\r\n                        plateau[larg * i + j] = new Blinky(x, y, GHOST_SPEED);\r\n                        break;\r\n                    case 'C':\r\n                        plateau[larg * i + j] = new Clyde(x, y, GHOST_SPEED);\r\n                        break;\r\n                    case 'M':\r\n                        pacman = new Pacman(x, y, PACMAN_SPEED);\r\n                        plateau[larg * i + j] = pacman;\r\n                        break;\r\n                    default:\r\n                        plateau[larg * i + j] = new Entity(x, y, 1, 1);\r\n                        break;\r\n                }\r\n\r\n            }\r\n\r\n        }\r\n\r\n        setWalls(\"blue\");\r\n\r\n        /*int[] parsedLst = new int[lst.length];\r\n        for (int i = 0; i < parsedLst.length; i++) {\r\n            parsedLst[i] = Integer.parseInt(lst[i]);\r\n        }*/\r\n\r\n//        idxFruit = parsedLst[12] * larg + parsedLst[13];\r\n\r\n        read.close();\r\n    }\r\n\r\n    public void setWalls(String color) {\r\n        for (int i = 0; i < plateau.length; i++) {\r\n            if (plateau[i] instanceof Wall){\r\n                ((Wall) plateau[i]).setImg(defineWallImage(\r\n                        (i + 1 < plateau.length && (i + 1)/larg == i/larg) ? plateau[i + 1] : new Entity(0, 0, 0, 0),\r\n                        i - larg >= 0 ? plateau[i - larg] : new Entity(0, 0, 0, 0),\r\n                        (i - 1 >= 0 && (i - 1)/larg == i/larg) ? plateau[i - 1] : new Entity(0, 0, 0, 0),\r\n                        i + larg < plateau.length ? plateau[i + larg] : new Entity(0, 0, 0, 0)\r\n                ));\r\n            }\r\n        }\r\n    }\r\n\r\n    public Entity[] getPlateau() {\r\n        return plateau;\r\n    }\r\n\r\n    public Entity getCell(int x, int y) {\r\n        int idx = (x%larg + y * larg)%getPlateau().length;\r\n        if (idx < 0)\r\n            idx = 0;\r\n        return getPlateau()[idx];\r\n    }\r\n    public void setCell(Entity e, int x, int y) {\r\n        int idx = (x%larg + y * larg)%getPlateau().length;\r\n        plateau[idx] = e;\r\n    }\r\n\r\n    private Image defineWallImage(Entity E, Entity N, Entity W, Entity S) {\r\n        Image img = null;\r\n        \r\n        if ((E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-T-down.png\");\r\n        if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-T-up.png\");\r\n        if (!(E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-T-left.png\");\r\n        if ((E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-T-right.png\");\r\n\r\n        if (!(E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-End-right.png\");\r\n        if (!(E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-End-down.png\");\r\n        if ((E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-End-left.png\");\r\n        if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-End-up.png\");\r\n\r\n        if (!(E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-Vertical.png\");\r\n        if ((E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-Horizontal.png\");\r\n\r\n        if (!(E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && !(S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-Corner-bottom-right.png\");\r\n        if ((E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-Corner-bottom-left.png\");\r\n        if ((E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-Corner-top-left.png\");\r\n        if (!(E instanceof Wall) && !(N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-Corner-top-right.png\");\r\n\r\n        if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))\r\n            img = new Image(\"img/wall/\"+wallsColor+\"/Wall-\"+wallsColor+\"-T-full.png\");\r\n\r\n        return img;\r\n    }\r\n\r\n    public int getLargeur() {\r\n        return larg;\r\n    }\r\n\r\n    public int getHauteur() {\r\n        return haut;\r\n    }\r\n\r\n    public Pacman getPacman() {\r\n        return pacman;\r\n    }\r\n\r\n    public int getIdxFruit() {\r\n        return idxFruit;\r\n    }\r\n\r\n    public Plateau simpleCopy() {\r\n        Plateau ret = new Plateau();\r\n        ret.plateau = this.plateau.clone();\r\n        ret.larg = this.larg;\r\n        ret.haut = this.haut;\r\n\r\n        return ret;\r\n    }\r\n\r\n    public void remove(Entity ent) {\r\n        for (int i = 0; i < plateau.length; i++) {\r\n            if (plateau[i] == ent) {\r\n                plateau[i] = new Entity(plateau[i].getPos(), plateau[i].getHitbox());\r\n                return;\r\n            }\r\n        }\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/Game/Plateau.java	(revision 4756fdb0e857008ff3bf2e8e7d61817894416a45)
++++ src/Game/Plateau.java	(date 1591624708389)
+@@ -1,6 +1,7 @@
+ package Game;
+ 
+ import Entity.*;
++import Utils.Position;
+ import javafx.scene.image.Image;
+ 
+ import java.io.BufferedReader;
+@@ -14,6 +15,8 @@
+     int larg;
+     int haut;
+ 
++    Position house = new Position(0, 0);
++
+     Pacman pacman;
+ 
+     Entity[] plateau;
+@@ -71,6 +74,8 @@
+                         pacman = new Pacman(x, y, PACMAN_SPEED);
+                         plateau[larg * i + j] = pacman;
+                         break;
++                    case 'H':
++                        house = new Position(j, i);
+                     default:
+                         plateau[larg * i + j] = new Entity(x, y, 1, 1);
+                         break;
+@@ -195,4 +200,7 @@
+         }
+     }
+ 
++    public Position getHouse() {
++        return house;
++    }
+ }
+\ No newline at end of file
+Index: .idea/pacman.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"JAVA_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\">\r\n    <output url=\"file://$MODULE_DIR$/out\" />\r\n    <output-test url=\"file://$MODULE_DIR$/testOut\" />\r\n    <exclude-output />\r\n    <content url=\"file://$MODULE_DIR$\">\r\n      <sourceFolder url=\"file://$MODULE_DIR$/src\" isTestSource=\"false\" />\r\n      <sourceFolder url=\"file://$MODULE_DIR$/test\" isTestSource=\"true\" />\r\n      <excludeFolder url=\"file://$MODULE_DIR$/out\" />\r\n      <excludeFolder url=\"file://$MODULE_DIR$/testOut\" />\r\n    </content>\r\n    <orderEntry type=\"inheritedJdk\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n    <orderEntry type=\"library\" name=\"lib\" level=\"project\" />\r\n  </component>\r\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/pacman.iml	(revision 4756fdb0e857008ff3bf2e8e7d61817894416a45)
++++ .idea/pacman.iml	(date 1591625685862)
+@@ -12,6 +12,6 @@
+     </content>
+     <orderEntry type="inheritedJdk" />
+     <orderEntry type="sourceFolder" forTests="false" />
+-    <orderEntry type="library" name="lib" level="project" />
++    <orderEntry type="library" exported="" name="lib" level="project" />
+   </component>
+ </module>
+\ No newline at end of file
+Index: src/Entity/Pacman.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package Entity;\r\n\r\nimport Utils.*;\r\nimport Game.*;\r\nimport javafx.scene.canvas.GraphicsContext;\r\nimport javafx.scene.image.Image;\r\n\r\n\r\n\r\npublic class Pacman extends Personnage{\r\n    private int life = 3;\r\n\r\n    private Position originalPos;\r\n\r\n    private static final Image imR = new Image(\"img/pacManR.png\");\r\n    private static final Image imD = new Image(\"img/pacManD.png\", false);\r\n    private static final Image imL = new Image(\"img/pacManL.png\", false);\r\n    private static final Image imU = new Image(\"img/pacManU.png\", false);\r\n\r\n\tboolean superPacman = false;\r\n\r\n\tpublic Pacman(double x, double y, double speed){\r\n\t    super(x, y, speed);\r\n        originalPos = new Position(x, y);\r\n    }\r\n\r\n\tpublic boolean isDead(Plateau p){\r\n        for (Entity e : p.getPlateau()) {\r\n            if (e instanceof Ghost && e.hit(this)) {\r\n                life--;\r\n                return true;\r\n            }\r\n        }\r\n        return false;\r\n\t}\r\n\r\n\tpublic void resetPos() {\r\n\t    setPos(originalPos);\r\n    }\r\n\r\n\tpublic int getLife() { return life; }\r\n\r\n\tpublic void manger(Partie partie){\r\n        for (Entity e : partie.getPlateau().getPlateau()) {\r\n            if(e instanceof Items && e.hit(this)) {\r\n                if (e instanceof SuperPacGomme) {\r\n                    superPacman = true;\r\n                }\r\n                partie.scoreAdd(((Items) e).getScore());\r\n                partie.getPlateau().remove(e);\r\n            }\r\n        }\r\n    }\r\n\r\n    public void draw(GraphicsContext gc) {\r\n        double x = getPos().getX();\r\n        double y = getPos().getY();\r\n\r\n\t    switch (getDir()) {\r\n            case RIGHT:\r\n                gc.drawImage(imR, x, y, Constants.PERSONNAGE_WIDTH, Constants.PERSONNAGE_HEIGHT);\r\n                break;\r\n            case LEFT:\r\n                gc.drawImage(imL, x, y, Constants.PERSONNAGE_WIDTH, Constants.PERSONNAGE_HEIGHT);\r\n                break;\r\n            case UP:\r\n                gc.drawImage(imU, x, y, Constants.PERSONNAGE_WIDTH, Constants.PERSONNAGE_HEIGHT);\r\n                break;\r\n            case DOWN:\r\n                gc.drawImage(imD, x, y, Constants.PERSONNAGE_WIDTH, Constants.PERSONNAGE_HEIGHT);\r\n                break;\r\n            default:\r\n                break;\r\n        }\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/Entity/Pacman.java	(revision 4756fdb0e857008ff3bf2e8e7d61817894416a45)
++++ src/Entity/Pacman.java	(date 1591624708388)
+@@ -27,7 +27,10 @@
+ 	public boolean isDead(Plateau p){
+         for (Entity e : p.getPlateau()) {
+             if (e instanceof Ghost && e.hit(this)) {
+-                life--;
++                if (!superPacman)
++                    life--;
++                else
++                    ((Ghost) e).go(p.getHouse());
+                 return true;
+             }
+         }
