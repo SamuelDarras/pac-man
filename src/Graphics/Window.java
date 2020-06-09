@@ -50,7 +50,7 @@ public class Window extends Application {
     @Override
     public void start(Stage stage) {
 
-        stage.setTitle("toto");
+        stage.setTitle("pac man");
 
         final Group root = new Group();
 
@@ -221,7 +221,7 @@ public class Window extends Application {
 
                     if (partie.getPacman().getLife() <= 0) {
                         this.stop();
-                        menu(stage);
+                        finJeu(stage);
                     }
                     deltaTime = currentNanoTime - prevtime;
 
@@ -354,6 +354,31 @@ public class Window extends Application {
         pop.getChildren().add(popVbox);
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(popUp);
+        stage.show();
+    }
+
+    public void finJeu(Stage stage){
+        Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
+        ImageView ivBg = new ImageView(bg);
+
+        Image backButton = new Image("img/back.png", 1.0*SCENE_WIDTH/6, 1.0*SCENE_HEIGHT/6, false, false);
+        ImageView ivBackButton = new ImageView(backButton);
+
+        Image msg = new Image("img/lose.png", 500, 200, false, false);
+        ImageView ivMsg = new ImageView(msg);
+
+        VBox vbox = new VBox();
+        vbox.getChildren().addAll(ivBackButton,ivMsg);
+
+        Group root = new Group();
+        root.getChildren().addAll(ivBg,vbox);
+
+        ivBackButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            menu(stage);
+        });
+
+        Scene fin = new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin);
+        stage.setScene(fin);
         stage.show();
     }
 
