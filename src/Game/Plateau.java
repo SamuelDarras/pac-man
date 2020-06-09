@@ -1,17 +1,21 @@
 package Game;
 
 import Entity.*;
+import Utils.Constants;
 import Utils.Position;
 import javafx.scene.image.Image;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static Utils.Constants.*;
 
 public class Plateau {
     String wallsColor = "blue";
-    int idxFruit = 0;
+    List<Integer> idxFruit;
     int larg;
     int haut;
 
@@ -39,7 +43,7 @@ public class Plateau {
         System.out.println("; " + larg);
 
         Init(larg, haut);
-
+        idxFruit = new ArrayList<>();
         plateau = new Entity[larg * haut];
         double x;
         double y;
@@ -76,6 +80,10 @@ public class Plateau {
                         break;
                     case 'H':
                         house = new Position(j, i);
+                        break;
+                    case'F':
+                        plateau[larg * i + j] = new Entity(x, y, 1, 1);
+                        idxFruit.add(larg * i + j);
                     default:
                         plateau[larg * i + j] = new Entity(x, y, 1, 1);
                         break;
@@ -178,7 +186,7 @@ public class Plateau {
         return pacman;
     }
 
-    public int getIdxFruit() {
+    public List<Integer> getIdxFruit() {
         return idxFruit;
     }
 
@@ -202,5 +210,21 @@ public class Plateau {
 
     public Position getHouse() {
         return house;
+    }
+
+    public void setFruit(){
+        for (Integer integer : idxFruit) {
+            if (!(plateau[integer] instanceof Fruit)) {
+                Random random = new Random();
+                int temp = random.nextInt(Constants.FRUIT_NAME.length);
+                String typeFruit = Constants.FRUIT_NAME[temp];
+                int score = Constants.FRUIT_SCORE[temp];
+                double x = plateau[integer].getPos().getX();
+                double y = plateau[integer].getPos().getY();
+                plateau[integer] = new Fruit(score, x, y, typeFruit);
+                System.out.println("img/" + typeFruit + ".png");
+                ((Fruit) plateau[integer]).setImg(new Image("img/" + typeFruit + ".png"));
+            }
+        }
     }
 }

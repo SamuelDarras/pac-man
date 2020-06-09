@@ -27,6 +27,7 @@ import javafx.util.Duration;
 
 import javax.swing.*;
 import java.nio.file.Paths;
+import java.time.LocalTime;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static Utils.Constants.*;
@@ -38,7 +39,6 @@ public class Window extends Application {
     String wallsColor = "blue";
     String levelPath ="";
     boolean sound = true;
-
     Partie partie;
 
     double margin = 1.1;
@@ -115,7 +115,7 @@ public class Window extends Application {
     public void menu(Stage stage) {
         partie = null;
 
-        Image jouer = new Image("img/0001_pacman.png",300,100,false,false);
+        Image jouer = new Image("img/jouer.png",300,100,false,false);
         ImageView ivJouer = new ImageView(jouer);
         ivJouer.preserveRatioProperty();
 
@@ -172,10 +172,13 @@ public class Window extends Application {
     public void jeu(Stage stage) {
         AtomicBoolean menu = new AtomicBoolean(false);
         final Group root = new Group();
+        final LocalTime ltDebut = LocalTime.now();
 
-        Canvas canvas = new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        root.getChildren().add(canvas);
+
+
+        final Canvas[] canvas = {new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin)};
+        GraphicsContext gc = canvas[0].getGraphicsContext2D();
+        root.getChildren().add(canvas[0]);
         Scene scene = new Scene(root);
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -203,20 +206,23 @@ public class Window extends Application {
 
         try {
             partie = new Partie(levelPath, wallsColor, this);
+
             new AnimationTimer() {
                 long prevtime;
                 long deltaTime;
 
 
-
                 AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
 
                 public void handle(long currentNanoTime) {
+                    LocalTime ltnow = LocalTime.now();
+                    int timer = (ltnow.getSecond()+ltnow.getMinute()*60+ltnow.getHour()*3600)-(ltDebut.getSecond()+ltDebut.getMinute()*60+ltDebut.getHour()*3600);
+                    System.out.println(timer);
+
                     if (partie.getPacman().getLife() <= 0) {
                         this.stop();
                         menu(stage);
                     }
-
                     deltaTime = currentNanoTime - prevtime;
 
                     if (!menu.get() && sound && !chomp.isPlaying())
@@ -225,6 +231,9 @@ public class Window extends Application {
                     if (!menu.get()) {
                         partie.getPacman().changeDir(dir);
                         partie.tick(deltaTime);
+                    }
+                    if(timer%10==0){
+                        partie.getPlateau().setFruit();
                     }
 
                     drawShapes(gc);
@@ -238,7 +247,6 @@ public class Window extends Application {
                 public void drawShapes(GraphicsContext gc) {
                     gc.setFill(Color.BLACK);
                     gc.fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT * margin);
-
                     for (Entity e : partie.getPlateau().getPlateau()) {
                         e.draw(gc);
                         //e.drawHitbox(gc);

@@ -26,13 +26,15 @@ public class Constants {
         PERSONNAGE_HEIGHT = ((double) SCENE_HEIGHT / (double) haut) * .99;
 
         ITEM_DEFAULT_WIDTH  =  PERSONNAGE_WIDTH / 4;
-        ITEM_DEFAULT_HEIGHT = PERSONNAGE_HEIGHT / 4;
+        ITEM_DEFAULT_HEIGHT =  PERSONNAGE_HEIGHT / 4;
         PACMAN_SPEED      = 1.0*SCENE_WIDTH/400;
 
         GHOST_SPEED       = PACMAN_SPEED * .5;
     }
 
-    public static int FRUIT_SIZE = 2;
+    public static int FRUIT_SIZE = 30;
+    public static String[] FRUIT_NAME = {"cherry","strawberry", "orange", "apple"};
+    public static int[] FRUIT_SCORE = {100,300,500,700};
 
 
 }
