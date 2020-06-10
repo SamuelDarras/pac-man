@@ -380,22 +380,13 @@ public class Window extends Application {
     }
 
     public void finJeu(Stage stage){
-        Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
-        ImageView ivBg = new ImageView(bg);
-
-        Image backButton = new Image("img/back.png", 1.0*SCENE_WIDTH/6, 1.0*SCENE_HEIGHT/6, false, false);
-        ImageView ivBackButton = new ImageView(backButton);
-
-        Image msg = new Image("img/lose.png", 500, 200, false, false);
+        Image msg = new Image("img/lose.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivMsg = new ImageView(msg);
 
-        VBox vbox = new VBox();
-        vbox.getChildren().addAll(ivBackButton,ivMsg);
-
         Group root = new Group();
-        root.getChildren().addAll(ivBg,vbox);
+        root.getChildren().addAll(ivMsg);
 
-        ivBackButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+        ivMsg.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             menu(stage);
         });
 
