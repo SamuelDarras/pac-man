@@ -24,9 +24,12 @@ public class Blinky extends Ghost {
       gc.drawImage(img, getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);
   }
 
-  public void move(Pacman pac, Plateau p) {
-    path = BreadthFirst(getGridPos(), pac.getGridPos(), p);
-    changeDir(getDirectionAccordingToPath(path));
-    super.move(pac, p);
+  public void tick(Pacman pac, Plateau p) {
+    if (!pac.superPacman) {
+
+      path = BreadthFirst(getGridPos(), pac.getGridPos(), p);
+      changeDir(getDirectionAccordingToPath(path));
+    }
+    changeDir(super.alterDirection(pac, p));
   }
 }

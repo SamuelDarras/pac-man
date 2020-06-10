@@ -27,11 +27,13 @@ public class Pacman extends Personnage{
 	public boolean isDead(Plateau p){
         for (Entity e : p.getPlateau()) {
             if (e instanceof Ghost && e.hit(this)) {
-                if (!superPacman)
+                if (!superPacman) {
                     life--;
-                else
+                    return true;
+                } else {
                     ((Ghost) e).go(p.getHouse());
-                return true;
+                    return false;
+                }
             }
         }
         return false;

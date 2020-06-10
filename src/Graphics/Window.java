@@ -249,11 +249,6 @@ public class Window extends Application {
                     gc.fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT * margin);
                     for (Entity e : partie.getPlateau().getPlateau()) {
                         e.draw(gc);
-                        //e.drawHitbox(gc);
-
-                        if (e instanceof Ghost)
-                            ((Ghost) e).move(partie.getPacman(), partie.getPlateau());
-
                     }
                     gc.setFill(Color.WHITE);
                     gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);

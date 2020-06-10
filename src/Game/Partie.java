@@ -3,6 +3,8 @@ package Game;
 
 import Entity.*;
 import Graphics.Window;
+import Utils.Direction;
+import com.sun.javafx.scene.control.SelectedItemsReadOnlyObservableList;
 
 public class Partie {
     private Score score;
@@ -26,8 +28,23 @@ public class Partie {
         }
         pacman.manger(this);
         for (Entity e : pla.getPlateau()) {
-            if (e instanceof Ghost)
-                ((Ghost) e).move(dt / 10000000.0, pla);
+            if (e instanceof Pinky) {
+                ((Pinky) e).tick(this.getPacman(), this.getPlateau());
+                ((Pinky) e).move(dt / 10000000.0, pla);
+            }
+            if (e instanceof Inky) {
+                ((Inky) e).tick(this.getPacman(), this.getPlateau());
+                ((Inky) e).move(dt / 10000000.0, pla);
+            }
+            if (e instanceof Clyde) {
+                ((Clyde) e).tick(this.getPacman(), this.getPlateau());
+                ((Clyde) e).move(dt / 10000000.0, pla);
+            }
+            if (e instanceof Blinky) {
+                ((Blinky) e).tick(this.getPacman(), this.getPlateau());
+                ((Blinky) e).move(dt / 10000000.0, pla);
+            }
+
         }
     }
 

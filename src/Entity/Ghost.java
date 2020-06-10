@@ -21,17 +21,13 @@ public abstract class Ghost extends Personnage {
     int cury = -1;
     public Direction getDirectionAccordingToPath(ArrayList<Position> path) {
 
-        if (curx == -1 || cury == -1) {
-            curx = (int) getGridPos().getX();
-            cury = (int) getGridPos().getY();
-        }
 
-        if ((curx != getPos().getX() || cury != getPos().getY()) && path.size() > 0) {
+        if (path.size() > 0) {
             int p0x = (int) path.get(path.size() - 1).getX();
             int p0y = (int) path.get(path.size() - 1).getY();
 
-            curx = (int) getGridPos().getX();
-            cury = (int) getGridPos().getY();
+            int curx = (int) getGridPos().getX();
+            int cury = (int) getGridPos().getY();
 
             if (curx > p0x && getDir() != Direction.RIGHT)
                 return Direction.LEFT;
@@ -50,30 +46,6 @@ public abstract class Ghost extends Personnage {
     }
 
     public void draw(GraphicsContext gc) {
-    }
-
-    public void move(Pacman pac, Plateau plat) {
-        if (definedDestination != null) {
-            path.addAll(BreadthFirst(getGridPos(), definedDestination, plat));
-
-            Direction n_dir = getDirectionAccordingToPath(path);
-            changeDir(n_dir);
-        }
-        if (pac.superPacman) {
-            int x = (int) (Math.random()*plat.getLargeur());
-            int y = (int) (Math.random()*plat.getLargeur());
-            while (plat.getCell(x, y) instanceof Wall) {
-                x = (int) (Math.random()*plat.getLargeur());
-                y = (int) (Math.random()*plat.getHauteur());
-                System.out.println("" + x + " ; " + y);
-            }
-            Position gotoPos = new Position(x, y);
-
-            path.addAll(BreadthFirst(getGridPos(), gotoPos, plat));
-
-            Direction n_dir = getDirectionAccordingToPath(path);
-            changeDir(n_dir);
-        }
     }
 
     public ArrayList<Position> BreadthFirst(Position start, Position end, Plateau plat) {
@@ -158,5 +130,34 @@ public abstract class Ghost extends Personnage {
                 return i;
         }
         return -1;
+    }
+
+    public Direction alterDirection(Pacman pac, Plateau plat) {
+        if (curx == -1 || cury == -1) {
+            curx = (int) getGridPos().getX();
+            cury = (int) getGridPos().getY();
+        }
+
+        System.out.println(getGridPos());
+        System.out.println(new Position(curx, cury));
+        if (pac.superPacman && !getGridPos().equals(new Position(curx, cury))) {
+            curx = (int) getGridPos().getX();
+            cury = (int) getGridPos().getY();
+            int x = (int)(Math.random()*plat.getLargeur());
+            int y = (int)(Math.random()*plat.getHauteur());
+            while (plat.getCell(x, y) instanceof Wall || Math.abs(x - (int) pac.getGridPos().getX()) < 4 || Math.abs(y - (int) pac.getGridPos().getY()) < 4 || getGridPos().equals(new Position(x, y))) {
+                x = (int)(Math.random()*plat.getLargeur());
+                y = (int)(Math.random()*plat.getHauteur());
+            }
+            return getDirectionAccordingToPath(BreadthFirst(getGridPos(), new Position(x, y), plat));
+        }
+        if (definedDestination != null) {
+            if (getGridPos().equals(definedDestination)) {
+                definedDestination = null;
+                return getDir();
+            }
+            return getDirectionAccordingToPath(BreadthFirst(getGridPos(), definedDestination, plat));
+        }
+        return getDir();
     }
 }

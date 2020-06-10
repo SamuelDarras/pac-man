@@ -22,21 +22,23 @@ public class Clyde extends Ghost {
       gc.drawImage(img, getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);
   }
 
-  public void move(Pacman pac, Plateau p) {
-    int xoff = 0;
-    int yoff = 0;
+  public void tick(Pacman pac, Plateau p) {
+    if (!pac.superPacman) {
+      int xoff = 0;
+      int yoff = 0;
 
-    int curpac_x = (int) pac.getGridPos().getX();
-    int curpac_y = (int) pac.getGridPos().getY();
+      int curpac_x = (int) pac.getGridPos().getX();
+      int curpac_y = (int) pac.getGridPos().getY();
 
-    Position gotoPos = new Position(1, 1);
-    if (((int) getGridPos().getX() - curpac_x)*((int) getGridPos().getX() - curpac_x) + ((int) getGridPos().getY() - curpac_y)*((int) getGridPos().getY() - curpac_y) > 8<<3)
-      gotoPos = new Position(curpac_x + xoff, curpac_y + yoff);
+      Position gotoPos = new Position(1, 1);
+      if (((int) getGridPos().getX() - curpac_x) * ((int) getGridPos().getX() - curpac_x) + ((int) getGridPos().getY() - curpac_y) * ((int) getGridPos().getY() - curpac_y) > 8 << 3)
+        gotoPos = new Position(curpac_x + xoff, curpac_y + yoff);
 
-    path = BreadthFirst(getGridPos(), gotoPos, p);
+      path = BreadthFirst(getGridPos(), gotoPos, p);
 
-    Direction n_dir = getDirectionAccordingToPath(path);
-    changeDir(n_dir);
-    super.move(pac, p);
+      Direction n_dir = getDirectionAccordingToPath(path);
+      changeDir(n_dir);
+    }
+    changeDir(super.alterDirection(pac, p));
   }
 }

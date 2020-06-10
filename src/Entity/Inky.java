@@ -22,27 +22,29 @@ public class Inky extends Ghost {
       gc.drawImage(img, getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);
   }
 
-  public void move(Pacman pac, Plateau p) {
-    int xoff = 0;
-    int yoff = 0;
+  public void tick(Pacman pac, Plateau p) {
+    if (!pac.superPacman) {
 
-    int curpac_x = (int) pac.getGridPos().getX();
-    int curpac_y = (int) pac.getGridPos().getY();
+      int xoff = 0;
+      int yoff = 0;
 
-    Position gotoPos = new Position(curpac_x, curpac_y);
+      int curpac_x = (int) pac.getGridPos().getX();
+      int curpac_y = (int) pac.getGridPos().getY();
 
-    /* TODO: démerde toi pour faire cette merde :
-     * - il faut passer à Inky la postion de Blinky
-     * - définir le vecteur de Blinky à deux cases devant Pacman
-     * - doubler ce veteur
-     */
+      Position gotoPos = new Position(curpac_x, curpac_y);
+
+      /* TODO: démerde toi pour faire cette merde :
+       * - il faut passer à Inky la postion de Blinky
+       * - définir le vecteur de Blinky à deux cases devant Pacman
+       * - doubler ce veteur
+       */
 
 
-    path = BreadthFirst(getGridPos(), gotoPos, p);
+      path = BreadthFirst(getGridPos(), gotoPos, p);
 
-    Direction n_dir = getDirectionAccordingToPath(path);
-    changeDir(n_dir);
-
-    super.move(pac, p);
+      Direction n_dir = getDirectionAccordingToPath(path);
+      changeDir(n_dir);
+    }
+    changeDir(super.alterDirection(pac, p));
   }
 }

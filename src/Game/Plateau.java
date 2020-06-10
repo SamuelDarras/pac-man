@@ -80,6 +80,7 @@ public class Plateau {
                         break;
                     case 'H':
                         house = new Position(j, i);
+                        plateau[larg * i + j] = new Entity(x, y, 1, 1);
                         break;
                     case'F':
                         plateau[larg * i + j] = new Entity(x, y, 1, 1);
@@ -94,13 +95,6 @@ public class Plateau {
         }
 
         setWalls("blue");
-
-        /*int[] parsedLst = new int[lst.length];
-        for (int i = 0; i < parsedLst.length; i++) {
-            parsedLst[i] = Integer.parseInt(lst[i]);
-        }*/
-
-//        idxFruit = parsedLst[12] * larg + parsedLst[13];
 
         read.close();
     }
