@@ -28,6 +28,7 @@ import javafx.util.Duration;
 import javax.swing.*;
 import java.nio.file.Paths;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static Utils.Constants.*;
@@ -39,7 +40,9 @@ public class Window extends Application {
     String wallsColor = "blue";
     String levelPath ="";
     boolean sound = true;
+    boolean fruit=true;
     Partie partie;
+
 
     double margin = 1.1;
 
@@ -175,7 +178,6 @@ public class Window extends Application {
         final LocalTime ltDebut = LocalTime.now();
 
 
-
         final Canvas[] canvas = {new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin)};
         GraphicsContext gc = canvas[0].getGraphicsContext2D();
         root.getChildren().add(canvas[0]);
@@ -206,19 +208,20 @@ public class Window extends Application {
 
         try {
             partie = new Partie(levelPath, wallsColor, this);
+            boolean bool=true;
 
             new AnimationTimer() {
                 long prevtime;
                 long deltaTime;
 
 
+
                 AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
 
                 public void handle(long currentNanoTime) {
                     LocalTime ltnow = LocalTime.now();
-                    int timer = (ltnow.getSecond()+ltnow.getMinute()*60+ltnow.getHour()*3600)-(ltDebut.getSecond()+ltDebut.getMinute()*60+ltDebut.getHour()*3600);
-                    System.out.println(timer);
 
+                    long timerF = ChronoUnit.SECONDS.between(ltDebut,ltnow);
                     if (partie.getPacman().getLife() <= 0) {
                         this.stop();
                         finJeu(stage);
@@ -232,7 +235,11 @@ public class Window extends Application {
                         partie.getPacman().changeDir(dir);
                         partie.tick(deltaTime);
                     }
-                    if(timer%10==0){
+                    if(timerF%11==0){
+                        fruit=true;
+                    }
+                    if(timerF%10==0 && timerF!=0 && fruit ){
+                        fruit=false;
                         partie.getPlateau().setFruit();
                     }
 
@@ -245,6 +252,7 @@ public class Window extends Application {
                 }
 
                 public void drawShapes(GraphicsContext gc) {
+                    LocalTime ltnow = LocalTime.now();
                     gc.setFill(Color.BLACK);
                     gc.fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT * margin);
                     for (Entity e : partie.getPlateau().getPlateau()) {
@@ -256,7 +264,8 @@ public class Window extends Application {
 
                     }
                     gc.setFill(Color.WHITE);
-                    gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
+                    gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.02);
+                    gc.fillText("Timer : " + ChronoUnit.HOURS.between(ltDebut,ltnow) + ":" + ChronoUnit.MINUTES.between(ltDebut,ltnow)%60 + ":" + ChronoUnit.SECONDS.between(ltDebut,ltnow)%60  , (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
                 }
                 public void drawMenu(GraphicsContext gc) {
                     gc.setFill(new Color(0, 0, 0, .5));
@@ -269,6 +278,7 @@ public class Window extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        fruit=true;
     }
 
     public void custo(Stage stage) {
