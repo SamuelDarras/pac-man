@@ -28,6 +28,7 @@ import javafx.util.Duration;
 import javax.swing.*;
 import java.nio.file.Paths;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static Utils.Constants.*;
@@ -39,7 +40,10 @@ public class Window extends Application {
     String wallsColor = "blue";
     String levelPath ="";
     boolean sound = true;
+    boolean fruit=true;
+    int mdj=0;
     Partie partie;
+
 
     double margin = 1.1;
 
@@ -158,7 +162,7 @@ public class Window extends Application {
             jeu(stage);
         });
 
-        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.out.println(mdj));
+        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> mdj(stage));
 
         ivCusto.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> custo(stage));
 
@@ -172,9 +176,7 @@ public class Window extends Application {
     public void jeu(Stage stage) {
         AtomicBoolean menu = new AtomicBoolean(false);
         final Group root = new Group();
-        final LocalTime ltDebut = LocalTime.now();
-
-
+        LocalTime ltDebut = LocalTime.now();
 
         final Canvas[] canvas = {new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin)};
         GraphicsContext gc = canvas[0].getGraphicsContext2D();
@@ -201,9 +203,18 @@ public class Window extends Application {
                     break;
             }
         });
-
         stage.setScene(scene);
+        System.out.println(mdj);
+        if(mdj==0)
+            mdj1(menu, ltDebut, stage, gc, mdj);
+        if(mdj==1){
+            ltDebut = ltDebut.plusSeconds(120);
+            mdj1(menu, ltDebut, stage, gc, mdj);
+        }
+        }
 
+
+    public void mdj1(AtomicBoolean menu, LocalTime ltDebut, Stage stage, GraphicsContext gc, int mdj){
         try {
             partie = new Partie(levelPath, wallsColor, this);
 
@@ -211,15 +222,17 @@ public class Window extends Application {
                 long prevtime;
                 long deltaTime;
 
-
                 AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
 
                 public void handle(long currentNanoTime) {
                     LocalTime ltnow = LocalTime.now();
-                    int timer = (ltnow.getSecond()+ltnow.getMinute()*60+ltnow.getHour()*3600)-(ltDebut.getSecond()+ltDebut.getMinute()*60+ltDebut.getHour()*3600);
-                    System.out.println(timer);
 
+                    long timerF = ChronoUnit.SECONDS.between(ltDebut,ltnow);
                     if (partie.getPacman().getLife() <= 0) {
+                        this.stop();
+                        finJeu(stage);
+                    }
+                    if(mdj==1 && Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow))==0 && Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60)==0 && Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)==0){
                         this.stop();
                         finJeu(stage);
                     }
@@ -232,7 +245,11 @@ public class Window extends Application {
                         partie.getPacman().changeDir(dir);
                         partie.tick(deltaTime);
                     }
-                    if(timer%10==0){
+                    if(timerF%11==0){
+                        fruit=true;
+                    }
+                    if(timerF%10==0 && timerF!=0 && fruit ){
+                        fruit=false;
                         partie.getPlateau().setFruit();
                     }
 
@@ -245,13 +262,20 @@ public class Window extends Application {
                 }
 
                 public void drawShapes(GraphicsContext gc) {
+                    LocalTime ltnow = LocalTime.now();
                     gc.setFill(Color.BLACK);
                     gc.fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT * margin);
                     for (Entity e : partie.getPlateau().getPlateau()) {
                         e.draw(gc);
                     }
                     gc.setFill(Color.WHITE);
-                    gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
+                    gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.02);
+                    if(mdj==0)
+                        gc.fillText("Timer : " + String.format("%02d:%02d:%02d", ChronoUnit.HOURS.between(ltDebut,ltnow), ChronoUnit.MINUTES.between(ltDebut,ltnow)%60, ChronoUnit.SECONDS.between(ltDebut,ltnow)%60), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
+                    else
+                        gc.fillText("Timer : " + String.format("%02d:%02d:%02d", Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow)), Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60), Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60))  , (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
+
+
                 }
                 public void drawMenu(GraphicsContext gc) {
                     gc.setFill(new Color(0, 0, 0, .5));
@@ -264,7 +288,10 @@ public class Window extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        fruit=true;
     }
+
+
 
     public void custo(Stage stage) {
         HBox popVbox=new HBox();
@@ -445,32 +472,89 @@ public class Window extends Application {
         popVbox.getChildren().add(ivlvl1);
 
         ivlvl1.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            System.out.println("level 1");
             levelPath="src/levels/level1V2.txt";
             jeu(stage);
         });
 
-        Image ilvl2 = new Image("img/0001_presentation1.2.png", width, height, false, false);
+        Image ilvl2 = new Image("img/Level_2.png", width, height, false, false);
         ImageView ivlvl2 = new ImageView(ilvl2);
 
         popVbox.getChildren().add(ivlvl2);
 
         ivlvl2.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            System.out.println("level 1 Pres");
-            levelPath="src/levels/level1Pres.txt";
+            levelPath="src/levels/level2.txt";
             jeu(stage);
         });
 
-        Image ilvl3 = new Image("img/0000_presentation-2.png", width, height, false, false);
+        Image ilvl3 = new Image("img/0001_presentation1.2.png", width, height, false, false);
         ImageView ivlvl3 = new ImageView(ilvl3);
 
         popVbox.getChildren().add(ivlvl3);
 
         ivlvl3.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            System.out.println("level 1 Pres");
+            levelPath="src/levels/level1Pres.txt";
+            jeu(stage);
+        });
+
+        Image ilvl4 = new Image("img/0000_presentation-2.png", width, height, false, false);
+        ImageView ivlvl4 = new ImageView(ilvl4);
+
+        popVbox.getChildren().add(ivlvl4);
+
+        ivlvl4.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             System.out.println("level 2 Pres");
             levelPath="src/levels/level2Pres.txt";
             jeu(stage);
         });
+
+        pop.getChildren().add(popVbox);
+        Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
+        stage.setScene(popUp);
+        stage.show();
+    }
+
+    public void mdj(Stage stage) {
+        double width = 1.0*SCENE_WIDTH/4;
+        double height = 1.0*SCENE_HEIGHT/4;
+
+        HBox popVbox=new HBox();
+        popVbox.setSpacing(30.);
+        popVbox.setAlignment(Pos.TOP_CENTER);
+
+        Group pop = new Group();
+
+        Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
+        main.getGraphicsContext2D().setFill(Color.BLACK);
+        main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);
+
+        pop.getChildren().add(main);
+
+        Image iback = new Image("img/back.png", width/2, height/2, false, false);
+        ImageView ivback = new ImageView(iback);
+        ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
+        popVbox.getChildren().add(ivback);
+
+        Image imdj1 = new Image("img/Classique.png", width, height, false, false);
+        ImageView ivmdj1 = new ImageView(imdj1);
+
+        popVbox.getChildren().add(ivmdj1);
+
+        ivmdj1.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            mdj=0;
+            menu(stage);
+        });
+
+        Image imdj2 = new Image("img/Contre-la-montre.png", width, height, false, false);
+        ImageView ivmdj2 = new ImageView(imdj2);
+
+        popVbox.getChildren().add(ivmdj2);
+
+        ivmdj2.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            mdj=1;
+            menu(stage);
+        });
+
 
         pop.getChildren().add(popVbox);
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
