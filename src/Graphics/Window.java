@@ -204,10 +204,11 @@ public class Window extends Application {
             }
         });
         stage.setScene(scene);
-        System.out.println(mdj);
         if(mdj==0)
+            root.getChildren().removeAll();
             mdj1(menu, ltDebut, stage, gc, mdj);
         if(mdj==1){
+            root.getChildren().removeAll();
             ltDebut = ltDebut.plusSeconds(120);
             mdj1(menu, ltDebut, stage, gc, mdj);
         }
@@ -224,13 +225,15 @@ public class Window extends Application {
 
                 AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
 
+                LocalTime ltnow;
                 public void handle(long currentNanoTime) {
-                    LocalTime ltnow = LocalTime.now();
+                    ltnow = LocalTime.now();
 
                     long timerF = ChronoUnit.SECONDS.between(ltDebut,ltnow);
                     if (partie.getPacman().getLife() <= 0) {
                         this.stop();
                         finJeu(stage);
+                        return;
                     }
                     if(mdj==1 && Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow))==0 && Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60)==0 && Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)==0){
                         this.stop();
@@ -241,7 +244,7 @@ public class Window extends Application {
                     if (!menu.get() && sound && !chomp.isPlaying())
                         chomp.play();
 
-                    if (!menu.get()) {
+                    if (!menu.get() && deltaTime < 1_000_000_000/5) {
                         partie.getPacman().changeDir(dir);
                         partie.tick(deltaTime);
                     }
@@ -255,8 +258,9 @@ public class Window extends Application {
 
                     drawShapes(gc);
 
-                    if (menu.get())
+                    if (menu.get()) {
                         drawMenu(gc);
+                    }
 
                     prevtime = currentNanoTime;
                 }
@@ -273,7 +277,11 @@ public class Window extends Application {
                     if(mdj==0)
                         gc.fillText("Timer : " + String.format("%02d:%02d:%02d", ChronoUnit.HOURS.between(ltDebut,ltnow), ChronoUnit.MINUTES.between(ltDebut,ltnow)%60, ChronoUnit.SECONDS.between(ltDebut,ltnow)%60), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
                     else
-                        gc.fillText("Timer : " + String.format("%02d:%02d:%02d", Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow)), Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60), Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60))  , (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
+                        gc.fillText("Timer : " + String.format("%02d:%02d:%02d",
+                                Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow)),
+                                Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60),
+                                Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)),
+                                (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
 
 
                 }
@@ -386,9 +394,7 @@ public class Window extends Application {
         Group root = new Group();
         root.getChildren().addAll(ivMsg);
 
-        ivMsg.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            menu(stage);
-        });
+        ivMsg.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> menu(stage));
 
         Scene fin = new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(fin);
