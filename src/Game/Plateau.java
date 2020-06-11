@@ -33,7 +33,7 @@ public class Plateau {
 
     private Plateau() {}
     public Plateau(String levelPath, String wallsColor) throws Exception {
-            this.wallsColor = wallsColor;
+        this.wallsColor = wallsColor;
         remplirPlateau(levelPath);
     }
 
@@ -50,6 +50,9 @@ public class Plateau {
 
         Init(larg, haut);
         idxFruit = new ArrayList<>();
+        idxPG = new ArrayList<>();
+        idxSPG = new ArrayList<>();
+
         plateau = new Entity[larg * haut];
         double x;
         double y;
@@ -248,10 +251,10 @@ public class Plateau {
     }
     public void refillPG(){
         for (Integer integer : idxPG) {
-            plateau[integer] = new PacGomme(plateau[integer].getPos().getX() + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 4 / 2, plateau[integer].getPos().getY() + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 4 / 2);
+            plateau[integer] = new PacGomme(plateau[integer].getPos().getX(), plateau[integer].getPos().getY());
         }
         for(Integer integer : idxSPG){
-            plateau[integer] = new SuperPacGomme(plateau[integer].getPos().getX() + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 2 / 2, plateau[integer].getPos().getY() + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 2 / 2);
+            plateau[integer] = new SuperPacGomme(plateau[integer].getPos().getX(), plateau[integer].getPos().getY());
         }
     }
 }

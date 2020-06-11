@@ -235,6 +235,11 @@ public class Window extends Application {
                 public void handle(long currentNanoTime) {
                     ltnow = LocalTime.now();
 
+                    timer = String.format("%02d:%02d:%02d",
+                            ChronoUnit.HOURS.between(ltDebut,ltnow),
+                            ChronoUnit.MINUTES.between(ltDebut,ltnow)%60,
+                            ChronoUnit.SECONDS.between(ltDebut,ltnow)%60);
+
                     partie.getPlateau().setFruit();
 
                     if (partie.getPacman().getLife() <= 0) {
@@ -297,14 +302,12 @@ public class Window extends Application {
                     gc.setFill(Color.WHITE);
                     gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.02);
                     if(mdj==0 || mdj==2)
-                        gc.fillText("Timer : " + String.format("%02d:%02d:%02d", ChronoUnit.HOURS.between(ltDebut,ltnow), ChronoUnit.MINUTES.between(ltDebut,ltnow)%60, ChronoUnit.SECONDS.between(ltDebut,ltnow)%60), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
+                        gc.fillText("Timer : " + timer, (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
                     else
-                        timer = String.format("%02d:%02d:%02d",
+                        gc.fillText("Timer : " + String.format("%02d:%02d:%02d",
                                 Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow)),
                                 Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60),
-                                Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60));
-
-                        gc.fillText("Timer : " + timer,
+                                Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)),
                                 (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
 
 
@@ -592,29 +595,30 @@ public class Window extends Application {
     }
 
     public void afficheScore(Stage stage){
-        Label tmp0 = new Label();
-        Label tmp1 = new Label();
-        Label tmp2 = new Label();
+        Label tmp0;
+        Label tmp1;
+        Label tmp2;
 
         VBox vbox = new VBox();
 
         Group group = new Group();
 
         for (String[] s : Score.readScoreFromFile()){
-            tmp0.setText(s[0]);
-            tmp1.setText(s[1]);
-            tmp2.setText(s[2]);
+            tmp0 = new Label(s[0]);
+            tmp1 = new Label(s[1]);
+            tmp2 = new Label(s[2]);
 
             vbox.getChildren().addAll(tmp0, tmp1, tmp2);
         }
-
-        group.getChildren().add(vbox);
-
         Image submit = new Image("img/Ok.png", 100, 100, false, false);
         ImageView ivSubmit = new ImageView(submit);
 
+        vbox.getChildren().add(ivSubmit);
+
+        group.getChildren().addAll(vbox);
+
         ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            afficheScore(stage);
+            menu(stage);
         });
 
         Scene score = new Scene(group,SCENE_WIDTH,SCENE_HEIGHT*margin);
@@ -624,23 +628,24 @@ public class Window extends Application {
 
     public void ecrireScore(Score score, Stage stage, String timer){
         Label label = new Label("Name :");
-        final TextField inputName = new TextField("enter your name");
-        String name = inputName.getText();
-
-        Group group = new Group();
-        group.getChildren().addAll(label, inputName);
-
-        Scene scene = new Scene(group, 200, 200);
-        stage.setScene(scene);
+        final TextField inputName = new TextField();
 
         Image submit = new Image("img/Ok.png", 100, 100, false, false);
         ImageView ivSubmit = new ImageView(submit);
 
+        Group group = new Group();
+        group.getChildren().addAll(label, inputName, ivSubmit);
+
+        Scene scene = new Scene(group, SCENE_WIDTH, SCENE_HEIGHT * margin);
+        stage.setScene(scene);
+
+
         ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            String name = inputName.getText();
+            Score.writeScoreToFile(""+score.getScore(), name, timer);
             afficheScore(stage);
         });
 
-        Score.writeScoreToFile(""+score.getScore(), name, timer);
     }
 
     public static AudioClip openAudio(String path) {

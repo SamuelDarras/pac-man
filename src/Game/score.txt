@@ -1,2 +1,6 @@
 toto;100;10:15
-pain;666;49:53
+pain;666;49:53enter your name;730;00:00:30
+enter your name;1550;00:00:42
+enter your name;1920;00:00:49
+enter your name;2820;00:01:08
+toi;130;00:00:06
