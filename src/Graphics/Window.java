@@ -3,6 +3,7 @@ package Graphics;
 import Entity.*;
 
 import Game.Partie;
+import Game.Score;
 import Utils.Constants;
 import Utils.Direction;
 import com.sun.prism.Graphics;
@@ -16,6 +17,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -30,6 +33,7 @@ import javax.swing.*;
 import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static Utils.Constants.*;
@@ -45,7 +49,7 @@ public class Window extends Application {
     long timerSPM=0;
     int mdj=0;
     Partie partie;
-
+    String timer = "";
 
     double margin = 1.1;
 
@@ -125,7 +129,7 @@ public class Window extends Application {
         ivJouer.preserveRatioProperty();
 
         Image demo = new Image("img/demo.png",300,100,false,false);
-        System.out.println(demo.getUrl());
+        /*System.out.println(demo.getUrl());*/
         ImageView ivDemo = new ImageView(demo);
         ivDemo.preserveRatioProperty();
 
@@ -159,7 +163,7 @@ public class Window extends Application {
         ivJouer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> select(stage));
 
         ivDemo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            levelPath="src/levels/test.txt";
+            levelPath="src/levels/level1V2.txt";
             jeu(stage);
         });
 
@@ -234,18 +238,18 @@ public class Window extends Application {
 
                     if (partie.getPacman().getLife() <= 0) {
                         this.stop();
-                        finJeu(stage,"lose");
+                        finJeu(stage,"lose", partie.getScore(), timer);
                         return;
                     }
                     if(!(partie.getPlateau().isAvailablePG())){
                         this.stop();
-                        finJeu(stage,"win");
+                        finJeu(stage,"win", partie.getScore(), timer);
                         return;
                     }
 
                     if(mdj==1 && Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow))==0 && Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60)==0 && Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)==0){
                         this.stop();
-                        finJeu(stage,"lose");
+                        finJeu(stage,"lose", partie.getScore(), timer);
                     }
                     deltaTime = currentNanoTime - prevtime;
 
@@ -290,10 +294,12 @@ public class Window extends Application {
                     if(mdj==0)
                         gc.fillText("Timer : " + String.format("%02d:%02d:%02d", ChronoUnit.HOURS.between(ltDebut,ltnow), ChronoUnit.MINUTES.between(ltDebut,ltnow)%60, ChronoUnit.SECONDS.between(ltDebut,ltnow)%60), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
                     else
-                        gc.fillText("Timer : " + String.format("%02d:%02d:%02d",
+                        timer = String.format("%02d:%02d:%02d",
                                 Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow)),
                                 Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60),
-                                Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)),
+                                Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60));
+
+                        gc.fillText("Timer : " + timer,
                                 (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
 
 
@@ -333,7 +339,6 @@ public class Window extends Application {
         double height = 1.0*SCENE_HEIGHT/6;
 
         ivBlueWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            System.out.println("blue");
             wallsColor = "blue";
             menu(stage);
         });
@@ -344,7 +349,6 @@ public class Window extends Application {
         popVbox.getChildren().add(ivGreenWall);
 
         ivGreenWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            System.out.println("green");
             wallsColor = "green";
             menu(stage);
         });
@@ -355,7 +359,6 @@ public class Window extends Application {
         popVbox.getChildren().add(ivorangeWall);
 
         ivorangeWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            System.out.println("orange");
             wallsColor = "orange";
             menu(stage);
         });
@@ -366,7 +369,6 @@ public class Window extends Application {
         popVbox.getChildren().add(ivpurpleWall);
 
         ivpurpleWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            System.out.println("purple");
             wallsColor = "purple";
             menu(stage);
         });
@@ -377,7 +379,6 @@ public class Window extends Application {
         popVbox.getChildren().add(ivredWall);
 
         ivredWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            System.out.println("red");
             wallsColor = "red";
             menu(stage);
         });
@@ -388,7 +389,6 @@ public class Window extends Application {
         popVbox.getChildren().add(ivyellowWall);
 
         ivyellowWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            System.out.println("yellow");
             wallsColor = "yellow";
             menu(stage);
         });
@@ -399,18 +399,21 @@ public class Window extends Application {
         stage.show();
     }
 
-    public void finJeu(Stage stage,String etat){
+    public void finJeu(Stage stage,String etat, Score score, String timer){
         Image msg;
-        if(etat.equals("win"))
-            msg = new Image("img/apple.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
-        else
-            msg = new Image("img/lose.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
+        if(etat.equals("win")) {
+            msg = new Image("img/apple.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
+        }
+        else {
+            msg = new Image("img/lose.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
+        }
+
         ImageView ivMsg = new ImageView(msg);
 
         Group root = new Group();
         root.getChildren().addAll(ivMsg);
 
-        ivMsg.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> menu(stage));
+        ivMsg.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> ecrireScore(score, stage, timer));
 
         Scene fin = new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(fin);
@@ -505,7 +508,6 @@ public class Window extends Application {
         popVbox.getChildren().add(ivlvl3);
 
         ivlvl3.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            System.out.println("level 1 Pres");
             levelPath="src/levels/level1Pres.txt";
             jeu(stage);
         });
@@ -516,7 +518,6 @@ public class Window extends Application {
         popVbox.getChildren().add(ivlvl4);
 
         ivlvl4.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            System.out.println("level 2 Pres");
             levelPath="src/levels/level2Pres.txt";
             jeu(stage);
         });
@@ -573,6 +574,58 @@ public class Window extends Application {
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(popUp);
         stage.show();
+    }
+
+    public void afficheScore(Stage stage){
+        Label tmp0 = new Label();
+        Label tmp1 = new Label();
+        Label tmp2 = new Label();
+
+        VBox vbox = new VBox();
+
+        Group group = new Group();
+
+        for (String[] s : Score.readScoreFromFile()){
+            tmp0.setText(s[0]);
+            tmp1.setText(s[1]);
+            tmp2.setText(s[2]);
+
+            vbox.getChildren().addAll(tmp0, tmp1, tmp2);
+        }
+
+        group.getChildren().add(vbox);
+
+        Image submit = new Image("img/Ok.png", 100, 100, false, false);
+        ImageView ivSubmit = new ImageView(submit);
+
+        ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            afficheScore(stage);
+        });
+
+        Scene score = new Scene(group,SCENE_WIDTH,SCENE_HEIGHT*margin);
+        stage.setScene(score);
+        stage.show();
+    }
+
+    public void ecrireScore(Score score, Stage stage, String timer){
+        Label label = new Label("Name :");
+        final TextField inputName = new TextField("enter your name");
+        String name = inputName.getText();
+
+        Group group = new Group();
+        group.getChildren().addAll(label, inputName);
+
+        Scene scene = new Scene(group, 200, 200);
+        stage.setScene(scene);
+
+        Image submit = new Image("img/Ok.png", 100, 100, false, false);
+        ImageView ivSubmit = new ImageView(submit);
+
+        ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            afficheScore(stage);
+        });
+
+        Score.writeScoreToFile(""+score.getScore(), name, timer);
     }
 
     public static AudioClip openAudio(String path) {
