@@ -19,6 +19,8 @@ import static Utils.Constants.*;
 public class Plateau {
     String wallsColor = "blue";
     List<Integer> idxFruit;
+    List<Integer> idxPG;
+    List<Integer> idxSPG;
     int larg;
     int haut;
     LocalTime[] ltdebut;
@@ -62,9 +64,11 @@ public class Plateau {
                         break;
                     case 'p':
                         plateau[larg * i + j] = new PacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 4 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 4 / 2);
+                        idxPG.add(larg * i + j);
                         break;
                     case 's':
                         plateau[larg * i + j] = new SuperPacGomme(x + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 2 / 2, y + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 2 / 2);
+                        idxSPG.add(larg * i + j);
                         break;
                     case 'I':
                         plateau[larg * i + j] = new Inky(x, y, GHOST_SPEED);
@@ -241,6 +245,13 @@ public class Plateau {
             }
         }
         return available;
-
+    }
+    public void refillPG(){
+        for (Integer integer : idxPG) {
+            plateau[integer] = new PacGomme(plateau[integer].getPos().getX() + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 4 / 2, plateau[integer].getPos().getY() + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 4 / 2);
+        }
+        for(Integer integer : idxSPG){
+            plateau[integer] = new SuperPacGomme(plateau[integer].getPos().getX() + WALL_WIDTH / 2 - PERSONNAGE_WIDTH / 2 / 2, plateau[integer].getPos().getY() + WALL_HEIGHT / 2 - PERSONNAGE_HEIGHT / 2 / 2);
+        }
     }
 }
