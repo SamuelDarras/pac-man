@@ -7,19 +7,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public class Inky extends Ghost {
-  Image img = new Image("img/InkyGhost.png");
 
   public Inky(double x, double y, double speed) {
     super(x, y, speed);
-  }
-
-  public void draw(GraphicsContext gc) {
-    super.draw(gc);
-
-    if (getDir() == Direction.LEFT)
-      gc.drawImage(img, getPos().getX() + getHitbox()[0], getPos().getY(), -getHitbox()[0], getHitbox()[1]);
-    else
-      gc.drawImage(img, getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);
+    img = new Image("img/InkyGhost.png");
   }
 
   public void tick(Pacman pac, Plateau p) {
