@@ -138,8 +138,8 @@ public abstract class Ghost extends Personnage {
             cury = (int) getGridPos().getY();
         }
 
-        System.out.println(getGridPos());
-        System.out.println(new Position(curx, cury));
+        //System.out.println(getGridPos());
+        //System.out.println(new Position(curx, cury));
         if (pac.superPacman && !getGridPos().equals(new Position(curx, cury))) {
             curx = (int) getGridPos().getX();
             cury = (int) getGridPos().getY();
