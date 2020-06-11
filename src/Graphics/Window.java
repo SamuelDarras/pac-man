@@ -40,7 +40,8 @@ public class Window extends Application {
     String wallsColor = "blue";
     String levelPath ="";
     boolean sound = true;
-    boolean fruit=true;
+    boolean boolSPM=true;
+    long timerSPM=0;
     int mdj=0;
     Partie partie;
 
@@ -229,7 +230,7 @@ public class Window extends Application {
                 public void handle(long currentNanoTime) {
                     ltnow = LocalTime.now();
 
-                    long timerF = ChronoUnit.SECONDS.between(ltDebut,ltnow);
+                    partie.getPlateau().setFruit();
                     if (partie.getPacman().getLife() <= 0) {
                         this.stop();
                         finJeu(stage);
@@ -244,16 +245,21 @@ public class Window extends Application {
                     if (!menu.get() && sound && !chomp.isPlaying())
                         chomp.play();
 
+                    if(partie.getPacman().getSuperPacMan()) {
+                        if (boolSPM) {
+                            timerSPM = ChronoUnit.SECONDS.between(ltDebut, ltnow);
+                            boolSPM = false;
+                        }
+                        else if(timerSPM != 0 && (ChronoUnit.SECONDS.between(ltDebut,ltnow)-timerSPM>=10)){
+                            boolSPM = true;
+                            timerSPM=0;
+                            partie.getPacman().setSuperPacMan(false);
+                        }
+                    }
+
                     if (!menu.get() && deltaTime < 1_000_000_000/5) {
                         partie.getPacman().changeDir(dir);
                         partie.tick(deltaTime);
-                    }
-                    if(timerF%11==0){
-                        fruit=true;
-                    }
-                    if(timerF%10==0 && timerF!=0 && fruit ){
-                        fruit=false;
-                        partie.getPlateau().setFruit();
                     }
 
                     drawShapes(gc);
@@ -296,7 +302,6 @@ public class Window extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        fruit=true;
     }
 
 

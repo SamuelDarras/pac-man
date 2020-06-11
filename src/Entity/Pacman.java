@@ -44,6 +44,9 @@ public class Pacman extends Personnage{
     }
 
 	public int getLife() { return life; }
+    public boolean getSuperPacMan() { return superPacman; }
+
+    public void setSuperPacMan(boolean bool){ this.superPacman=bool;}
 
 	public void manger(Partie partie){
         for (Entity e : partie.getPlateau().getPlateau()) {
