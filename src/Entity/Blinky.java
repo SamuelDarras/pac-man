@@ -1,12 +1,7 @@
 package Entity;
 
 import Game.Plateau;
-import Utils.Direction;
-import Utils.Position;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-
-import java.util.ArrayList;
 
 public class Blinky extends Ghost {
 
@@ -16,8 +11,7 @@ public class Blinky extends Ghost {
   }
 
   public void tick(Pacman pac, Plateau p) {
-    if (!pac.superPacman) {
-
+    if (!pac.superPacman || definedDestination == null) {
       path = BreadthFirst(getGridPos(), pac.getGridPos(), p);
       changeDir(getDirectionAccordingToPath(path));
     }

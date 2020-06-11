@@ -16,7 +16,7 @@ public class Pinky extends Ghost {
   }
 
   public void tick(Pacman pac, Plateau p) {
-    if (!pac.superPacman) {
+    if (!pac.superPacman || definedDestination == null) {
 
       path = new ArrayList<>();
       int xoff = 0;

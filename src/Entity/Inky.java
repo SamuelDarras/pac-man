@@ -14,7 +14,7 @@ public class Inky extends Ghost {
   }
 
   public void tick(Pacman pac, Plateau p) {
-    if (!pac.superPacman) {
+    if (!pac.superPacman || definedDestination == null) {
 
       int xoff = 0;
       int yoff = 0;

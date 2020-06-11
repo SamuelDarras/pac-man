@@ -148,18 +148,23 @@ public abstract class Ghost extends Personnage {
         System.out.println(getGridPos());
         System.out.println(new Position(curx, cury));
 
+        alteredImg = null;
         if (pac.superPacman) {
             alteredImg = new Image("img/DeadGhost.png");
-        } else {
-            alteredImg = null;
         }
         if (definedDestination != null) {
             alteredImg = new Image("img/EatenGhost.png");
-        } else {
-            alteredImg = alteredImg;
         }
 
         if (pac.superPacman && !getGridPos().equals(new Position(curx, cury))) {
+            if (definedDestination != null && getGridPos().equals(definedDestination)) {
+                definedDestination = null;
+                resetSpeed();
+            }
+            if (definedDestination != null) {
+                addSpeed(getSpeed());
+                return getDirectionAccordingToPath(BreadthFirst(getGridPos(), definedDestination, plat));
+            }
             curx = (int) getGridPos().getX();
             cury = (int) getGridPos().getY();
             int x = (int)(Math.random()*plat.getLargeur());
@@ -169,15 +174,6 @@ public abstract class Ghost extends Personnage {
                 y = (int)(Math.random()*plat.getHauteur());
             }
             return getDirectionAccordingToPath(BreadthFirst(getGridPos(), new Position(x, y), plat));
-        }
-        if (definedDestination != null) {
-            if (getGridPos().equals(definedDestination)) {
-                definedDestination = null;
-                resetSpeed();
-                return getDir();
-            }
-            addSpeed(getSpeed());
-            return getDirectionAccordingToPath(BreadthFirst(getGridPos(), definedDestination, plat));
         }
         return getDir();
     }
