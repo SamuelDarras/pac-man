@@ -3,6 +3,7 @@ package Graphics;
 import Entity.*;
 
 import Game.Partie;
+import Utils.Constants;
 import Utils.Direction;
 import com.sun.prism.Graphics;
 import javafx.animation.Animation;
@@ -60,7 +61,6 @@ public class Window extends Application {
         final Group root = new Group();
 
         Canvas canvas = new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
         root.getChildren().add(canvas);
 
         Image img = new Image("img/menu1Animate.png", SCENE_WIDTH, SCENE_HEIGHT, false, false);

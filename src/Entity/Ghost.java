@@ -4,11 +4,13 @@ import Game.Plateau;
 import Utils.Direction;
 import Utils.Position;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public abstract class Ghost extends Personnage {
+    Image img;
+    Image alteredImg;
     ArrayList<Position> path;
 
     Position definedDestination;
@@ -46,6 +48,11 @@ public abstract class Ghost extends Personnage {
     }
 
     public void draw(GraphicsContext gc) {
+        Image toDraw = alteredImg == null ? img : alteredImg;
+        if (getDir() == Direction.LEFT)
+            gc.drawImage(toDraw, getPos().getX() + getHitbox()[0], getPos().getY(), -getHitbox()[0], getHitbox()[1]);
+        else
+            gc.drawImage(toDraw, getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);
     }
 
     public ArrayList<Position> BreadthFirst(Position start, Position end, Plateau plat) {
@@ -138,8 +145,20 @@ public abstract class Ghost extends Personnage {
             cury = (int) getGridPos().getY();
         }
 
-        //System.out.println(getGridPos());
-        //System.out.println(new Position(curx, cury));
+        System.out.println(getGridPos());
+        System.out.println(new Position(curx, cury));
+
+        if (pac.superPacman) {
+            alteredImg = new Image("img/DeadGhost.png");
+        } else {
+            alteredImg = null;
+        }
+        if (definedDestination != null) {
+            alteredImg = new Image("img/EatenGhost.png");
+        } else {
+            alteredImg = alteredImg;
+        }
+
         if (pac.superPacman && !getGridPos().equals(new Position(curx, cury))) {
             curx = (int) getGridPos().getX();
             cury = (int) getGridPos().getY();
@@ -154,8 +173,10 @@ public abstract class Ghost extends Personnage {
         if (definedDestination != null) {
             if (getGridPos().equals(definedDestination)) {
                 definedDestination = null;
+                resetSpeed();
                 return getDir();
             }
+            addSpeed(getSpeed());
             return getDirectionAccordingToPath(BreadthFirst(getGridPos(), definedDestination, plat));
         }
         return getDir();
