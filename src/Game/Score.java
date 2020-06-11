@@ -13,6 +13,7 @@ public class Score {
 		ArrayList<String[]> r = new ArrayList<>();
 		String str = "";
 		try {
+			int bestScore = 0;
 			InputStream file = new FileInputStream(SCOREFILE);
 			InputStreamReader fileReader = new InputStreamReader(file);
 			BufferedReader reader = new BufferedReader(fileReader);
@@ -21,7 +22,9 @@ public class Score {
 				String name = splitted[0];
 				String score = splitted[1];
 				String time = splitted[2];
-				r.add(splitted);
+				bestScore = bestScore > Integer.parseInt(score) ? bestScore : Integer.parseInt(score);
+
+				r.add((bestScore == Integer.parseInt(score) ? 0 : r.size()-1), splitted);
 			}
 			return r;
 		}
@@ -39,6 +42,17 @@ public class Score {
 		}
 		catch(IOException ioEx) {
 			System.out.println("Erreur lors de l'écriture du score : " + ioEx.getMessage());
+		}
+	}
+
+	public static void main(String[] args) {
+		Score s = new Score();
+		int c = 5;
+		for (String[] strs : s.readScoreFromFile()) {
+			if (c <= 0)
+				break;
+			c--;
+			System.out.println(strs[0] + "  " + strs[1] + "  " + strs[2]);
 		}
 	}
 
