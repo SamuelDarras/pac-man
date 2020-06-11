@@ -418,7 +418,7 @@ public class Window extends Application {
     public void finJeu(Stage stage,String etat, Score score, String timer){
         Image msg;
         if(etat.equals("win")) {
-            msg = new Image("img/apple.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
+            msg = new Image("img/win.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
         }
         else {
             msg = new Image("img/lose.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
