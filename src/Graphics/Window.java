@@ -205,7 +205,7 @@ public class Window extends Application {
             }
         });
         stage.setScene(scene);
-        if(mdj==0)
+        if(mdj==0 || mdj==2)
             root.getChildren().removeAll();
             mdj1(menu, ltDebut, stage, gc, mdj);
         if(mdj==1){
@@ -214,6 +214,7 @@ public class Window extends Application {
             mdj1(menu, ltDebut, stage, gc, mdj);
         }
         }
+
 
 
     public void mdj1(AtomicBoolean menu, LocalTime ltDebut, Stage stage, GraphicsContext gc, int mdj){
@@ -237,10 +238,14 @@ public class Window extends Application {
                         finJeu(stage,"lose");
                         return;
                     }
-                    if(!(partie.getPlateau().isAvailablePG())){
+                    if(!(partie.getPlateau().isAvailablePG()) && mdj!=2){
                         this.stop();
                         finJeu(stage,"win");
                         return;
+                    }
+
+                    if(mdj==2 && !(partie.getPlateau().isAvailablePG())){
+                        partie.getPlateau().refillPG();
                     }
 
                     if(mdj==1 && Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow))==0 && Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60)==0 && Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)==0){
@@ -287,7 +292,7 @@ public class Window extends Application {
                     }
                     gc.setFill(Color.WHITE);
                     gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.02);
-                    if(mdj==0)
+                    if(mdj==0 || mdj==2)
                         gc.fillText("Timer : " + String.format("%02d:%02d:%02d", ChronoUnit.HOURS.between(ltDebut,ltnow), ChronoUnit.MINUTES.between(ltDebut,ltnow)%60, ChronoUnit.SECONDS.between(ltDebut,ltnow)%60), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
                     else
                         gc.fillText("Timer : " + String.format("%02d:%02d:%02d",
@@ -565,6 +570,16 @@ public class Window extends Application {
 
         ivmdj2.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             mdj=1;
+            menu(stage);
+        });
+
+        Image imdj3 = new Image("img/Infinity.png", width, height, false, false);
+        ImageView ivmdj3 = new ImageView(imdj3);
+
+        popVbox.getChildren().add(ivmdj3);
+
+        ivmdj3.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            mdj=2;
             menu(stage);
         });
 
