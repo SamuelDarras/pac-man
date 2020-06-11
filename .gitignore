@@ -1,2 +1,9 @@
 /.idea/*
 /out/*
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/pacman.iml
+/.idea/vcs.xml
+/.idea/workspace.xml
+/.idea/shelf/
+/.idea/codeStyles/
