@@ -232,4 +232,15 @@ public class Plateau {
             }
         }
     }
+    public boolean isAvailablePG(){
+        boolean available=false;
+        for(int i=0;i<plateau.length;i++){
+            if(plateau[i] instanceof PacGomme || plateau[i] instanceof SuperPacGomme) {
+                available = true;
+                break;
+            }
+        }
+        return available;
+
+    }
 }

@@ -231,14 +231,21 @@ public class Window extends Application {
                     ltnow = LocalTime.now();
 
                     partie.getPlateau().setFruit();
+
                     if (partie.getPacman().getLife() <= 0) {
                         this.stop();
-                        finJeu(stage);
+                        finJeu(stage,"lose");
                         return;
                     }
+                    if(!(partie.getPlateau().isAvailablePG())){
+                        this.stop();
+                        finJeu(stage,"win");
+                        return;
+                    }
+
                     if(mdj==1 && Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow))==0 && Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60)==0 && Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)==0){
                         this.stop();
-                        finJeu(stage);
+                        finJeu(stage,"lose");
                     }
                     deltaTime = currentNanoTime - prevtime;
 
@@ -392,8 +399,12 @@ public class Window extends Application {
         stage.show();
     }
 
-    public void finJeu(Stage stage){
-        Image msg = new Image("img/lose.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
+    public void finJeu(Stage stage,String etat){
+        Image msg;
+        if(etat.equals("win"))
+            msg = new Image("img/apple.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
+        else
+            msg = new Image("img/lose.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivMsg = new ImageView(msg);
 
         Group root = new Group();
