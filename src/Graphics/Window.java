@@ -11,6 +11,8 @@ import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -18,6 +20,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,6 +34,7 @@ import javafx.util.Duration;
 
 import javax.swing.*;
 import java.nio.file.Paths;
+import java.rmi.dgc.VMID;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -48,6 +52,7 @@ public class Window extends Application {
     boolean boolSPM=true;
     long timerSPM=0;
     int mdj=0;
+    double volume=0.3;
     Partie partie;
     String timer = "";
 
@@ -182,6 +187,8 @@ public class Window extends Application {
         AtomicBoolean menu = new AtomicBoolean(false);
         final Group root = new Group();
         LocalTime ltDebut = LocalTime.now();
+        AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
+        chomp.setVolume(volume);
 
         final Canvas[] canvas = {new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin)};
         GraphicsContext gc = canvas[0].getGraphicsContext2D();
@@ -211,17 +218,17 @@ public class Window extends Application {
         stage.setScene(scene);
         if(mdj==0 || mdj==2)
             root.getChildren().removeAll();
-            mdj1(menu, ltDebut, stage, gc, mdj);
+            mdj1(menu, ltDebut, stage, gc, mdj,chomp);
         if(mdj==1){
             root.getChildren().removeAll();
             ltDebut = ltDebut.plusSeconds(120);
-            mdj1(menu, ltDebut, stage, gc, mdj);
+            mdj1(menu, ltDebut, stage, gc, mdj,chomp);
         }
         }
 
 
 
-    public void mdj1(AtomicBoolean menu, LocalTime ltDebut, Stage stage, GraphicsContext gc, int mdj){
+    public void mdj1(AtomicBoolean menu, LocalTime ltDebut, Stage stage, GraphicsContext gc, int mdj,AudioClip chomp){
         try {
             partie = new Partie(levelPath, wallsColor, this);
 
@@ -229,7 +236,8 @@ public class Window extends Application {
                 long prevtime;
                 long deltaTime;
 
-                AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
+
+
 
                 LocalTime ltnow;
                 public void handle(long currentNanoTime) {
@@ -450,9 +458,40 @@ public class Window extends Application {
         main.getGraphicsContext2D().setFill(Color.BLACK);
         main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);
 
-        root.getChildren().add(main);
-        root.getChildren().add(ivSoundOn);
-        root.getChildren().add(ivback);
+        VBox vVol = new VBox();
+
+        Label labVol = new Label("Volume : ");
+        Slider slider = new Slider();
+
+
+        slider.setMin(0);
+
+        // The maximum value.
+        slider.setMax(100);
+
+        // Current value
+        slider.setValue(volume*100);
+
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+
+        slider.setBlockIncrement(5);
+
+        slider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, //
+                                Number oldValue, Number newValue) {
+                volume = newValue.intValue()*1.0/100;
+            }
+        });
+
+        vVol.getChildren().addAll(labVol,slider);
+        vVol.setPrefHeight(1.0*SCENE_HEIGHT/4);
+        vVol.setPrefWidth(1.0*SCENE_WIDTH/2);
+        vVol.setLayoutX(1.0*SCENE_WIDTH/2 - 150);
+        vVol.setLayoutY((1.0*SCENE_HEIGHT/4)+150);
+        root.getChildren().addAll(main,ivSoundOn,ivback,vVol);
+
 
         ivSoundOn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             sound = false;
