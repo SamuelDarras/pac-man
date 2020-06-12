@@ -4,41 +4,40 @@ import Entity.*;
 
 import Game.Partie;
 import Game.Score;
-import Utils.Constants;
 import Utils.Direction;
-import com.sun.prism.Graphics;
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.swing.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Paths;
-import java.rmi.dgc.VMID;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static Utils.Constants.*;
 
@@ -409,7 +408,16 @@ public class Window extends Application {
             menu(stage);
         });
 
-        pop.getChildren().add(popVbox);
+        Image iCreateLvl = new Image("img/Level_creator.png", 150, 150, false, false);
+        ImageView ivCreateLvl = new ImageView(iCreateLvl);
+        ivCreateLvl.setY(SCENE_HEIGHT-75);
+
+
+        ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            fromCreateLvl(stage);
+        });
+
+        pop.getChildren().addAll(popVbox,ivCreateLvl);
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(popUp);
         stage.show();
@@ -686,6 +694,181 @@ public class Window extends Application {
             afficheScore(stage);
         });
 
+    }
+    public void fromCreateLvl(Stage stage){
+        Group root = new Group();
+
+        Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
+        main.getGraphicsContext2D().setFill(Color.BLACK);
+        main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);
+        GridPane form = new GridPane();
+
+        Label height = new Label("height : ");
+        Label width = new Label("width : ");
+        Label name = new Label("lvl name : ");
+        height.setTextFill(Color.WHITE);
+        width.setTextFill(Color.WHITE);
+        name.setTextFill(Color.WHITE);
+        TextField inputHeight = new TextField();
+        TextField inputWidth = new TextField();
+        TextField inputName = new TextField();
+
+        Image submit = new Image("img/Ok.png", 100, 100, false, false);
+        ImageView ivSubmit = new ImageView(submit);
+        ivSubmit.setX(200);
+        ivSubmit.setY(-25);
+
+        ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            if(inputHeight.getText()!=null && inputHeight.getText()!=null && inputName.getText()!=null)
+               createLvl(Integer.valueOf(inputHeight.getText()),Integer.valueOf(inputWidth.getText()),inputName.getText(),stage);
+        });
+
+        form.add(height,0,0);
+        form.add(inputHeight,1,0);
+        form.add(width,0,1);
+        form.add(inputWidth,1,1);
+        form.add(name,0,2);
+        form.add(inputName,1,2);
+
+        form.setAlignment(Pos.CENTER);
+
+        root.getChildren().addAll(main,form,ivSubmit);
+
+        stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
+
+    }
+    public void createLvl(int height,int width,String name,Stage stage){
+        Group root = new Group();
+        AtomicReference<String> currentBlock = new AtomicReference<>("img/bgBlack.png");
+        int tailleP=height*width;
+        ImageView[] tabIV = new ImageView[tailleP];
+        VBox vbox = new VBox();
+        HBox hbox = new HBox();
+
+        Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
+        main.getGraphicsContext2D().setFill(Color.BLACK);
+        main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);
+        GridPane plateau = new GridPane();
+        for(int i=0;i<tailleP;i++){
+            tabIV[i]=new ImageView(new Image("img/bgBlack.png", ((SCENE_WIDTH*1.0)/width)-1.51, (SCENE_HEIGHT*1.0)/height, false, false));
+
+            int finalI = i;
+            tabIV[i].addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+                tabIV[finalI].setImage(new Image(currentBlock.get(), ((SCENE_WIDTH*1.0)/width)-1.51, (SCENE_HEIGHT*1.0)/height, false, false));
+
+            });
+            plateau.add(tabIV[i],i%width,i/width);
+        }
+        hbox.setMinWidth(100);
+        hbox.setSpacing(10);
+        hbox.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        ImageView[] select = {  new ImageView(new Image("img/bgBlack.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/wall/purple/Wall-purple-T-full.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/PacGomme.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/SuperPacGomme.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/all_fruits.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/pacManR.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/BlinkyGhost.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/ClydeGhost.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/InkyGhost.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/PinkyGhost.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/Home.png", 50, 50, false, false))
+                              };
+        for (ImageView imageView : select) {
+            imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+                currentBlock.set(imageView.getImage().getUrl());
+            });
+            hbox.getChildren().add(imageView);
+        }
+        ImageView save = new ImageView(new Image("img/Save.png", 50, 50, false, false));
+        save.addEventHandler(MouseEvent.MOUSE_CLICKED, reset->{
+                String txt=verifPlateau(tabIV);
+                if(!(txt.equals(""))){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setContentText("Error: "+txt);
+                    alert.showAndWait();
+                }else {
+                    try {
+                        createLvlFile(tabIV,name,height,width);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+        });
+        hbox.getChildren().add(save);
+        plateau.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(3))));
+        vbox.getChildren().addAll(plateau,hbox);
+        root.getChildren().addAll(main,vbox);
+
+        stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
+    }
+    public String verifPlateau(ImageView[] tabIV){
+        String txt="";
+        int compPG=0;
+        int compSPG=0;
+        int compPM=0;
+        int compF=0;
+        int compH=0;
+        for (ImageView imageView : tabIV) {
+            if (imageView.getImage().getUrl().contains("/PacGomme"))
+                compPG++;
+            if (imageView.getImage().getUrl().contains("SuperPacGomme"))
+                compSPG++;
+            if (imageView.getImage().getUrl().contains("pacManR"))
+                compPM++;
+            if (imageView.getImage().getUrl().contains("Ghost"))
+                compF++;
+            if (imageView.getImage().getUrl().contains("Home"))
+                compH++;
+        }
+        if(compPG==0 && compSPG==0)
+            txt+=" Au moin 1 PacGomme ou SuperPacGomme.";
+        if(compPM!=1)
+            txt+=" Il faut 1 seul PacMan.";
+        if(compF!=0 && compH==0)
+            txt+=" Il faut 1 maison pour les fantomes.";
+        if(compH>=2)
+            txt+=" Il faut qu'une seule maison";
+        return txt;
+    }
+    public void createLvlFile(ImageView[] tabIV,String name,int height,int width) throws IOException {
+        File file = new File("src//levels//custo//"+name+".txt");
+        FileWriter fileWriter = new FileWriter("src//levels/custo//"+name+".txt");
+        fileWriter.write(height+" "+width+"\n");
+        for(int i=0;i<height;i++){
+            for(int j=0;j<width;j++) {
+                fileWriter.write(getCarac(tabIV[i * width + j]) + "");
+            }
+            fileWriter.write("\n");
+        }
+        fileWriter.close();
+    }
+    public String getCarac(ImageView iv){
+        String url = iv.getImage().getUrl();
+        if(url.contains("img/bgBlack.png"))
+            return "0";
+        if(url.contains("img/wall/purple/Wall-purple-T-full.png"))
+            return "1";
+        if(url.contains("img/PacGomme.png"))
+            return "p";
+        if(url.contains("img/SuperPacGomme.png"))
+            return "s";
+        if(url.contains("img/all_fruits.png"))
+            return "F";
+        if(url.contains("img/pacManR.png"))
+            return "M";
+        if(url.contains("img/BlinkyGhost.png"))
+            return "B";
+        if(url.contains("img/ClydeGhost.png"))
+            return "C";
+        if(url.contains("img/InkyGhost.png"))
+            return "I";
+        if(url.contains("img/PinkyGhost.png"))
+            return "P";
+        if(url.contains("img/Home.png"))
+            return "H";
+        return "";
     }
 
     public static AudioClip openAudio(String path) {
