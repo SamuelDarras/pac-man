@@ -186,7 +186,7 @@ public class Window extends Application {
 
         ivOption.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> settings(stage));
 
-        ivTrophy.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> afficheScore(stage));
+        ivTrophy.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> scoreBoard(stage));
 
         stage.setScene(new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin));
     }
@@ -435,7 +435,7 @@ public class Window extends Application {
         Group root = new Group();
         root.getChildren().addAll(ivMsg);
 
-        ivMsg.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> ecrireScore(score, stage, timer));
+        ivMsg.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> ecrireScore(score, stage, timer, mdj));
 
         Scene fin = new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(fin);
@@ -640,7 +640,7 @@ public class Window extends Application {
         stage.show();
     }
 
-    public void afficheScore(Stage stage){
+    public void afficheScore(Stage stage, int mode){
         Label tmp0;
         Label tmp1;
         Label tmp2;
@@ -652,7 +652,7 @@ public class Window extends Application {
 
         int c = 5;
 
-        for (String[] s : Score.readScoreFromFile()){
+        for (String[] s : Score.readScoreFromFile(mode)){
 
             if (c <= 0)
                 break;
@@ -696,7 +696,7 @@ public class Window extends Application {
         stage.show();
     }
 
-    public void ecrireScore(Score score, Stage stage, String timer){
+    public void ecrireScore(Score score, Stage stage, String timer, int mdj){
         Label label = new Label("Entrer votre nom :");
         label.setStyle("-fx-text-fill:WHITE;");
 
@@ -721,10 +721,63 @@ public class Window extends Application {
 
         ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             String name = inputName.getText();
-            Score.writeScoreToFile(""+score.getScore(), name, timer);
-            afficheScore(stage);
+            Score.writeScoreToFile(""+score.getScore(), name, timer, mdj);
+            afficheScore(stage ,mdj);
         });
 
+    }
+
+    public void scoreBoard(Stage stage){
+        double width = 200;
+        double height = 200;
+
+        Image select = new Image("img/Select_mode.png", 350, 100, false, false);
+        ImageView ivSelect = new ImageView(select);
+        ivSelect.setX(150);
+
+        Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
+        ImageView ivBg = new ImageView(bg);
+
+        Image classic = new Image("img/Classique.png", width, height, false, false);
+        ImageView ivClassic = new ImageView(classic);
+
+        Image clm = new Image("img/Contre-la-montre.png", width, height, false, false);
+        ImageView ivclm = new ImageView(clm);
+
+        Image infini = new Image("img/Infinity.png", width, height, false, false);
+        ImageView ivinfini = new ImageView(infini);
+
+        Image back = new Image("img/back.png", 100, 100, false, false);
+        ImageView ivBack = new ImageView(back);
+
+        VBox vbox = new VBox();
+        vbox.setPadding(new Insets(100,0,0,SCENE_WIDTH/3));
+        vbox.setSpacing(20.);
+
+        vbox.getChildren().addAll(ivClassic,ivclm,ivinfini);
+
+        Group group = new Group();
+        group.getChildren().addAll(ivBg,vbox,ivBack,ivSelect);
+
+        ivClassic.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            afficheScore(stage , 0);
+        });
+
+        ivclm.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            afficheScore(stage , 1);
+        });
+
+        ivinfini.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            afficheScore(stage , 2);
+        });
+
+        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            menu(stage);
+        });
+
+        Scene scoreBoard = new Scene(group,SCENE_WIDTH,SCENE_HEIGHT*margin);
+        stage.setScene(scoreBoard);
+        stage.show();
     }
 
     public static AudioClip openAudio(String path) {
