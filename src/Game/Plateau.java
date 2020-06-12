@@ -45,8 +45,8 @@ public class Plateau {
         haut = Integer.parseInt(lst[0]);
         larg = Integer.parseInt(lst[1]);
 
-        System.out.print(haut);
-        System.out.println("; " + larg);
+        /*System.out.print(haut);
+        System.out.println("; " + larg);*/
 
         Init(larg, haut);
         idxFruit = new ArrayList<>();

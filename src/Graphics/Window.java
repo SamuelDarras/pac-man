@@ -461,6 +461,7 @@ public class Window extends Application {
         VBox vVol = new VBox();
 
         Label labVol = new Label("Volume : ");
+        labVol.setStyle("-fx-text-fill:WHITE;");
         Slider slider = new Slider();
 
 
