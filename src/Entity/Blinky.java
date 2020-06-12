@@ -11,10 +11,9 @@ public class Blinky extends Ghost {
   }
 
   public void tick(Pacman pac, Plateau p) {
-    if (!pac.superPacman || definedDestination == null) {
-      path = BreadthFirst(getGridPos(), pac.getGridPos(), p);
-      changeDir(getDirectionAccordingToPath(path));
-    }
+    gotoPos = pac.getGridPos();
+    path = BreadthFirst(getGridPos(), gotoPos, p);
+    changeDir(getDirectionAccordingToPath(path));
     changeDir(super.alterDirection(pac, p));
   }
 }

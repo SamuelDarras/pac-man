@@ -11,10 +11,13 @@ public class Personnage extends Entity{
   private double speed;
   private static final double[] speedLimits = new double[] {0, 4};
 
+  Position originalPos;
+
   private Direction dir = Direction.RIGHT;
 
   public Personnage (double _x, double _y, double _baseSpeed) {
     super(_x, _y, PERSONNAGE_WIDTH, PERSONNAGE_HEIGHT);
+    originalPos = new Position(_x, _y);
     baseSpeed = _baseSpeed;
     speed = baseSpeed;
   }
@@ -72,6 +75,10 @@ public class Personnage extends Entity{
   }
 
   public void changeDir(Direction n_dir) {
+    if (n_dir == null) {
+      dir = getDir();
+      return;
+    }
     dir = n_dir;
   }
 
@@ -93,6 +100,10 @@ public class Personnage extends Entity{
   }
   public double getSpeed() { return speed; }
   public double getBaseSpeed() { return baseSpeed; }
+
+  public void resetPosition() {
+    setPos(originalPos);
+  }
 
   public Direction getDir() {
       return dir;

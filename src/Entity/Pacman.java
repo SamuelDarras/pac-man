@@ -10,8 +10,6 @@ import javafx.scene.image.Image;
 public class Pacman extends Personnage{
     private int life = 3;
 
-    private Position originalPos;
-
     private static final Image imR = new Image("img/pacManR.png");
     private static final Image imD = new Image("img/pacManD.png", false);
     private static final Image imL = new Image("img/pacManL.png", false);
@@ -21,17 +19,20 @@ public class Pacman extends Personnage{
 
 	public Pacman(double x, double y, double speed){
 	    super(x, y, speed);
-        originalPos = new Position(x, y);
     }
 
 	public boolean isDead(Plateau p){
         for (Entity e : p.getPlateau()) {
             if (e instanceof Ghost && e.hit(this)) {
                 if (!superPacman) {
+                    for (Entity ee : p.getPlateau())
+                        if (ee instanceof Ghost)
+                            ((Ghost) ee).resetPosition();
+
                     life--;
                     return true;
                 } else {
-                    ((Ghost) e).go(p.getHouse());
+                    ((Ghost) e).dead = true;
                     return false;
                 }
             }
