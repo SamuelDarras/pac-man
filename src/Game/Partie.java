@@ -3,8 +3,6 @@ package Game;
 
 import Entity.*;
 import Graphics.Window;
-import Utils.Direction;
-import com.sun.javafx.scene.control.SelectedItemsReadOnlyObservableList;
 
 public class Partie {
     private Score score;

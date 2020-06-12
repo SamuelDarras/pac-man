@@ -149,6 +149,13 @@ public class Window extends Application {
         ImageView ivOption = new ImageView(options);
         ivDemo.preserveRatioProperty();
 
+        Image trophy = new Image("img/trophy.png",300,300,false,false);
+        ImageView ivTrophy = new ImageView(trophy);
+        ivTrophy.preserveRatioProperty();
+
+        ivTrophy.setX(-100);
+        ivTrophy.setY(550);
+
         Group root = new Group();
 
         VBox vbox=new VBox();
@@ -162,7 +169,7 @@ public class Window extends Application {
         bg.drawImage(image, 0, 0, SCENE_WIDTH,SCENE_HEIGHT*margin);
 
         root.getChildren().add(c);
-        root.getChildren().add(vbox);
+        root.getChildren().addAll(ivTrophy, vbox);
 
         ivJouer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> select(stage));
 
@@ -177,7 +184,7 @@ public class Window extends Application {
 
         ivOption.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> settings(stage));
 
-
+        ivTrophy.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> scoreBoard(stage));
 
         stage.setScene(new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin));
     }
@@ -242,8 +249,7 @@ public class Window extends Application {
                 public void handle(long currentNanoTime) {
                     ltnow = LocalTime.now();
 
-                    timer = String.format("%02d:%02d:%02d",
-                            ChronoUnit.HOURS.between(ltDebut,ltnow),
+                    timer = String.format("%02d:%02d",
                             ChronoUnit.MINUTES.between(ltDebut,ltnow)%60,
                             ChronoUnit.SECONDS.between(ltDebut,ltnow)%60);
 
@@ -311,8 +317,7 @@ public class Window extends Application {
                     if(mdj==0 || mdj==2)
                         gc.fillText("Timer : " + timer, (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
                     else
-                        gc.fillText("Timer : " + String.format("%02d:%02d:%02d",
-                                Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow)),
+                        gc.fillText("Timer : " + String.format("%02d:%02d",
                                 Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60),
                                 Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)),
                                 (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
@@ -437,7 +442,7 @@ public class Window extends Application {
         Group root = new Group();
         root.getChildren().addAll(ivMsg);
 
-        ivMsg.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> ecrireScore(score, stage, timer));
+        ivMsg.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> ecrireScore(score, stage, timer, mdj));
 
         Scene fin = new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(fin);
@@ -521,8 +526,9 @@ public class Window extends Application {
         double width = 1.0*SCENE_WIDTH/4;
         double height = 1.0*SCENE_HEIGHT/4;
 
-        HBox popVbox=new HBox();
-        popVbox.setSpacing(30.);
+        VBox popVbox=new VBox();
+        popVbox.setSpacing(10.);
+        popVbox.setPadding(new Insets(0,0,0, SCENE_WIDTH/3));
         popVbox.setAlignment(Pos.TOP_CENTER);
 
         Group pop = new Group();
@@ -536,7 +542,6 @@ public class Window extends Application {
         Image iback = new Image("img/back.png", width/2, height/2, false, false);
         ImageView ivback = new ImageView(iback);
         ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
-        popVbox.getChildren().add(ivback);
 
         Image ilvl1 = new Image("img/0002_Level-1.png", width, height, false, false);
         ImageView ivlvl1 = new ImageView(ilvl1);
@@ -578,7 +583,7 @@ public class Window extends Application {
             jeu(stage);
         });
 
-        pop.getChildren().add(popVbox);
+        pop.getChildren().addAll(popVbox, ivback);
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(popUp);
         stage.show();
@@ -588,8 +593,9 @@ public class Window extends Application {
         double width = 1.0*SCENE_WIDTH/4;
         double height = 1.0*SCENE_HEIGHT/4;
 
-        HBox popVbox=new HBox();
+        VBox popVbox=new VBox();
         popVbox.setSpacing(30.);
+        popVbox.setPadding(new Insets(0,0,0,SCENE_WIDTH/3));
         popVbox.setAlignment(Pos.TOP_CENTER);
 
         Group pop = new Group();
@@ -603,7 +609,6 @@ public class Window extends Application {
         Image iback = new Image("img/back.png", width/2, height/2, false, false);
         ImageView ivback = new ImageView(iback);
         ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
-        popVbox.getChildren().add(ivback);
 
         Image imdj1 = new Image("img/Classique.png", width, height, false, false);
         ImageView ivmdj1 = new ImageView(imdj1);
@@ -636,64 +641,150 @@ public class Window extends Application {
         });
 
 
-        pop.getChildren().add(popVbox);
+        pop.getChildren().addAll(popVbox, ivback);
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(popUp);
         stage.show();
     }
 
-    public void afficheScore(Stage stage){
+    public void afficheScore(Stage stage, int mode){
         Label tmp0;
         Label tmp1;
         Label tmp2;
+        Label sepa;
 
         VBox vbox = new VBox();
 
         Group group = new Group();
 
-        for (String[] s : Score.readScoreFromFile()){
+        int c = 5;
+
+        for (String[] s : Score.readScoreFromFile(mode)){
+
+            if (c <= 0)
+                break;
+            c--;
+
             tmp0 = new Label(s[0]);
-            tmp1 = new Label(s[1]);
-            tmp2 = new Label(s[2]);
+            tmp0.setStyle("-fx-text-fill:WHITE; -fx-font-size:30px;");
+            tmp0.setAlignment(Pos.TOP_CENTER);
+            tmp1 = new Label("Score : "+ s[1]);
+            tmp1.setStyle("-fx-text-fill:WHITE; -fx-font-size:15px;");
+            tmp2 = new Label("Temps : "+s[2]);
+            tmp2.setStyle("-fx-text-fill:WHITE; -fx-font-size:15px;");
+            sepa = new Label("##########");
+            sepa.setStyle("-fx-text-fill:WHITE; -fx-font-size:20px;");
 
-            vbox.getChildren().addAll(tmp0, tmp1, tmp2);
+            vbox.getChildren().addAll(tmp0, tmp1, tmp2, sepa);
         }
-        Image submit = new Image("img/Ok.png", 100, 100, false, false);
+
+        vbox.setPadding(new Insets(160, 0,0,150));
+
+        Image submit = new Image("img/Ok.png", 300, 300, false, false);
         ImageView ivSubmit = new ImageView(submit);
+        ivSubmit.setY(SCENE_HEIGHT*margin-100);
+        ivSubmit.setX(-100);
 
-        vbox.getChildren().add(ivSubmit);
+        Image bg = new Image("img/bgBlack.png", 500, SCENE_HEIGHT * margin + 200, false, false);
+        ImageView ivBg = new ImageView(bg);
 
-        group.getChildren().addAll(vbox);
+        Image label = new Image("img/high_score.png", 400, 100, false, false);
+        ImageView ivLabel = new ImageView(label);
+        ivLabel.setX(20.);
+
+        group.getChildren().addAll(ivBg, ivLabel , ivSubmit,vbox);
 
         ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             menu(stage);
         });
 
-        Scene score = new Scene(group,SCENE_WIDTH,SCENE_HEIGHT*margin);
+        Scene score = new Scene(group,450,SCENE_HEIGHT*margin+100);
         stage.setScene(score);
         stage.show();
     }
 
-    public void ecrireScore(Score score, Stage stage, String timer){
-        Label label = new Label("Name :");
+    public void ecrireScore(Score score, Stage stage, String timer, int mdj){
+        Label label = new Label("Entrer votre nom :");
+        label.setStyle("-fx-text-fill:WHITE;");
+
         final TextField inputName = new TextField();
 
-        Image submit = new Image("img/Ok.png", 100, 100, false, false);
+        Image submit = new Image("img/Ok.png", 250, 250, false, false);
         ImageView ivSubmit = new ImageView(submit);
 
-        Group group = new Group();
-        group.getChildren().addAll(label, inputName, ivSubmit);
+        Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
+        ImageView ivBg = new ImageView(bg);
 
-        Scene scene = new Scene(group, SCENE_WIDTH, SCENE_HEIGHT * margin);
+        VBox vbox = new VBox();
+        vbox.setPadding(new Insets(15, 12, 15, 12));
+        vbox.getChildren().addAll(label, inputName, ivSubmit);
+
+        Group group = new Group();
+        group.getChildren().addAll(ivBg,vbox);
+
+        Scene scene = new Scene(group, 300, 300);
         stage.setScene(scene);
 
 
         ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             String name = inputName.getText();
-            Score.writeScoreToFile(""+score.getScore(), name, timer);
-            afficheScore(stage);
+            Score.writeScoreToFile(""+score.getScore(), name, timer, mdj);
+            afficheScore(stage ,mdj);
         });
 
+    }
+
+    public void scoreBoard(Stage stage){
+        double width = 200;
+        double height = 200;
+
+        Image select = new Image("img/Select_mode.png", 350, 100, false, false);
+        ImageView ivSelect = new ImageView(select);
+        ivSelect.setX(150);
+
+        Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
+        ImageView ivBg = new ImageView(bg);
+
+        Image classic = new Image("img/Classique.png", width, height, false, false);
+        ImageView ivClassic = new ImageView(classic);
+
+        Image clm = new Image("img/Contre-la-montre.png", width, height, false, false);
+        ImageView ivclm = new ImageView(clm);
+
+        Image infini = new Image("img/Infinity.png", width, height, false, false);
+        ImageView ivinfini = new ImageView(infini);
+
+        Image back = new Image("img/back.png", 100, 100, false, false);
+        ImageView ivBack = new ImageView(back);
+
+        VBox vbox = new VBox();
+        vbox.setPadding(new Insets(100,0,0,SCENE_WIDTH/3));
+        vbox.setSpacing(20.);
+
+        vbox.getChildren().addAll(ivClassic,ivclm,ivinfini);
+
+        Group group = new Group();
+        group.getChildren().addAll(ivBg,vbox,ivBack,ivSelect);
+
+        ivClassic.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            afficheScore(stage , 0);
+        });
+
+        ivclm.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            afficheScore(stage , 1);
+        });
+
+        ivinfini.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            afficheScore(stage , 2);
+        });
+
+        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            menu(stage);
+        });
+
+        Scene scoreBoard = new Scene(group,SCENE_WIDTH,SCENE_HEIGHT*margin);
+        stage.setScene(scoreBoard);
+        stage.show();
     }
     public void fromCreateLvl(Stage stage){
         Group root = new Group();
