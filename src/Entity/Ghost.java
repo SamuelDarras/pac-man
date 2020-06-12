@@ -1,19 +1,25 @@
 package Entity;
 
 import Game.Plateau;
+import Utils.Constants;
 import Utils.Direction;
 import Utils.Position;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
 public abstract class Ghost extends Personnage {
     Image img;
     Image alteredImg;
+
+    Position gotoPos;
     ArrayList<Position> path;
 
-    Position definedDestination;
+    boolean frightened = false;
+    boolean dead = false;
+    boolean alreadyDied = false;
 
     public Ghost(double x, double y, double baseSpeed) {
         super(x, y, baseSpeed);
@@ -23,7 +29,6 @@ public abstract class Ghost extends Personnage {
     int cury = -1;
     public Direction getDirectionAccordingToPath(ArrayList<Position> path) {
 
-
         if (path.size() > 0) {
             int p0x = (int) path.get(path.size() - 1).getX();
             int p0y = (int) path.get(path.size() - 1).getY();
@@ -31,20 +36,16 @@ public abstract class Ghost extends Personnage {
             int curx = (int) getGridPos().getX();
             int cury = (int) getGridPos().getY();
 
-            if (curx > p0x && getDir() != Direction.RIGHT)
+            if (curx > p0x)
                 return Direction.LEFT;
-            if (curx < p0x && getDir() != Direction.LEFT)
+            if (curx < p0x)
                 return Direction.RIGHT;
-            if (cury > p0y && getDir() != Direction.DOWN)
+            if (cury > p0y)
                 return Direction.UP;
-            if (cury < p0y && getDir() != Direction.UP)
+            if (cury < p0y)
                 return Direction.DOWN;
         }
         return getDir();
-    }
-
-    public void go(Position pos) {
-        definedDestination = pos.copy();
     }
 
     public void draw(GraphicsContext gc) {
@@ -53,6 +54,19 @@ public abstract class Ghost extends Personnage {
             gc.drawImage(toDraw, getPos().getX() + getHitbox()[0], getPos().getY(), -getHitbox()[0], getHitbox()[1]);
         else
             gc.drawImage(toDraw, getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);
+        if (path != null && path.size() > 0) {
+            Position prev = path.get(0).copy();
+            for (Position pos : path) {
+                gc.setStroke(Color.RED);
+                gc.setLineWidth(5);
+                gc.strokeLine((int) prev.getX()*Constants.WALL_WIDTH + Constants.WALL_WIDTH*.5, (int) prev.getY()*Constants.WALL_HEIGHT + Constants.WALL_HEIGHT*.5, (int) pos.getX()*Constants.WALL_WIDTH + Constants.WALL_WIDTH*.5, (int) pos.getY()*Constants.WALL_HEIGHT + Constants.WALL_HEIGHT*.5);
+                prev = pos.copy();
+            }
+        }
+        if (gotoPos != null) {
+            gc.setFill(Color.RED);
+            gc.fillOval((int) gotoPos.getX() * Constants.WALL_WIDTH, (int) gotoPos.getY() * Constants.WALL_HEIGHT, 10, 10);
+        }
     }
 
     public ArrayList<Position> BreadthFirst(Position start, Position end, Plateau plat) {
@@ -67,19 +81,21 @@ public abstract class Ghost extends Personnage {
         Plateau platCpy = plat.simpleCopy();
         int curx = (int) getGridPos().getX();
         int cury = (int) getGridPos().getY();
-        switch (getDir()) {
-            case UP:
-                platCpy.setCell(new Wall(platCpy.getCell(curx, cury + 1).getPos().getX(), platCpy.getCell(curx, cury + 1).getPos().getY()), curx, cury + 1);
-                break;
-            case DOWN:
-                platCpy.setCell(new Wall(platCpy.getCell(curx, cury - 1).getPos().getX(), platCpy.getCell(curx, cury - 1).getPos().getY()), curx, cury - 1);
-                break;
-            case LEFT:
-                platCpy.setCell(new Wall(platCpy.getCell(curx + 1, cury).getPos().getX(), platCpy.getCell(curx + 1, cury).getPos().getY()), curx + 1, cury);
-                break;
-            case RIGHT:
-                platCpy.setCell(new Wall(platCpy.getCell(curx - 1, cury).getPos().getX(), platCpy.getCell(curx - 1, cury).getPos().getY()), curx - 1, cury);
-                break;
+        if (getNeighbours(getGridPos(), plat).size() > 1) {
+            switch (getDir()) {
+                case UP:
+                    platCpy.setCell(new Wall(platCpy.getCell(curx, cury + 1).getPos().getX(), platCpy.getCell(curx, cury + 1).getPos().getY()), curx, cury + 1);
+                    break;
+                case DOWN:
+                    platCpy.setCell(new Wall(platCpy.getCell(curx, cury - 1).getPos().getX(), platCpy.getCell(curx, cury - 1).getPos().getY()), curx, cury - 1);
+                    break;
+                case LEFT:
+                    platCpy.setCell(new Wall(platCpy.getCell(curx + 1, cury).getPos().getX(), platCpy.getCell(curx + 1, cury).getPos().getY()), curx + 1, cury);
+                    break;
+                case RIGHT:
+                    platCpy.setCell(new Wall(platCpy.getCell(curx - 1, cury).getPos().getX(), platCpy.getCell(curx - 1, cury).getPos().getY()), curx - 1, cury);
+                    break;
+            }
         }
 
         while (frontier.size() > 0) {
@@ -145,26 +161,34 @@ public abstract class Ghost extends Personnage {
             cury = (int) getGridPos().getY();
         }
 
-        /*System.out.println(getGridPos());
-        System.out.println(new Position(curx, cury));*/
+
+        if (pac.superPacman && !frightened && !alreadyDied) {
+            frightened = true;
+        }
+        if (!pac.superPacman) {
+            frightened = false;
+            alreadyDied = false;
+        }
 
         alteredImg = null;
-        if (pac.superPacman) {
+        if (frightened)
             alteredImg = new Image("img/DeadGhost.png");
-        }
-        if (definedDestination != null) {
+        if (dead)
             alteredImg = new Image("img/EatenGhost.png");
-        }
 
-        if (pac.superPacman && !getGridPos().equals(new Position(curx, cury))) {
-            if (definedDestination != null && getGridPos().equals(definedDestination)) {
-                definedDestination = null;
+        if (dead) {
+            if (getGridPos().equals(plat.getHouse())) {
+                dead = false;
+                alreadyDied = true;
+                frightened = false;
                 resetSpeed();
+                return Direction.LEFT;
             }
-            if (definedDestination != null) {
-                addSpeed(getSpeed());
-                return getDirectionAccordingToPath(BreadthFirst(getGridPos(), definedDestination, plat));
-            }
+            addSpeed(getSpeed());
+            gotoPos = plat.getHouse();
+            return getDirectionAccordingToPath(BreadthFirst(getGridPos(), gotoPos, plat));
+        }
+        if (frightened && !getGridPos().equals(new Position(curx, cury))) {
             curx = (int) getGridPos().getX();
             cury = (int) getGridPos().getY();
             int x = (int)(Math.random()*plat.getLargeur());
@@ -173,8 +197,10 @@ public abstract class Ghost extends Personnage {
                 x = (int)(Math.random()*plat.getLargeur());
                 y = (int)(Math.random()*plat.getHauteur());
             }
-            return getDirectionAccordingToPath(BreadthFirst(getGridPos(), new Position(x, y), plat));
+            gotoPos = new Position(x, y);
+            return getDirectionAccordingToPath(BreadthFirst(getGridPos(), gotoPos, plat));
         }
-        return getDir();
+
+        return null;
     }
 }
