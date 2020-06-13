@@ -135,16 +135,22 @@ public class Score {
 
 	public static void writeScoreToFile(String playerScore, String playerName, String playerTime, int mdj) {
 		try {
-			if (mdj == 0 || mdj == 1) {
-				FileWriter fileWriter = new FileWriter(SCOREFILEScore2, true);
+			if (mdj == 0) {
+				FileWriter fileWriter = new FileWriter(SCOREFILEScore0, true);
 				fileWriter.write(playerName + ";" + playerScore + ";" + playerTime + "\n");
 				fileWriter.close();
 			}
-			else {
+			if (mdj == 1) {
 				FileWriter fileWriter = new FileWriter(SCOREFILETime, true);
 				fileWriter.write(playerName + ";" + playerScore + ";" + playerTime + "\n");
 				fileWriter.close();
 			}
+			if (mdj == 2) {
+				FileWriter fileWriter = new FileWriter(SCOREFILEScore2, true);
+				fileWriter.write(playerName + ";" + playerScore + ";" + playerTime + "\n");
+				fileWriter.close();
+			}
+
 		}
 		catch(IOException ioEx) {
 			System.out.println("Erreur lors de l'écriture du score : " + ioEx.getMessage());
