@@ -17,10 +17,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -137,8 +134,8 @@ public class Window extends Application {
         ImageView ivDemo = new ImageView(demo);
         ivDemo.preserveRatioProperty();
 
-        Image mdj = new Image("img/mdj.png",700,100,false,false);
-        ImageView ivMdj = new ImageView(mdj);
+        Image imdj = new Image("img/mdj.png",700,100,false,false);
+        ImageView ivMdj = new ImageView(imdj);
         ivDemo.preserveRatioProperty();
 
         Image custo = new Image("img/custo.png",700,100,false,false);
@@ -175,7 +172,7 @@ public class Window extends Application {
 
         ivDemo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             levelPath="src/levels/level1V2.txt";
-            jeu(stage);
+            jeu(stage,mdj);
         });
 
         ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> mdj(stage));
@@ -189,7 +186,7 @@ public class Window extends Application {
         stage.setScene(new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin));
     }
 
-    public void jeu(Stage stage) {
+    public void jeu(Stage stage,int mdj) {
         AtomicBoolean menu = new AtomicBoolean(false);
         final Group root = new Group();
         LocalTime ltDebut = LocalTime.now();
@@ -222,7 +219,7 @@ public class Window extends Application {
             }
         });
         stage.setScene(scene);
-        if(mdj==0 || mdj==2)
+        if(mdj==0 || mdj==2 || mdj==4)
             root.getChildren().removeAll();
             mdj1(menu, ltDebut, stage, gc, mdj,chomp);
         if(mdj==1){
@@ -244,7 +241,6 @@ public class Window extends Application {
 
 
 
-
                 LocalTime ltnow;
                 public void handle(long currentNanoTime) {
                     ltnow = LocalTime.now();
@@ -257,12 +253,12 @@ public class Window extends Application {
 
                     if (partie.getPacman().getLife() <= 0) {
                         this.stop();
-                        finJeu(stage,"lose", partie.getScore(), timer);
+                        finJeu(stage,"lose", partie.getScore(), timer,mdj);
                         return;
                     }
                     if(!(partie.getPlateau().isAvailablePG()) && mdj!=2){
                         this.stop();
-                        finJeu(stage,"win", partie.getScore(), timer);
+                        finJeu(stage,"win", partie.getScore(), timer,mdj);
                         return;
                     }
 
@@ -272,7 +268,7 @@ public class Window extends Application {
 
                     if(mdj==1 && Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow))==0 && Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60)==0 && Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)==0){
                         this.stop();
-                        finJeu(stage,"lose", partie.getScore(), timer);
+                        finJeu(stage,"lose", partie.getScore(), timer,mdj);
                     }
                     deltaTime = currentNanoTime - prevtime;
 
@@ -314,7 +310,7 @@ public class Window extends Application {
                     }
                     gc.setFill(Color.WHITE);
                     gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.02);
-                    if(mdj==0 || mdj==2)
+                    if(mdj==0 || mdj==2 || mdj==4)
                         gc.fillText("Timer : " + timer, (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
                     else
                         gc.fillText("Timer : " + String.format("%02d:%02d",
@@ -416,19 +412,23 @@ public class Window extends Application {
         Image iCreateLvl = new Image("img/Level_creator.png", 150, 150, false, false);
         ImageView ivCreateLvl = new ImageView(iCreateLvl);
         ivCreateLvl.setY(SCENE_HEIGHT-75);
+        ivCreateLvl.setX(SCENE_WIDTH-150);
 
 
         ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             fromCreateLvl(stage);
         });
+        ImageView ivback = new ImageView(new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false));
+        ivback.setY(SCENE_HEIGHT-20);
+        ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> menu(stage));
 
-        pop.getChildren().addAll(popVbox,ivCreateLvl);
+        pop.getChildren().addAll(popVbox,ivCreateLvl,ivback);
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(popUp);
         stage.show();
     }
 
-    public void finJeu(Stage stage,String etat, Score score, String timer){
+    public void finJeu(Stage stage,String etat, Score score, String timer,int mdj){
         Image msg;
         if(etat.equals("win")) {
             msg = new Image("img/win.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
@@ -452,6 +452,7 @@ public class Window extends Application {
     public void settings(Stage stage) {
         Image iback = new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false);
         ImageView ivback = new ImageView(iback);
+        ivback.setY(SCENE_HEIGHT-20);
         ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
 
         Image soundOn = new Image("img/son-on.png", 200, 100, false, false);
@@ -539,9 +540,7 @@ public class Window extends Application {
 
         pop.getChildren().add(main);
 
-        Image iback = new Image("img/back.png", width/2, height/2, false, false);
-        ImageView ivback = new ImageView(iback);
-        ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
+
 
         Image ilvl1 = new Image("img/0002_Level-1.png", width, height, false, false);
         ImageView ivlvl1 = new ImageView(ilvl1);
@@ -550,7 +549,7 @@ public class Window extends Application {
 
         ivlvl1.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             levelPath="src/levels/level1V2.txt";
-            jeu(stage);
+            jeu(stage,mdj);
         });
 
         Image ilvl2 = new Image("img/Level_2.png", width, height, false, false);
@@ -560,7 +559,7 @@ public class Window extends Application {
 
         ivlvl2.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             levelPath="src/levels/level2.txt";
-            jeu(stage);
+            jeu(stage,mdj);
         });
 
         Image ilvl3 = new Image("img/0001_presentation1.2.png", width, height, false, false);
@@ -570,7 +569,7 @@ public class Window extends Application {
 
         ivlvl3.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             levelPath="src/levels/level1Pres.txt";
-            jeu(stage);
+            jeu(stage,mdj);
         });
 
         Image ilvl4 = new Image("img/0000_presentation-2.png", width, height, false, false);
@@ -580,13 +579,59 @@ public class Window extends Application {
 
         ivlvl4.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             levelPath="src/levels/level2Pres.txt";
-            jeu(stage);
+            jeu(stage,mdj);
         });
+        ImageView ivback = new ImageView(new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false));
+        ivback.setY(SCENE_HEIGHT-20);
+        ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> menu(stage));
 
-        pop.getChildren().addAll(popVbox, ivback);
+        ImageView lvlCusto = new ImageView(new Image("img/Custom_level.png",width,height,false,false));
+        lvlCusto.setX(SCENE_WIDTH-width);
+        lvlCusto.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> selectCusto(stage));
+
+        pop.getChildren().addAll(popVbox, ivback,lvlCusto);
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(popUp);
         stage.show();
+    }
+    public void selectCusto(Stage stage){
+        Group root = new Group();
+
+        Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
+        main.getGraphicsContext2D().setFill(Color.BLACK);
+        main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);
+        File repertoire = new File("src//levels/custo//");
+        File[] files= repertoire.listFiles();
+        assert files != null;
+        Button[] buttons = new Button[files.length];
+        for(int i=0;i<buttons.length;i++){
+            buttons[i]= new Button(files[i].getName().substring(0,files[i].getName().length()-4));
+            int finalI = i;
+            buttons[i].addEventHandler(MouseEvent.MOUSE_CLICKED, click-> {
+                levelPath = "src//levels//custo//" + files[finalI].getName();
+                jeu(stage, 4);
+                    }
+            );
+        }
+        ImageView ivback = new ImageView(new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false));
+        ivback.setY(SCENE_HEIGHT-20);
+        ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> select(stage));
+
+
+        GridPane gridPane = new GridPane();
+
+        for(int i=0;i<10;i++){
+            for(int j=0;j<10;j++){
+                if (i*10+j<buttons.length)
+                    gridPane.add(buttons[i*10+j],j,i);
+            }
+        }
+
+
+        root.getChildren().addAll(main,gridPane,ivback);
+
+        stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
+
     }
 
     public void mdj(Stage stage) {
@@ -606,8 +651,8 @@ public class Window extends Application {
 
         pop.getChildren().add(main);
 
-        Image iback = new Image("img/back.png", width/2, height/2, false, false);
-        ImageView ivback = new ImageView(iback);
+        ImageView ivback = new ImageView(new Image("img/back.png", width/2, height/2, false, false));
+        ivback.setY(SCENE_HEIGHT-20);
         ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
 
         Image imdj1 = new Image("img/Classique.png", width, height, false, false);
@@ -704,33 +749,37 @@ public class Window extends Application {
     }
 
     public void ecrireScore(Score score, Stage stage, String timer, int mdj){
-        Label label = new Label("Entrer votre nom :");
-        label.setStyle("-fx-text-fill:WHITE;");
+        System.out.println(mdj);
+        if(mdj!=4) {
+            Label label = new Label("Entrer votre nom :");
+            label.setStyle("-fx-text-fill:WHITE;");
 
-        final TextField inputName = new TextField();
+            final TextField inputName = new TextField();
 
-        Image submit = new Image("img/Ok.png", 250, 250, false, false);
-        ImageView ivSubmit = new ImageView(submit);
+            Image submit = new Image("img/Ok.png", 250, 250, false, false);
+            ImageView ivSubmit = new ImageView(submit);
 
-        Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
-        ImageView ivBg = new ImageView(bg);
+            Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
+            ImageView ivBg = new ImageView(bg);
 
-        VBox vbox = new VBox();
-        vbox.setPadding(new Insets(15, 12, 15, 12));
-        vbox.getChildren().addAll(label, inputName, ivSubmit);
+            VBox vbox = new VBox();
+            vbox.setPadding(new Insets(15, 12, 15, 12));
+            vbox.getChildren().addAll(label, inputName, ivSubmit);
 
-        Group group = new Group();
-        group.getChildren().addAll(ivBg,vbox);
+            Group group = new Group();
+            group.getChildren().addAll(ivBg, vbox);
 
-        Scene scene = new Scene(group, 300, 300);
-        stage.setScene(scene);
+            Scene scene = new Scene(group, 300, 300);
+            stage.setScene(scene);
 
 
-        ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            String name = inputName.getText();
-            Score.writeScoreToFile(""+score.getScore(), name, timer, mdj);
-            afficheScore(stage ,mdj);
-        });
+            ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+                String name = inputName.getText();
+                Score.writeScoreToFile("" + score.getScore(), name, timer, mdj);
+                afficheScore(stage, mdj);
+            });
+        }else
+            menu(stage);
 
     }
 
@@ -754,8 +803,10 @@ public class Window extends Application {
         Image infini = new Image("img/Infinity.png", width, height, false, false);
         ImageView ivinfini = new ImageView(infini);
 
-        Image back = new Image("img/back.png", 100, 100, false, false);
-        ImageView ivBack = new ImageView(back);
+
+        ImageView ivBack = new ImageView(new Image("img/back.png", 100, 100, false, false));
+        ivBack.setY(SCENE_HEIGHT-20);
+
 
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(100,0,0,SCENE_WIDTH/3));
@@ -804,10 +855,10 @@ public class Window extends Application {
         TextField inputWidth = new TextField();
         TextField inputName = new TextField();
 
-        Image submit = new Image("img/Ok.png", 100, 100, false, false);
+        Image submit = new Image("img/Ok_custo.png", 50, 40, false, false);
         ImageView ivSubmit = new ImageView(submit);
-        ivSubmit.setX(200);
-        ivSubmit.setY(-25);
+        ivSubmit.setX(SCENE_WIDTH/3.1);
+        ivSubmit.setY(20);
 
         ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             if(inputHeight.getText()!=null && inputHeight.getText()!=null && inputName.getText()!=null)
@@ -822,8 +873,11 @@ public class Window extends Application {
         form.add(inputName,1,2);
 
         form.setAlignment(Pos.CENTER);
+        ImageView ivback = new ImageView(new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false));
+        ivback.setY(SCENE_HEIGHT-20);
+        ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> custo(stage));
 
-        root.getChildren().addAll(main,form,ivSubmit);
+        root.getChildren().addAll(main,form,ivSubmit,ivback);
 
         stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
 
@@ -841,11 +895,11 @@ public class Window extends Application {
         main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);
         GridPane plateau = new GridPane();
         for(int i=0;i<tailleP;i++){
-            tabIV[i]=new ImageView(new Image("img/bgBlack.png", ((SCENE_WIDTH*1.0)/width)-1.51, (SCENE_HEIGHT*1.0)/height, false, false));
+            tabIV[i]=new ImageView(new Image("img/bgBlack.png", ((SCENE_WIDTH*1.0)/width)-8, (SCENE_HEIGHT*1.0)/height-8, false, false));
 
             int finalI = i;
             tabIV[i].addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-                tabIV[finalI].setImage(new Image(currentBlock.get(), ((SCENE_WIDTH*1.0)/width)-1.51, (SCENE_HEIGHT*1.0)/height, false, false));
+                tabIV[finalI].setImage(new Image(currentBlock.get(), ((SCENE_WIDTH*1.0)/width)-8, (SCENE_HEIGHT*1.0)/height-8, false, false));
 
             });
             plateau.add(tabIV[i],i%width,i/width);
@@ -871,7 +925,14 @@ public class Window extends Application {
             });
             hbox.getChildren().add(imageView);
         }
-        ImageView save = new ImageView(new Image("img/Save.png", 50, 50, false, false));
+        HBox hbox2 = new HBox();
+        ImageView back = new ImageView(new Image("img/back.png", 75, 75, false, false));
+
+        back.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            menu(stage);
+        });
+
+        ImageView save = new ImageView(new Image("img/Save.png", 75, 75, false, false));
         save.addEventHandler(MouseEvent.MOUSE_CLICKED, reset->{
                 String txt=verifPlateau(tabIV);
                 if(!(txt.equals(""))){
@@ -882,14 +943,16 @@ public class Window extends Application {
                 }else {
                     try {
                         createLvlFile(tabIV,name,height,width);
+                        menu(stage);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
         });
-        hbox.getChildren().add(save);
+        hbox2.getChildren().addAll(save,back);
         plateau.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(3))));
-        vbox.getChildren().addAll(plateau,hbox);
+        vbox.getChildren().addAll(plateau,hbox,hbox2);
+        vbox.setPadding(new Insets(0,0,0,SCENE_WIDTH/30));
         root.getChildren().addAll(main,vbox);
 
         stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
