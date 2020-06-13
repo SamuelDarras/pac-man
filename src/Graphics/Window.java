@@ -659,23 +659,26 @@ public class Window extends Application {
 
         int c = 5;
 
-        for (String[] s : Score.readScoreFromFile(mode)){
+        for (String s : Score.readScoreFromFile(mode)){
+
+            String[] str = s.split(";");
+
+
 
             if (c <= 0)
                 break;
             c--;
 
-            tmp0 = new Label(s[0]);
+            tmp0 = new Label(str[0]);
             tmp0.setStyle("-fx-text-fill:WHITE; -fx-font-size:30px;");
-            tmp0.setAlignment(Pos.TOP_CENTER);
-            tmp1 = new Label("Score : "+ s[1]);
-            tmp1.setStyle("-fx-text-fill:WHITE; -fx-font-size:15px;");
-            tmp2 = new Label("Temps : "+s[2]);
-            tmp2.setStyle("-fx-text-fill:WHITE; -fx-font-size:15px;");
-            sepa = new Label("##########");
-            sepa.setStyle("-fx-text-fill:WHITE; -fx-font-size:20px;");
+            tmp1 = new Label("Score: "+str[1]);
+            tmp1.setStyle("-fx-text-fill:WHITE; -fx-font-size:20px;");
+            tmp2 = new Label("Time: "+str[2]);
+            tmp2.setStyle("-fx-text-fill:WHITE; -fx-font-size:20px;");
+            sepa = new Label("----------------------------------");
+            sepa.setStyle("-fx-text-fill:WHITE; -fx-font-size:10px;");
 
-            vbox.getChildren().addAll(tmp0, tmp1, tmp2, sepa);
+            vbox.getChildren().addAll(tmp0,tmp1,tmp2,sepa);
         }
 
         vbox.setPadding(new Insets(160, 0,0,150));
