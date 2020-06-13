@@ -9,8 +9,8 @@ public class Clyde extends Ghost {
 
 
     public Clyde(double x, double y, double speed, String skin) {
-        super(x, y, speed);
-        img = new Image("img/"+skin+"/ClydeGhost.png");
+        super(x, y, speed, skin);
+        img = new Image("img/Pacman/"+skin+"/ClydeGhost.png");
     }
 
     public void tick(Pacman pac, Plateau p) {
