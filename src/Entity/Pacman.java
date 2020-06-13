@@ -2,23 +2,28 @@ package Entity;
 
 import Utils.*;
 import Game.*;
+import javafx.animation.PauseTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-
+import javafx.util.Duration;
 
 
 public class Pacman extends Personnage{
     private int life = 3;
 
-    private static final Image imR = new Image("img/pacManR.png");
-    private static final Image imD = new Image("img/pacManD.png", false);
-    private static final Image imL = new Image("img/pacManL.png", false);
-    private static final Image imU = new Image("img/pacManU.png", false);
+    private  final Image imR;
+    private  final Image imD;
+    private  final Image imL;
+    private  final Image imU;
 
 	boolean superPacman = false;
 
-	public Pacman(double x, double y, double speed){
+	public Pacman(double x, double y, double speed, String skin){
 	    super(x, y, speed);
+	    imR = new Image("img/"+skin+"/pacManR.png");
+        imD = new Image("img/"+skin+"/pacManD.png");
+        imL = new Image("img/"+skin+"/pacManL.png");
+        imU = new Image("img/"+skin+"/pacManU.png");
     }
 
 	public boolean isDead(Plateau p){

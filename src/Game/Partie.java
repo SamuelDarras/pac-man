@@ -12,9 +12,9 @@ public class Partie {
 
     private Window win;
 
-    public Partie(String levelPath, String wallsColor, Window window) throws Exception {
+    public Partie(String levelPath, String wallsColor, Window window, String skin) throws Exception {
         score = new Score();
-        pla = new Plateau(levelPath, wallsColor);
+        pla = new Plateau(levelPath, wallsColor, skin);
         pacman = pla.getPacman();
         win = window;
     }

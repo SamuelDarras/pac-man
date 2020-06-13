@@ -7,9 +7,10 @@ import javafx.scene.image.Image;
 
 public class Clyde extends Ghost {
 
-    public Clyde(double x, double y, double speed) {
+
+    public Clyde(double x, double y, double speed, String skin) {
         super(x, y, speed);
-        img = new Image("img/ClydeGhost.png");
+        img = new Image("img/"+skin+"/ClydeGhost.png");
     }
 
     public void tick(Pacman pac, Plateau p) {
@@ -29,4 +30,5 @@ public class Clyde extends Ghost {
         changeDir(n_dir);
         changeDir(super.alterDirection(pac, p));
     }
+
 }

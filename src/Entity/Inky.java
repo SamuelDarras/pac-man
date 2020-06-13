@@ -7,9 +7,11 @@ import javafx.scene.image.Image;
 
 public class Inky extends Ghost {
 
-    public Inky(double x, double y, double speed) {
+
+
+    public Inky(double x, double y, double speed, String skin) {
         super(x, y, speed);
-        img = new Image("img/InkyGhost.png");
+        img = new Image("img/"+skin+"/InkyGhost.png");
     }
 
     public void tick(Pacman pac, Plateau p) {
@@ -34,4 +36,5 @@ public class Inky extends Ghost {
         changeDir(n_dir);
         changeDir(super.alterDirection(pac, p));
     }
+
 }

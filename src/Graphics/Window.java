@@ -43,6 +43,7 @@ public class Window extends Application {
 
     Direction dir = Direction.RIGHT;
     String wallsColor = "blue";
+    String skin = "classic";
     String levelPath ="";
     boolean sound = true;
     boolean boolSPM=true;
@@ -114,9 +115,6 @@ public class Window extends Application {
 
         currentStage = stage;
         stage.setScene(scene);
-
-//        AudioClip son = Window.openAudio("src/music/pacman_beginning.wav");
-//       son.play();
 
         stage.setResizable(false);
         stage.show();
@@ -233,7 +231,7 @@ public class Window extends Application {
 
     public void mdj1(AtomicBoolean menu, LocalTime ltDebut, Stage stage, GraphicsContext gc, int mdj,AudioClip chomp){
         try {
-            partie = new Partie(levelPath, wallsColor, this);
+            partie = new Partie(levelPath, wallsColor, this, skin);
 
             new AnimationTimer() {
                 long prevtime;
@@ -346,95 +344,33 @@ public class Window extends Application {
 
 
     public void custo(Stage stage) {
-        HBox popVbox=new HBox();
+        Group group = new Group();
 
-        Group pop = new Group();
+        HBox box = new HBox();
+        box.setSpacing(50.);
 
-        Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
-        main.getGraphicsContext2D().setFill(Color.BLACK);
-        main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);
+        Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
+        ImageView ivBg = new ImageView(bg);
 
-        pop.getChildren().add(main);
+        Image custoWall = new Image("img/custoWall.png", 195, 65, false, false);
+        ImageView ivCustoWall = new ImageView(custoWall);
+        ivCustoWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> custoWall(stage));
 
-        Image blueWall = new Image("img/wall/blue/Wall-blue-Block.png", 1.0*SCENE_WIDTH/6, 1.0*SCENE_HEIGHT/6, false, false);
-        ImageView ivBlueWall = new ImageView(blueWall);
+        Image custoAll = new Image("img/PacmanCusto.png", 195, 65, false, false);
+        ImageView ivCustoAll = new ImageView(custoAll);
+        ivCustoAll.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> custoCarac(stage));
 
-        popVbox.getChildren().add(ivBlueWall);
-
-        double width = 1.0*SCENE_WIDTH/6;
-        double height = 1.0*SCENE_HEIGHT/6;
-
-        ivBlueWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            wallsColor = "blue";
-            menu(stage);
-        });
-
-        Image greenWall = new Image("img/wall/green/Wall-green-Block.png", width, height, false, false);
-        ImageView ivGreenWall = new ImageView(greenWall);
-
-        popVbox.getChildren().add(ivGreenWall);
-
-        ivGreenWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            wallsColor = "green";
-            menu(stage);
-        });
-
-        Image orangeWall = new Image("img/wall/orange/Wall-orange-Block.png", width, height, false, false);
-        ImageView ivorangeWall = new ImageView(orangeWall);
-
-        popVbox.getChildren().add(ivorangeWall);
-
-        ivorangeWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            wallsColor = "orange";
-            menu(stage);
-        });
-
-        Image purpleWall = new Image("img/wall/purple/Wall-purple-Block.png", width, height, false, false);
-        ImageView ivpurpleWall = new ImageView(purpleWall);
-
-        popVbox.getChildren().add(ivpurpleWall);
-
-        ivpurpleWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            wallsColor = "purple";
-            menu(stage);
-        });
-
-        Image redWall = new Image("img/wall/red/Wall-red-Block.png", width, height, false, false);
-        ImageView ivredWall = new ImageView(redWall);
-
-        popVbox.getChildren().add(ivredWall);
-
-        ivredWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            wallsColor = "red";
-            menu(stage);
-        });
-
-        Image yellowWall = new Image("img/wall/yellow/Wall-yellow-Block.png", width, height, false, false);
-        ImageView ivyellowWall = new ImageView(yellowWall);
-
-        popVbox.getChildren().add(ivyellowWall);
-
-        ivyellowWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            wallsColor = "yellow";
-            menu(stage);
-        });
-
-        Image iCreateLvl = new Image("img/Level_creator.png", 150, 150, false, false);
-        ImageView ivCreateLvl = new ImageView(iCreateLvl);
-        ivCreateLvl.setY(SCENE_HEIGHT-75);
-        ivCreateLvl.setX(SCENE_WIDTH-150);
-
-
-        ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            fromCreateLvl(stage);
-        });
-        ImageView ivback = new ImageView(new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false));
+        Image iback = new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false);
+        ImageView ivback = new ImageView(iback);
         ivback.setY(SCENE_HEIGHT-20);
-        ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> menu(stage));
+        ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
 
-        pop.getChildren().addAll(popVbox,ivCreateLvl,ivback);
-        Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
-        stage.setScene(popUp);
+        box.getChildren().addAll(ivCustoAll,ivCustoWall);
+
+        group.getChildren().addAll(ivBg,ivback,box);
+
+        Scene scene = new Scene(group,SCENE_WIDTH,SCENE_HEIGHT*margin);
+        stage.setScene(scene);
         stage.show();
     }
 
@@ -452,7 +388,12 @@ public class Window extends Application {
         Group root = new Group();
         root.getChildren().addAll(ivMsg);
 
-        ivMsg.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> ecrireScore(score, stage, timer, mdj));
+        ivMsg.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if (mdj == 2 || etat.equals("win"))
+                ecrireScore(score, stage, timer, mdj);
+            else
+                afficheScore(stage, mdj);
+        });
 
         Scene fin = new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(fin);
@@ -718,8 +659,6 @@ public class Window extends Application {
 
             String[] str = s.split(";");
 
-
-
             if (c <= 0)
                 break;
             c--;
@@ -762,7 +701,6 @@ public class Window extends Application {
     }
 
     public void ecrireScore(Score score, Stage stage, String timer, int mdj){
-        System.out.println(mdj);
         if(mdj!=4) {
             Label label = new Label("Entrer votre nom :");
             label.setStyle("-fx-text-fill:WHITE;");
@@ -794,7 +732,6 @@ public class Window extends Application {
             });
         }else
             menu(stage);
-
     }
 
     public void scoreBoard(Stage stage){
@@ -1043,4 +980,157 @@ public class Window extends Application {
         return new AudioClip(Paths.get(path).toUri().toString());
     }
 
+    public void custoWall(Stage stage){
+        HBox popVbox=new HBox();
+
+        Group pop = new Group();
+
+        Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
+        main.getGraphicsContext2D().setFill(Color.BLACK);
+        main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);
+
+        pop.getChildren().add(main);
+
+        Image blueWall = new Image("img/wall/blue/Wall-blue-Block.png", 1.0*SCENE_WIDTH/6, 1.0*SCENE_HEIGHT/6, false, false);
+        ImageView ivBlueWall = new ImageView(blueWall);
+
+        popVbox.getChildren().add(ivBlueWall);
+
+        double width = 1.0*SCENE_WIDTH/6;
+        double height = 1.0*SCENE_HEIGHT/6;
+
+        ivBlueWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            wallsColor = "blue";
+        });
+
+        Image greenWall = new Image("img/wall/green/Wall-green-Block.png", width, height, false, false);
+        ImageView ivGreenWall = new ImageView(greenWall);
+
+        popVbox.getChildren().add(ivGreenWall);
+
+        ivGreenWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            wallsColor = "green";
+        });
+
+        Image orangeWall = new Image("img/wall/orange/Wall-orange-Block.png", width, height, false, false);
+        ImageView ivorangeWall = new ImageView(orangeWall);
+
+        popVbox.getChildren().add(ivorangeWall);
+
+        ivorangeWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            wallsColor = "orange";
+        });
+
+        Image purpleWall = new Image("img/wall/purple/Wall-purple-Block.png", width, height, false, false);
+        ImageView ivpurpleWall = new ImageView(purpleWall);
+
+        popVbox.getChildren().add(ivpurpleWall);
+
+        ivpurpleWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            wallsColor = "purple";
+        });
+
+        Image redWall = new Image("img/wall/red/Wall-red-Block.png", width, height, false, false);
+        ImageView ivredWall = new ImageView(redWall);
+
+        popVbox.getChildren().add(ivredWall);
+
+        ivredWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            wallsColor = "red";
+        });
+
+        Image yellowWall = new Image("img/wall/yellow/Wall-yellow-Block.png", width, height, false, false);
+        ImageView ivyellowWall = new ImageView(yellowWall);
+
+        popVbox.getChildren().add(ivyellowWall);
+
+        ivyellowWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            wallsColor = "yellow";
+        });
+
+        Image iCreateLvl = new Image("img/Level_creator.png", 150, 150, false, false);
+        ImageView ivCreateLvl = new ImageView(iCreateLvl);
+        ivCreateLvl.setY(SCENE_HEIGHT-75);
+        ivCreateLvl.setX(SCENE_WIDTH-150);
+
+
+        ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            fromCreateLvl(stage);
+        });
+
+        ImageView ivback = new ImageView(new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false));
+        ivback.setY(SCENE_HEIGHT-20);
+        ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> custo(stage));
+
+        pop.getChildren().addAll(popVbox,ivCreateLvl,ivback);
+        Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
+        stage.setScene(popUp);
+        stage.show();
+    }
+
+    public void custoCarac(Stage stage){
+        double width = 150;
+        double height = 150;
+
+        VBox popVbox1=new VBox();
+        popVbox1.setPadding(new Insets(50,0,0, 200));
+        popVbox1.setSpacing(20.);
+
+        VBox popVbox2=new VBox();
+        popVbox2.setPadding(new Insets(50,0,0, 400));
+        popVbox2.setSpacing(20.);
+
+        Group pop = new Group();
+
+        Image licorne = new Image("img/Pacman/presentation/licorne.png", width, height, false, false);
+        ImageView ivLicorne = new ImageView(licorne);
+        popVbox1.getChildren().add(ivLicorne);
+
+        ivLicorne.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "Licorne");
+
+        Image normal = new Image("img/Pacman/presentation/normal.png", width, height, false, false);
+        ImageView ivNormal = new ImageView(normal);
+        popVbox1.getChildren().add(ivNormal);
+
+        ivNormal.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "classic");
+
+        Image pokemon = new Image("img/Pacman/presentation/pokemon.png", width, height, false, false);
+        ImageView ivPokemon = new ImageView(pokemon);
+        popVbox1.getChildren().add(ivPokemon);
+
+        ivPokemon.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "Pokémon");
+
+        Image samus = new Image("img/Pacman/presentation/samus.png", width, height, false, false);
+        ImageView ivSamus = new ImageView(samus);
+        popVbox2.getChildren().add(ivSamus);
+
+        ivSamus.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "Samus");
+
+        Image star = new Image("img/Pacman/presentation/starwars.png", width, height, false, false);
+        ImageView ivStar = new ImageView(star);
+        popVbox2.getChildren().add(ivStar);
+
+        ivStar.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "Starwars");
+
+        Image tortue = new Image("img/Pacman/presentation/tortue-ninja.png", width, height, false, false);
+        ImageView ivTortue = new ImageView(tortue);
+        popVbox2.getChildren().add(ivTortue);
+
+        ivTortue.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "NinjaTurtle");
+
+        Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
+        ImageView ivBg = new ImageView(bg);
+
+        Image back = new Image("img/back.png", width, height, false, false);
+        ImageView ivBack = new ImageView(back);
+        ivBack.setY(SCENE_HEIGHT-25);
+
+        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> custo(stage));
+
+        pop.getChildren().addAll(ivBg, ivBack,popVbox1, popVbox2);
+
+        Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
+        stage.setScene(popUp);
+        stage.show();
+    }
 }
