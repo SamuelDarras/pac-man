@@ -43,6 +43,8 @@ public class Score {
 						}
 					}
 				}
+				fileReader.close();
+				file.close();
 
 				return sort;
 			}
@@ -86,6 +88,8 @@ public class Score {
 
 					}
 				}
+				fileReader.close();
+				file.close();
 
 				return sort;
 			}
@@ -116,8 +120,11 @@ public class Score {
 						}
 					}
 				}
+				fileReader.close();
+				file.close();
 
 				return sort;
+
 			}
 		}
 		catch(IOException ioEx) {
