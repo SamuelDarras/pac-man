@@ -350,6 +350,15 @@ public class Window extends Application {
         HBox box = new HBox();
         box.setSpacing(50.);
 
+        Image iCreateLvl = new Image("img/Level_creator.png", 150, 150, false, false);
+        ImageView ivCreateLvl = new ImageView(iCreateLvl);
+        ivCreateLvl.setY(SCENE_HEIGHT-75);
+        ivCreateLvl.setX(SCENE_WIDTH-150);
+
+        ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            fromCreateLvl(stage);
+        });
+
         Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);
 
@@ -368,7 +377,7 @@ public class Window extends Application {
 
         box.getChildren().addAll(ivCustoAll,ivCustoWall);
 
-        group.getChildren().addAll(ivBg,ivback,box);
+        group.getChildren().addAll(ivBg,ivback,box,ivCreateLvl);
 
         Scene scene = new Scene(group,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(scene);
@@ -1049,21 +1058,11 @@ public class Window extends Application {
             wallsColor = "yellow";
         });
 
-        Image iCreateLvl = new Image("img/Level_creator.png", 150, 150, false, false);
-        ImageView ivCreateLvl = new ImageView(iCreateLvl);
-        ivCreateLvl.setY(SCENE_HEIGHT-75);
-        ivCreateLvl.setX(SCENE_WIDTH-150);
-
-
-        ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            fromCreateLvl(stage);
-        });
-
         ImageView ivback = new ImageView(new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false));
         ivback.setY(SCENE_HEIGHT-20);
         ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> custo(stage));
 
-        pop.getChildren().addAll(popVbox,ivCreateLvl,ivback);
+        pop.getChildren().addAll(popVbox,ivback);
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(popUp);
         stage.show();
@@ -1116,9 +1115,9 @@ public class Window extends Application {
         Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);
 
-        Image back = new Image("img/back.png", width, height, false, false);
+        Image back = new Image("img/back.png", 75, 75, false, false);
         ImageView ivBack = new ImageView(back);
-        ivBack.setY(SCENE_HEIGHT-25);
+        ivBack.setY(SCENE_HEIGHT-20);
 
         ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> {
             System.out.println(skin);
