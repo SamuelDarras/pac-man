@@ -10,8 +10,8 @@ public class Inky extends Ghost {
 
 
     public Inky(double x, double y, double speed, String skin) {
-        super(x, y, speed);
-        img = new Image("img/"+skin+"/InkyGhost.png");
+        super(x, y, speed, skin);
+        img = new Image("img/Pacman/"+skin+"/InkyGhost.png");
     }
 
     public void tick(Pacman pac, Plateau p) {

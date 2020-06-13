@@ -21,7 +21,9 @@ public abstract class Ghost extends Personnage {
     boolean dead = false;
     boolean alreadyDied = false;
 
-    public Ghost(double x, double y, double baseSpeed) {
+    private String skin = "classic";
+
+    public Ghost(double x, double y, double baseSpeed, String skin) {
         super(x, y, baseSpeed);
     }
 
@@ -172,9 +174,9 @@ public abstract class Ghost extends Personnage {
 
         alteredImg = null;
         if (frightened)
-            alteredImg = new Image("img/DeadGhost.png");
+            alteredImg = new Image("img/Pacman/"+skin+"/DeadGhost.png");
         if (dead)
-            alteredImg = new Image("img/EatenGhost.png");
+            alteredImg = new Image("img/Pacman/classic/EatenGhost.png");
 
         if (dead) {
             if (getGridPos().equals(plat.getHouse())) {

@@ -20,10 +20,10 @@ public class Pacman extends Personnage{
 
 	public Pacman(double x, double y, double speed, String skin){
 	    super(x, y, speed);
-	    imR = new Image("img/"+skin+"/pacManR.png");
-        imD = new Image("img/"+skin+"/pacManD.png");
-        imL = new Image("img/"+skin+"/pacManL.png");
-        imU = new Image("img/"+skin+"/pacManU.png");
+	    imR = new Image("img/Pacman/"+skin+"/pacManR.png");
+        imD = new Image("img/Pacman/"+skin+"/pacManD.png");
+        imL = new Image("img/Pacman/"+skin+"/pacManL.png");
+        imU = new Image("img/Pacman/"+skin+"/pacManU.png");
     }
 
 	public boolean isDead(Plateau p){
