@@ -21,10 +21,11 @@ public abstract class Ghost extends Personnage {
     boolean dead = false;
     boolean alreadyDied = false;
 
-    private String skin = "classic";
+    private String skin;
 
     public Ghost(double x, double y, double baseSpeed, String skin) {
         super(x, y, baseSpeed);
+        this.skin = skin;
     }
 
     int curx = -1;

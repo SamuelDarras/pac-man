@@ -231,6 +231,7 @@ public class Window extends Application {
 
     public void mdj1(AtomicBoolean menu, LocalTime ltDebut, Stage stage, GraphicsContext gc, int mdj,AudioClip chomp){
         try {
+            System.out.println(skin);
             partie = new Partie(levelPath, wallsColor, this, skin);
 
             new AnimationTimer() {
@@ -1073,7 +1074,7 @@ public class Window extends Application {
         double height = 150;
 
         VBox popVbox1=new VBox();
-        popVbox1.setPadding(new Insets(50,0,0, 200));
+        popVbox1.setPadding(new Insets(50,0,0, 100));
         popVbox1.setSpacing(20.);
 
         VBox popVbox2=new VBox();
@@ -1081,12 +1082,6 @@ public class Window extends Application {
         popVbox2.setSpacing(20.);
 
         Group pop = new Group();
-
-        Image licorne = new Image("img/Pacman/presentation/licorne.png", width, height, false, false);
-        ImageView ivLicorne = new ImageView(licorne);
-        popVbox1.getChildren().add(ivLicorne);
-
-        ivLicorne.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "Licorne");
 
         Image normal = new Image("img/Pacman/presentation/normal.png", width, height, false, false);
         ImageView ivNormal = new ImageView(normal);
@@ -1098,7 +1093,7 @@ public class Window extends Application {
         ImageView ivPokemon = new ImageView(pokemon);
         popVbox1.getChildren().add(ivPokemon);
 
-        ivPokemon.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "Pokémon");
+        ivPokemon.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "Pokemon");
 
         Image samus = new Image("img/Pacman/presentation/samus.png", width, height, false, false);
         ImageView ivSamus = new ImageView(samus);
@@ -1116,7 +1111,7 @@ public class Window extends Application {
         ImageView ivTortue = new ImageView(tortue);
         popVbox2.getChildren().add(ivTortue);
 
-        ivTortue.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "NinjaTurtle");
+        ivTortue.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "Ninja Turtle");
 
         Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);
@@ -1125,9 +1120,12 @@ public class Window extends Application {
         ImageView ivBack = new ImageView(back);
         ivBack.setY(SCENE_HEIGHT-25);
 
-        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> custo(stage));
+        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> {
+            System.out.println(skin);
+            custo(stage);
+        });
 
-        pop.getChildren().addAll(ivBg, ivBack,popVbox1, popVbox2);
+        pop.getChildren().addAll(ivBg, ivBack,popVbox2, popVbox1);
 
         Scene popUp = new Scene(pop,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(popUp);
