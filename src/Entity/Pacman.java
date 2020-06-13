@@ -1,10 +1,12 @@
 package Entity;
 
+import Graphics.Window;
 import Utils.*;
 import Game.*;
 import javafx.animation.PauseTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 
 
@@ -17,9 +19,18 @@ public class Pacman extends Personnage{
     private  final Image imU;
 
 	boolean superPacman = false;
+    AudioClip eatGhost = Window.openAudio("src/music/pacman_eatghost.wav");
+    AudioClip death = Window.openAudio("src/music/pacman_death.wav");
+    AudioClip chomp = Window.openAudio("src/music/pacman_chomp2.wav");
+    AudioClip eatFruit = Window.openAudio("src/music/pacman_eatfruit.wav");
 
-	public Pacman(double x, double y, double speed, String skin){
+
+	public Pacman(double x, double y, double speed, String skin,double volume){
 	    super(x, y, speed);
+        death.setVolume(volume);
+        chomp.setVolume(volume);
+        eatGhost.setVolume(volume);
+        eatFruit.setVolume(volume);
 	    imR = new Image("img/Pacman/"+skin+"/pacManR.png");
         imD = new Image("img/Pacman/"+skin+"/pacManD.png");
         imL = new Image("img/Pacman/"+skin+"/pacManL.png");
@@ -35,8 +46,12 @@ public class Pacman extends Personnage{
                             ((Ghost) ee).resetPosition();
 
                     life--;
+                    if(!death.isPlaying())
+                        death.play();
                     return true;
                 } else {
+                    if(!eatGhost.isPlaying())
+                       eatGhost.play();
                     ((Ghost) e).dead = true;
                     return false;
                 }
@@ -57,7 +72,12 @@ public class Pacman extends Personnage{
 	public void manger(Partie partie){
         for (Entity e : partie.getPlateau().getPlateau()) {
             if(e instanceof Items && e.hit(this)) {
+                if(!chomp.isPlaying() && e instanceof PacGomme)
+                    chomp.play();
+                if(!(eatFruit.isPlaying())&& e instanceof Fruit)
+                    eatFruit.play();
                 if (e instanceof SuperPacGomme) {
+                    chomp.play();
                     superPacman = true;
                 }
                 partie.scoreAdd(((Items) e).getScore());
@@ -86,6 +106,12 @@ public class Pacman extends Personnage{
             default:
                 break;
         }
+    }
+    public void stopSound(){
+	    chomp.stop();
+	    eatGhost.stop();
+	    death.stop();
+	    eatFruit.stop();
     }
 
 }

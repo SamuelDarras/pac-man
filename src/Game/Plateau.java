@@ -1,9 +1,11 @@
 package Game;
 
 import Entity.*;
+import Graphics.Window;
 import Utils.Constants;
 import Utils.Position;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -226,8 +228,9 @@ public class Plateau {
     public void setFruit(){
         for (Integer integer : idxFruit) {
             if (!(plateau[integer] instanceof Fruit)) {
-                if (ltdebut[idxFruit.indexOf(integer)]==null)
-                    ltdebut[idxFruit.indexOf(integer)]= LocalTime.now();
+                if (ltdebut[idxFruit.indexOf(integer)]==null) {
+                    ltdebut[idxFruit.indexOf(integer)] = LocalTime.now();
+                }
                 if(ChronoUnit.SECONDS.between(ltdebut[idxFruit.indexOf(integer)],LocalTime.now())>=10) {
                     Random random = new Random();
                     int temp = random.nextInt(Constants.FRUIT_NAME.length);

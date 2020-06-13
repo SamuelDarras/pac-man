@@ -1,11 +1,13 @@
 package Entity;
 
 import Game.Plateau;
+import Graphics.Window;
 import Utils.Constants;
 import Utils.Direction;
 import Utils.Position;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public abstract class Ghost extends Personnage {
     boolean frightened = false;
     boolean dead = false;
     boolean alreadyDied = false;
+
 
     private String skin;
 

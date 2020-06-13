@@ -49,7 +49,7 @@ public class Window extends Application {
     boolean boolSPM=true;
     long timerSPM=0;
     int mdj=0;
-    double volume=0.3;
+    double volume=0.1;
     Partie partie;
     String timer = "";
 
@@ -188,8 +188,7 @@ public class Window extends Application {
         AtomicBoolean menu = new AtomicBoolean(false);
         final Group root = new Group();
         LocalTime ltDebut = LocalTime.now();
-        AudioClip chomp = Window.openAudio("src/music/pacman_chomp.wav");
-        chomp.setVolume(volume);
+
 
         final Canvas[] canvas = {new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin)};
         GraphicsContext gc = canvas[0].getGraphicsContext2D();
@@ -219,20 +218,21 @@ public class Window extends Application {
         stage.setScene(scene);
         if(mdj==0 || mdj==2 || mdj==4)
             root.getChildren().removeAll();
-            mdj1(menu, ltDebut, stage, gc, mdj,chomp);
+            mdj1(menu, ltDebut, stage, gc, mdj);
         if(mdj==1){
             root.getChildren().removeAll();
             ltDebut = ltDebut.plusSeconds(120);
-            mdj1(menu, ltDebut, stage, gc, mdj,chomp);
+            mdj1(menu, ltDebut, stage, gc, mdj);
         }
         }
 
 
 
-    public void mdj1(AtomicBoolean menu, LocalTime ltDebut, Stage stage, GraphicsContext gc, int mdj,AudioClip chomp){
+    public void mdj1(AtomicBoolean menu, LocalTime ltDebut, Stage stage, GraphicsContext gc, int mdj){
         try {
-            System.out.println(skin);
-            partie = new Partie(levelPath, wallsColor, this, skin);
+            partie = new Partie(levelPath, wallsColor, this, skin,volume);
+            AudioClip chomp=Window.openAudio("src/music/pacman-ghostnoises.wav");
+            chomp.setVolume(volume);
 
             new AnimationTimer() {
                 long prevtime;
@@ -252,22 +252,31 @@ public class Window extends Application {
 
                     if (partie.getPacman().getLife() <= 0) {
                         this.stop();
+                        partie.getPacman().stopSound();
+                        chomp.stop();
                         if(mdj==1)
                             finJeu(stage,"lose",partie.getScore(),String.format("%02d:%02d",
                                     Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60),
                                     Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)),mdj);
                         else
-                            finJeu(stage,"lose", partie.getScore(), timer,mdj);
+                            finJeu(stage, "lose", partie.getScore(), timer, mdj);
+
                         return;
                     }
+
+                    if (!menu.get() && sound && !chomp.isPlaying())
+                        chomp.play();
+
                     if(!(partie.getPlateau().isAvailablePG()) && mdj!=2){
                         this.stop();
+                        partie.getPacman().stopSound();
+                        chomp.stop();
                         if(mdj==1)
                             finJeu(stage,"win",partie.getScore(),String.format("%02d:%02d",
                                     Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60),
                                     Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)),mdj);
                         else
-                           finJeu(stage,"win", partie.getScore(), timer,mdj);
+                            finJeu(stage, "win", partie.getScore(), timer, mdj);
                         return;
                     }
 
@@ -277,12 +286,12 @@ public class Window extends Application {
 
                     if(mdj==1 && Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow))==0 && Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60)==0 && Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)==0){
                         this.stop();
+                        partie.getPacman().stopSound();
+                        chomp.stop();
                         finJeu(stage,"lose", partie.getScore(), "02:00",mdj);
                     }
                     deltaTime = currentNanoTime - prevtime;
 
-                    if (!menu.get() && sound && !chomp.isPlaying())
-                        chomp.play();
 
                     if(partie.getPacman().getSuperPacMan()) {
                         if (boolSPM) {
@@ -358,7 +367,6 @@ public class Window extends Application {
         ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             fromCreateLvl(stage);
         });
-
         Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);
 
@@ -386,6 +394,9 @@ public class Window extends Application {
 
     public void finJeu(Stage stage,String etat, Score score, String timer,int mdj){
         Image msg;
+        AudioClip soundfin = Window.openAudio("src/music/pacman_beginning.wav");
+        soundfin.setVolume(volume);
+        soundfin.play();
         if(etat.equals("win")) {
             msg = new Image("img/win.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
         }
@@ -765,7 +776,7 @@ public class Window extends Application {
         ImageView ivinfini = new ImageView(infini);
 
 
-        ImageView ivBack = new ImageView(new Image("img/back.png", 100, 100, false, false));
+        ImageView ivBack = new ImageView(new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false));
         ivBack.setY(SCENE_HEIGHT-20);
 
 
@@ -1115,14 +1126,11 @@ public class Window extends Application {
         Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);
 
-        Image back = new Image("img/back.png", 75, 75, false, false);
+        Image back = new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false);
         ImageView ivBack = new ImageView(back);
         ivBack.setY(SCENE_HEIGHT-20);
 
-        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> {
-            System.out.println(skin);
-            custo(stage);
-        });
+        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> custo(stage));
 
         pop.getChildren().addAll(ivBg, ivBack,popVbox2, popVbox1);
 
