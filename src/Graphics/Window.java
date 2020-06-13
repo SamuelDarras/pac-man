@@ -253,12 +253,22 @@ public class Window extends Application {
 
                     if (partie.getPacman().getLife() <= 0) {
                         this.stop();
-                        finJeu(stage,"lose", partie.getScore(), timer,mdj);
+                        if(mdj==1)
+                            finJeu(stage,"lose",partie.getScore(),String.format("%02d:%02d",
+                                    Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60),
+                                    Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)),mdj);
+                        else
+                            finJeu(stage,"lose", partie.getScore(), timer,mdj);
                         return;
                     }
                     if(!(partie.getPlateau().isAvailablePG()) && mdj!=2){
                         this.stop();
-                        finJeu(stage,"win", partie.getScore(), timer,mdj);
+                        if(mdj==1)
+                            finJeu(stage,"win",partie.getScore(),String.format("%02d:%02d",
+                                    Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60),
+                                    Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)),mdj);
+                        else
+                           finJeu(stage,"win", partie.getScore(), timer,mdj);
                         return;
                     }
 
@@ -268,7 +278,7 @@ public class Window extends Application {
 
                     if(mdj==1 && Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow))==0 && Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60)==0 && Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)==0){
                         this.stop();
-                        finJeu(stage,"lose", partie.getScore(), timer,mdj);
+                        finJeu(stage,"lose", partie.getScore(), "02:00",mdj);
                     }
                     deltaTime = currentNanoTime - prevtime;
 
@@ -761,6 +771,7 @@ public class Window extends Application {
 
             Image submit = new Image("img/Ok.png", 250, 250, false, false);
             ImageView ivSubmit = new ImageView(submit);
+
 
             Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
             ImageView ivBg = new ImageView(bg);
