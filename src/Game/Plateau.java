@@ -7,6 +7,8 @@ import javafx.scene.image.Image;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -20,6 +22,8 @@ public class Plateau {
     List<Integer> idxFruit;
     List<Integer> idxPG;
     List<Integer> idxSPG;
+    LocalTime[] ltdebut;
+    double volume;
     int larg;
     int haut;
 
@@ -30,9 +34,10 @@ public class Plateau {
     Entity[] plateau;
 
     private Plateau() {}
-    public Plateau(String levelPath, String wallsColor, String skin) throws Exception {
+    public Plateau(String levelPath, String wallsColor, String skin,double volume) throws Exception {
         this.wallsColor = wallsColor;
         this.skin = skin;
+        this.volume=volume;
         remplirPlateau(levelPath);
     }
 
@@ -51,6 +56,7 @@ public class Plateau {
         idxFruit = new ArrayList<>();
         idxPG = new ArrayList<>();
         idxSPG = new ArrayList<>();
+
 
         plateau = new Entity[larg * haut];
         double x;
@@ -85,7 +91,7 @@ public class Plateau {
                         plateau[larg * i + j] = new Clyde(x, y, GHOST_SPEED, skin);
                         break;
                     case 'M':
-                        pacman = new Pacman(x, y, PACMAN_SPEED, skin);
+                        pacman = new Pacman(x, y, PACMAN_SPEED, skin,volume);
                         plateau[larg * i + j] = pacman;
                         break;
                     case 'H':
@@ -105,6 +111,7 @@ public class Plateau {
         }
 
         setWalls("blue");
+        ltdebut=new LocalTime[idxFruit.size()];
 
         read.close();
     }
@@ -219,15 +226,19 @@ public class Plateau {
     public void setFruit(){
         for (Integer integer : idxFruit) {
             if (!(plateau[integer] instanceof Fruit)) {
-                Random random = new Random();
-                int temp = random.nextInt(Constants.FRUIT_NAME.length);
-                String typeFruit = Constants.FRUIT_NAME[temp];
-                int score = Constants.FRUIT_SCORE[temp];
-                double x = plateau[integer].getPos().getX();
-                double y = plateau[integer].getPos().getY();
-                plateau[integer] = new Fruit(score, x, y, typeFruit);
-                System.out.println("img/" + typeFruit + ".png");
-                ((Fruit) plateau[integer]).setImg(new Image("img/" + typeFruit + ".png"));
+                if (ltdebut[idxFruit.indexOf(integer)]==null)
+                    ltdebut[idxFruit.indexOf(integer)]= LocalTime.now();
+                if(ChronoUnit.SECONDS.between(ltdebut[idxFruit.indexOf(integer)],LocalTime.now())>=10) {
+                    Random random = new Random();
+                    int temp = random.nextInt(Constants.FRUIT_NAME.length);
+                    String typeFruit = Constants.FRUIT_NAME[temp];
+                    int score = Constants.FRUIT_SCORE[temp];
+                    double x = plateau[integer].getPos().getX();
+                    double y = plateau[integer].getPos().getY();
+                    plateau[integer] = new Fruit(score, x, y, typeFruit);
+                    ((Fruit) plateau[integer]).setImg(new Image("img/" + typeFruit + ".png"));
+                    ltdebut[idxFruit.indexOf(integer)]=null;
+                }
             }
         }
     }
