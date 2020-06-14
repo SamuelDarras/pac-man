@@ -176,7 +176,7 @@ public class Window extends Application {
             jeu(stage,mdj);
         });
 
-        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> mdj(stage));
+        ivMdj.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> menuMdj(stage));
 
         ivCusto.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> custo(stage));
 
@@ -219,9 +219,10 @@ public class Window extends Application {
             }
         });
         stage.setScene(scene);
-        if(mdj==0 || mdj==2 || mdj==4)
+        if(mdj==0 || mdj==2 || mdj==4) {
             root.getChildren().removeAll();
             mdj1(menu, ltDebut, stage, gc, mdj);
+        }
         if(mdj==1){
             root.getChildren().removeAll();
             ltDebut = ltDebut.plusSeconds(120);
@@ -236,6 +237,7 @@ public class Window extends Application {
             partie = new Partie(levelPath, wallsColor, this, skin,volume);
             AudioClip chomp=Window.openAudio("src/music/pacman-ghostnoises.wav");
             chomp.setVolume(volume);
+
 
             new AnimationTimer() {
                 long prevtime;
@@ -286,7 +288,7 @@ public class Window extends Application {
                         partie.getPlateau().refillPG();
                     }
 
-                    if(mdj==1 && Math.abs(ChronoUnit.HOURS.between(ltDebut,ltnow))==0 && Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60)==0 && Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)==0){
+                    if(mdj==1 && Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60)==0 && Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)==0){
                         this.stop();
                         partie.getPacman().stopSound();
                         chomp.stop();
@@ -323,14 +325,14 @@ public class Window extends Application {
                     }
                     gc.setFill(Color.WHITE);
                     gc.fillText("Score : " + partie.getScore().getScore(), (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.02);
-                    if(mdj==0 || mdj==2 || mdj==4)
+                    if(mdj==0 || mdj==2 || mdj==4) {
                         gc.fillText("Timer : " + timer, (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
-                    else
+                    }else {
                         gc.fillText("Timer : " + String.format("%02d:%02d",
-                                Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60),
-                                Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)),
+                                Math.abs(ChronoUnit.MINUTES.between(ltDebut, ltnow) % 60),
+                                Math.abs(ChronoUnit.SECONDS.between(ltDebut, ltnow) % 60)),
                                 (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
-
+                    }
                     Image pac = new Image("img/Pacman/"+skin+"/pacManL.png");
                     int i;
                     for (i = partie.getPacman().getLife(); i > 0; i--) {
@@ -607,7 +609,7 @@ public class Window extends Application {
 
     }
 
-    public void mdj(Stage stage) {
+    public void menuMdj(Stage stage) {
         double width = 1.0*SCENE_WIDTH/4;
         double height = 1.0*SCENE_HEIGHT/4;
 
