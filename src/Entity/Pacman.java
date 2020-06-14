@@ -9,6 +9,8 @@ import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 
+import java.time.LocalTime;
+
 
 public class Pacman extends Personnage{
     private int life = 3;
@@ -17,6 +19,7 @@ public class Pacman extends Personnage{
     private  final Image imD;
     private  final Image imL;
     private  final Image imU;
+    LocalTime tempSPM;
 
 	boolean superPacman = false;
     AudioClip eatGhost = Window.openAudio("src/music/pacman_eatghost.wav");
@@ -79,6 +82,7 @@ public class Pacman extends Personnage{
                 if (e instanceof SuperPacGomme) {
                     chomp.play();
                     superPacman = true;
+                    tempSPM= LocalTime.now();
                 }
                 partie.scoreAdd(((Items) e).getScore());
                 partie.getPlateau().remove(e);
@@ -107,6 +111,8 @@ public class Pacman extends Personnage{
                 break;
         }
     }
+
+    public LocalTime getSuperPacManTime(){return this.tempSPM;}
     public void stopSound(){
 	    chomp.stop();
 	    eatGhost.stop();

@@ -53,6 +53,7 @@ public class Window extends Application {
     long timerSPM=0;
     int mdj=0;
     double volume=0.1;
+    double tempVolume=0.1;
     Partie partie;
     String timer = "";
 
@@ -146,7 +147,6 @@ public class Window extends Application {
         Image options = new Image("img/menu2/options.png",500,100,false,false);
         ImageView ivOption = new ImageView(options);
         ivDemo.preserveRatioProperty();
-
         Image trophy = new Image("img/menu2/trophy.png",300,300,false,false);
         ImageView ivTrophy = new ImageView(trophy);
         ivTrophy.preserveRatioProperty();
@@ -296,15 +296,8 @@ public class Window extends Application {
 
 
                     if(partie.getPacman().getSuperPacMan()) {
-                        if (boolSPM) {
-                            timerSPM = ChronoUnit.SECONDS.between(ltDebut, ltnow);
-                            boolSPM = false;
-                        }
-                        else if(timerSPM != 0 && (ChronoUnit.SECONDS.between(ltDebut,ltnow)-timerSPM>=10)){
-                            boolSPM = true;
-                            timerSPM=0;
+                        if(ChronoUnit.SECONDS.between(partie.getPacman().getSuperPacManTime(),LocalTime.now())>=10)
                             partie.getPacman().setSuperPacMan(false);
-                        }
                     }
 
                     if (!menu.get() && deltaTime < 1_000_000_000/5) {
@@ -476,6 +469,7 @@ public class Window extends Application {
             public void changed(ObservableValue<? extends Number> observable, //
                                 Number oldValue, Number newValue) {
                 volume = newValue.intValue()*1.0/100;
+                tempVolume = volume;
             }
         });
 
@@ -488,13 +482,13 @@ public class Window extends Application {
 
 
         ivSoundOn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            sound = false;
+            volume=0.0;
             root.getChildren().add(ivSoundOff);
             root.getChildren().remove(ivSoundOn);
         });
 
         ivSoundOff.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            sound = true;
+            volume=tempVolume;
 
             root.getChildren().add(ivSoundOn);
             root.getChildren().remove(ivSoundOff);
