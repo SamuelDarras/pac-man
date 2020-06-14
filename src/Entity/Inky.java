@@ -9,8 +9,7 @@ import javafx.scene.paint.Color;
 
 public class Inky extends Ghost {
 
-
-
+    //fantôme bleu
     public Inky(double x, double y, double speed, String skin) {
         super(x, y, speed, skin);
         img = new Image("img/Pacman/"+skin+"/InkyGhost.png");

@@ -22,6 +22,7 @@ public class Personnage extends Entity{
     speed = baseSpeed;
   }
 
+  //mouvement de pac-man avec implémentation d'un rail invisible permettant de mieux controler ses mouvements
   public void move(double dt, Plateau p) {
     double x = getPos().getX();
     double y = getPos().getY();
@@ -95,9 +96,11 @@ public class Personnage extends Entity{
   public Position<Integer> getGridPos() {
     return new Position<>((int) Math.round(getPos().getX()/WALL_WIDTH), (int) Math.round(getPos().getY()/WALL_HEIGHT));
   }
+
   public void resetSpeed() {
     speed = baseSpeed;
   }
+
   public double getSpeed() { return speed; }
 
   public void resetPosition() {

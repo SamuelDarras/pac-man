@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 
 public class Blinky extends Ghost {
 
-
+  //fantôme rouge
   public Blinky(double x, double y, double speed, String skin) {
     super(x, y, speed, skin);
     img = new Image("img/Pacman/"+skin+"/BlinkyGhost.png");

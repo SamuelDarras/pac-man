@@ -2,7 +2,6 @@ package Entity;
 
 import Utils.Position;
 import javafx.scene.canvas.GraphicsContext;
-
 public class Entity {
     private Position<Double> pos;
     private final double[] hitbox;

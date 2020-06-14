@@ -13,6 +13,7 @@ public class Score {
 	private static final String SCOREFILETime = "src/Game/time.txt";
 	private static final String SCOREFILEScore2 = "src/Game/score2";
 
+	//lit les scores dans le fichier correspondant au mode de jeu choisit
 	public static List<String> readScoreFromFile(int mdj) {
 		String str;
 		try {
@@ -139,6 +140,7 @@ public class Score {
 		return null;
 	}
 
+	//écrit le score dans le fichier correspondant au mode de jeu choisit
 	public static void writeScoreToFile(String playerScore, String playerName, String playerTime, int mdj) {
 		try {
 			if (mdj == 0) {

@@ -26,7 +26,7 @@ public class Pacman extends Personnage{
     AudioClip chomp = Window.openAudio("src/music/pacman_chomp2.wav");
     AudioClip eatFruit = Window.openAudio("src/music/pacman_eatfruit.wav");
 
-
+    //créé le pac man avec le skin et le volume sonore choisit
 	public Pacman(double x, double y, double speed, String skin,double volume){
 	    super(x, y, speed);
         death.setVolume(volume);
@@ -39,6 +39,7 @@ public class Pacman extends Personnage{
         imU = new Image("img/Pacman/"+skin+"/pacManU.png");
     }
 
+    //gestion des vies
 	public boolean isDead(Plateau p){
         for (Entity e : p.getPlateau()) {
             if (e instanceof Ghost && e.hit(this)) {
@@ -70,6 +71,7 @@ public class Pacman extends Personnage{
 
     public void setSuperPacMan(boolean bool){ this.superPacman=bool;}
 
+    //gestion du son, de la récupération des pac-gommes, de la récupération des super pac-gommes et du score
 	public void manger(Partie partie){
         for (Entity e : partie.getPlateau().getPlateau()) {
             if(e instanceof Items && e.hit(this)) {
@@ -94,6 +96,7 @@ public class Pacman extends Personnage{
         }
     }
 
+    //change d'image suivant quelle direction pac man prends
     public void draw(GraphicsContext gc) {
         double x = getPos().getX();
         double y = getPos().getY();
@@ -117,6 +120,7 @@ public class Pacman extends Personnage{
     }
 
     public LocalTime getSuperPacManTime(){return this.tempSPM;}
+
     public void stopSound(){
 	    chomp.stop();
 	    eatGhost.stop();
