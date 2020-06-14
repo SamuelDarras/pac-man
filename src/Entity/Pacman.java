@@ -1,13 +1,12 @@
 package Entity;
 
+import Game.Partie;
+import Game.Plateau;
 import Graphics.Window;
-import Utils.*;
-import Game.*;
-import javafx.animation.PauseTransition;
+import Utils.Constants;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
-import javafx.util.Duration;
 
 import java.time.LocalTime;
 
@@ -47,7 +46,6 @@ public class Pacman extends Personnage{
                     for (Entity ee : p.getPlateau())
                         if (ee instanceof Ghost)
                             ((Ghost) ee).resetPosition();
-
                     life--;
                     if(!death.isPlaying())
                         death.play();

@@ -49,8 +49,6 @@ public class Window extends Application {
     String skin = "classic";
     String levelPath ="";
     boolean sound = true;
-    boolean boolSPM=true;
-    long timerSPM=0;
     int mdj=0;
     double volume=0.1;
     double tempVolume=0.1;

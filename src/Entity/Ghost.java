@@ -188,7 +188,8 @@ public abstract class Ghost extends Personnage {
                 alreadyDied = true;
                 frightened = false;
                 resetSpeed();
-                return getDirectionAccordingToPath(BreadthFirst(getGridPos(), pac.getGridPos(), plat));
+                resetPosition();
+                return getDir();
             }
             addSpeed(getSpeed());
             gotoPos = plat.getHouse();
@@ -206,7 +207,6 @@ public abstract class Ghost extends Personnage {
             gotoPos = new Position(x, y);
             return getDirectionAccordingToPath(BreadthFirst(getGridPos(), gotoPos, plat));
         }
-
         resetSpeed();
         return null;
     }
