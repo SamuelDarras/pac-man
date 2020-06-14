@@ -2,6 +2,7 @@ package Graphics;
 
 import Entity.*;
 
+import Game.CustoMap;
 import Game.Partie;
 import Game.Score;
 import Utils.Direction;
@@ -20,6 +21,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
@@ -266,7 +269,6 @@ public class Window extends Application {
 
                     if (!menu.get() && sound && !chomp.isPlaying())
                         chomp.play();
-
                     if(!(partie.getPlateau().isAvailablePG()) && mdj!=2){
                         this.stop();
                         partie.getPacman().stopSound();
@@ -906,7 +908,8 @@ public class Window extends Application {
 
         ImageView save = new ImageView(new Image("img/createLevel/Save.png", 75, 75, false, false));
         save.addEventHandler(MouseEvent.MOUSE_CLICKED, reset->{
-                String txt=verifPlateau(tabIV);
+                CustoMap custoMap = new CustoMap(tabIV,name,height,width);
+                String txt=custoMap.verifPlateau();
                 if(!(txt.equals(""))){
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
@@ -914,7 +917,7 @@ public class Window extends Application {
                     alert.showAndWait();
                 }else {
                     try {
-                        createLvlFile(tabIV,name,height,width);
+                        custoMap.createLvlFile();
                         menu(stage);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -928,73 +931,6 @@ public class Window extends Application {
         root.getChildren().addAll(main,vbox);
 
         stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
-    }
-    public String verifPlateau(ImageView[] tabIV){
-        String txt="";
-        int compPG=0;
-        int compSPG=0;
-        int compPM=0;
-        int compF=0;
-        int compH=0;
-        for (ImageView imageView : tabIV) {
-            if (imageView.getImage().getUrl().contains("/PacGomme"))
-                compPG++;
-            if (imageView.getImage().getUrl().contains("SuperPacGomme"))
-                compSPG++;
-            if (imageView.getImage().getUrl().contains("pacManR"))
-                compPM++;
-            if (imageView.getImage().getUrl().contains("Ghost"))
-                compF++;
-            if (imageView.getImage().getUrl().contains("Home"))
-                compH++;
-        }
-        if(compPG==0 && compSPG==0)
-            txt+=" Au moin 1 PacGomme ou SuperPacGomme.";
-        if(compPM!=1)
-            txt+=" Il faut 1 seul PacMan.";
-        if(compF!=0 && compH==0)
-            txt+=" Il faut 1 maison pour les fantomes.";
-        if(compH>=2)
-            txt+=" Il faut qu'une seule maison";
-        return txt;
-    }
-    public void createLvlFile(ImageView[] tabIV,String name,int height,int width) throws IOException {
-        File file = new File("src//levels//custo//"+name+".txt");
-        FileWriter fileWriter = new FileWriter("src//levels/custo//"+name+".txt");
-        fileWriter.write(height+" "+width+"\n");
-        for(int i=0;i<height;i++){
-            for(int j=0;j<width;j++) {
-                fileWriter.write(getCarac(tabIV[i * width + j]) + "");
-            }
-            fileWriter.write("\n");
-        }
-        fileWriter.close();
-    }
-    public String getCarac(ImageView iv){
-        String url = iv.getImage().getUrl();
-        if(url.contains("img/bgBlack.png"))
-            return "0";
-        if(url.contains("img/wall/purple/Wall-purple-T-full.png"))
-            return "1";
-        if(url.contains("img/PacGomme.png"))
-            return "p";
-        if(url.contains("img/SuperPacGomme.png"))
-            return "s";
-        if(url.contains("img/all_fruits.png"))
-            return "F";
-        if(url.contains("img/pacManR.png"))
-            return "M";
-        if(url.contains("img/BlinkyGhost.png"))
-            return "B";
-        if(url.contains("img/ClydeGhost.png"))
-            return "C";
-        if(url.contains("img/InkyGhost.png"))
-            return "I";
-        if(url.contains("img/PinkyGhost.png"))
-            return "P";
-        if(url.contains("img/Home.png"))
-            return "H";
-        return "";
     }
 
     public static AudioClip openAudio(String path) {
