@@ -63,7 +63,6 @@ public abstract class Ghost extends Personnage {
         if (path != null && path.size() > 0) {
             Position prev = path.get(0).copy();
             for (Position pos : path) {
-                gc.setStroke(Color.RED);
                 gc.setLineWidth(5);
                 gc.strokeLine((int) prev.getX()*Constants.WALL_WIDTH + Constants.WALL_WIDTH*.5, (int) prev.getY()*Constants.WALL_HEIGHT + Constants.WALL_HEIGHT*.5, (int) pos.getX()*Constants.WALL_WIDTH + Constants.WALL_WIDTH*.5, (int) pos.getY()*Constants.WALL_HEIGHT + Constants.WALL_HEIGHT*.5);
                 prev = pos.copy();
@@ -87,7 +86,7 @@ public abstract class Ghost extends Personnage {
         Plateau platCpy = plat.simpleCopy();
         int curx = (int) getGridPos().getX();
         int cury = (int) getGridPos().getY();
-        if (getNeighbours(getGridPos(), plat).size() > 1) {
+        if (getNeighbours(getGridPos(), plat).size() >= 2) {
             switch (getDir()) {
                 case UP:
                     platCpy.setCell(new Wall(platCpy.getCell(curx, cury + 1).getPos().getX(), platCpy.getCell(curx, cury + 1).getPos().getY()), curx, cury + 1);
@@ -173,6 +172,7 @@ public abstract class Ghost extends Personnage {
         }
         if (!pac.superPacman) {
             frightened = false;
+            dead = false;
             alreadyDied = false;
         }
 
@@ -188,7 +188,7 @@ public abstract class Ghost extends Personnage {
                 alreadyDied = true;
                 frightened = false;
                 resetSpeed();
-                return Direction.LEFT;
+                return getDirectionAccordingToPath(BreadthFirst(getGridPos(), pac.getGridPos(), plat));
             }
             addSpeed(getSpeed());
             gotoPos = plat.getHouse();
@@ -207,6 +207,7 @@ public abstract class Ghost extends Personnage {
             return getDirectionAccordingToPath(BreadthFirst(getGridPos(), gotoPos, plat));
         }
 
+        resetSpeed();
         return null;
     }
 }

@@ -290,7 +290,7 @@ public class Window extends Application {
                         this.stop();
                         partie.getPacman().stopSound();
                         chomp.stop();
-                        finJeu(stage,"lose", partie.getScore(), "02:00",mdj);
+                        finJeu(stage,"lose", partie.getScore(), "02:00", mdj);
                     }
                     deltaTime = currentNanoTime - prevtime;
 
@@ -338,6 +338,11 @@ public class Window extends Application {
                                 Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)),
                                 (1.0 * SCENE_WIDTH / 2) * .9, SCENE_HEIGHT * 1.05);
 
+                    Image pac = new Image("img/Pacman/"+skin+"/pacManL.png");
+                    int i;
+                    for (i = partie.getPacman().getLife(); i > 0; i--) {
+                        gc.drawImage(pac, 10 + i * 22, SCENE_HEIGHT*margin - 30, 20, 20);
+                    }
 
                 }
                 public void drawMenu(GraphicsContext gc) {

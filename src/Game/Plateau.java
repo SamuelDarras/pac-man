@@ -1,11 +1,9 @@
 package Game;
 
 import Entity.*;
-import Graphics.Window;
 import Utils.Constants;
 import Utils.Position;
 import javafx.scene.image.Image;
-import javafx.scene.media.AudioClip;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -183,6 +181,10 @@ public class Plateau {
 
         if ((E instanceof Wall) && (N instanceof Wall) && (W instanceof Wall) && (S instanceof Wall))
             img = new Image("img/wall/"+wallsColor+"/Wall-"+wallsColor+"-T-full.png");
+
+        if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
+            img = new Image("img/wall/"+wallsColor+"/Wall-"+wallsColor+"-Block.png");
+
 
         return img;
     }

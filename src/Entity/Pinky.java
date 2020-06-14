@@ -3,7 +3,9 @@ package Entity;
 import Game.Plateau;
 import Utils.Direction;
 import Utils.Position;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
@@ -12,6 +14,11 @@ public class Pinky extends Ghost {
     public Pinky(double x, double y, double speed, String skin) {
         super(x, y, speed, skin);
         img = new Image("img/Pacman/"+skin+"/PinkyGhost.png");
+    }
+
+    public void draw(GraphicsContext gc) {
+        gc.setStroke(Color.PINK);
+        super.draw(gc);
     }
 
     public void tick(Pacman pac, Plateau p) {
