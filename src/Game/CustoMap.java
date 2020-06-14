@@ -26,7 +26,7 @@ public class CustoMap {
         int compPM=0;
         int compF=0;
         int compH=0;
-        for (ImageView imageView : this.tabIV) {
+        for (ImageView imageView : tabIV) {
             if (imageView.getImage().getUrl().contains("/PacGomme"))
                 compPG++;
             if (imageView.getImage().getUrl().contains("SuperPacGomme"))
@@ -49,12 +49,12 @@ public class CustoMap {
         return txt;
     }
     public void createLvlFile() throws IOException {
-        File file = new File("src//levels//custo//"+this.name+".txt");
-        FileWriter fileWriter = new FileWriter("src//levels/custo//"+this.name+".txt");
-        fileWriter.write(this.height+" "+this.width+"\n");
-        for(int i=0;i<this.height;i++){
-            for(int j=0;j<this.width;j++) {
-                fileWriter.write(getCarac(this.tabIV[i * this.width + j]) + "");
+        File file = new File("src//levels//custo//"+name+".txt");
+        FileWriter fileWriter = new FileWriter("src//levels/custo//"+name+".txt");
+        fileWriter.write(height+" "+width+"\n");
+        for(int i=0;i<height;i++){
+            for(int j=0;j<width;j++) {
+                fileWriter.write(getCarac(tabIV[i * width + j]) + "");
             }
             fileWriter.write("\n");
         }
@@ -66,23 +66,23 @@ public class CustoMap {
             return "0";
         if(url.contains("img/wall/purple/Wall-purple-T-full.png"))
             return "1";
-        if(url.contains("img/PacGomme.png"))
+        if(url.contains("img/createLevel/PacGomme.png"))
             return "p";
-        if(url.contains("img/SuperPacGomme.png"))
+        if(url.contains("img/createLevel/SuperPacGomme.png"))
             return "s";
-        if(url.contains("img/all_fruits.png"))
+        if(url.contains("img/createLevel/all_fruits.png"))
             return "F";
-        if(url.contains("img/pacManR.png"))
+        if(url.contains("img/createLevel/pacManR.png"))
             return "M";
-        if(url.contains("img/BlinkyGhost.png"))
+        if(url.contains("img/createLevel/BlinkyGhost.png"))
             return "B";
-        if(url.contains("img/ClydeGhost.png"))
+        if(url.contains("img/createLevel/ClydeGhost.png"))
             return "C";
-        if(url.contains("img/InkyGhost.png"))
+        if(url.contains("img/createLevel/InkyGhost.png"))
             return "I";
-        if(url.contains("img/PinkyGhost.png"))
+        if(url.contains("img/createLevel/PinkyGhost.png"))
             return "P";
-        if(url.contains("img/Home.png"))
+        if(url.contains("img/createLevel/Home.png"))
             return "H";
         return "";
     }
