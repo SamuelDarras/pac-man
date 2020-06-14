@@ -22,6 +22,7 @@ public class Pinky extends Ghost {
         super.draw(gc);
     }
 
+    //met à jour la direction du fantôme
     public void tick(Pacman pac, Plateau p) {
 
         path = new ArrayList<>();

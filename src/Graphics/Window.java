@@ -183,7 +183,7 @@ public class Window extends Application {
         stage.setScene(new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin));
     }
 
-    //
+    //initialise la partie
     public void jeu(Stage stage,int mdj) {
         AtomicBoolean menu = new AtomicBoolean(false);
         final Group root = new Group();
@@ -218,18 +218,18 @@ public class Window extends Application {
         stage.setScene(scene);
         if(mdj==0 || mdj==2 || mdj==4) {
             root.getChildren().removeAll();
-            mdj1(menu, ltDebut, stage, gc, mdj);
+            play(menu, ltDebut, stage, gc, mdj);
         }
         if(mdj==1){
             root.getChildren().removeAll();
             ltDebut = ltDebut.plusSeconds(120);
-            mdj1(menu, ltDebut, stage, gc, mdj);
+            play(menu, ltDebut, stage, gc, mdj);
         }
         }
 
 
-
-    public void mdj1(AtomicBoolean menu, LocalTime ltDebut, Stage stage, GraphicsContext gc, int mdj){
+    //gère et dessine la partie
+    public void play(AtomicBoolean menu, LocalTime ltDebut, Stage stage, GraphicsContext gc, int mdj){
         try {
             partie = new Partie(levelPath, wallsColor, skin,volume);
             AudioClip chomp=Window.openAudio("src/music/pacman-ghostnoises.wav");
@@ -249,6 +249,7 @@ public class Window extends Application {
 
                     partie.getPlateau().setFruit();
 
+                    //termine la partie lorsque perdue
                     if (partie.getPacman().getLife() <= 0) {
                         this.stop();
                         partie.getPacman().stopSound();
@@ -263,8 +264,11 @@ public class Window extends Application {
                         return;
                     }
 
+                    //active le son des fantômes
                     if (!menu.get() && sound && !chomp.isPlaying())
                         chomp.play();
+
+                    //termine la partie lorsque gagné sauf mode de jeu infini
                     if(!(partie.getPlateau().isAvailablePG()) && mdj!=2){
                         this.stop();
                         partie.getPacman().stopSound();
@@ -278,6 +282,7 @@ public class Window extends Application {
                         return;
                     }
 
+                    //reremplit le tableau en mode de jeu infini
                     if(mdj==2 && !(partie.getPlateau().isAvailablePG())){
                         partie.getPacman().addSpeed(partie.getPacman().getSpeed()*.2);
                         for (Entity e : partie.getPlateau().getPlateau())
@@ -286,6 +291,7 @@ public class Window extends Application {
                         partie.getPlateau().refillPG();
                     }
 
+                    //perd le jeu lorsque le temps est écoulé en mode contre la montre
                     if(mdj==1 && Math.abs(ChronoUnit.MINUTES.between(ltDebut,ltnow)%60)==0 && Math.abs(ChronoUnit.SECONDS.between(ltDebut,ltnow)%60)==0){
                         this.stop();
                         partie.getPacman().stopSound();
@@ -294,12 +300,13 @@ public class Window extends Application {
                     }
                     deltaTime = currentNanoTime - prevtime;
 
-
+                    //gestion du super pac man
                     if(partie.getPacman().getSuperPacMan()) {
                         if(ChronoUnit.SECONDS.between(partie.getPacman().getSuperPacManTime(),LocalTime.now())>=10)
                             partie.getPacman().setSuperPacMan(false);
                     }
 
+                    //évite les glitchs liés aux lags
                     if (!menu.get() && deltaTime < 1_000_000_000/5) {
                         partie.getPacman().changeDir(dir);
                         partie.tick(deltaTime);
@@ -314,6 +321,7 @@ public class Window extends Application {
                     prevtime = currentNanoTime;
                 }
 
+                //dessine le plateau
                 public void drawShapes(GraphicsContext gc) {
                     LocalTime ltnow = LocalTime.now();
                     gc.setFill(Color.BLACK);
@@ -338,6 +346,7 @@ public class Window extends Application {
                     }
 
                 }
+                //affiche le menu pause
                 public void drawMenu(GraphicsContext gc) {
                     gc.setFill(new Color(0, 0, 0, .5));
                     gc.fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT);
@@ -455,13 +464,10 @@ public class Window extends Application {
         labVol.setStyle("-fx-text-fill:WHITE;");
         Slider slider = new Slider();
 
-
         slider.setMin(0);
 
-        // The maximum value.
         slider.setMax(100);
 
-        // Current value
         slider.setValue(volume*100);
 
         slider.setShowTickLabels(true);
@@ -469,7 +475,6 @@ public class Window extends Application {
 
         slider.setBlockIncrement(5);
 
-        //
         slider.valueProperty().addListener((observable, oldValue, newValue) -> {
             volume = newValue.intValue()*1.0/100;
             tempVolume = volume;
@@ -516,8 +521,6 @@ public class Window extends Application {
         main.getGraphicsContext2D().fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT*margin);
 
         pop.getChildren().add(main);
-
-
 
         Image ilvl1 = new Image("img/menu2/jouer/0002_Level-1.png", width, height, false, false);
         ImageView ivlvl1 = new ImageView(ilvl1);
@@ -595,7 +598,6 @@ public class Window extends Application {
         ImageView ivback = new ImageView(new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false));
         ivback.setY(SCENE_HEIGHT-20);
         ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> select(stage));
-
 
         GridPane gridPane = new GridPane();
 
@@ -809,6 +811,8 @@ public class Window extends Application {
         stage.setScene(scoreBoard);
         stage.show();
     }
+
+    //scene qui afficher trois inputs afin d'avoir les information du levels que l'on souhaite créer
     public void formCreateLvl(Stage stage){
         Group root = new Group();
 
@@ -823,7 +827,7 @@ public class Window extends Application {
         height.setTextFill(Color.WHITE);
         width.setTextFill(Color.WHITE);
         name.setTextFill(Color.WHITE);
-        TextField inputHeight = new TextField();                           //scene qui afficher trois inputs afin d'avoir les information du levels que l'on souhaite créer
+        TextField inputHeight = new TextField();
         TextField inputWidth = new TextField();
         TextField inputName = new TextField();
 
@@ -949,42 +953,60 @@ public class Window extends Application {
         double width = 1.0*SCENE_WIDTH/6;
         double height = 1.0*SCENE_HEIGHT/6;
 
-        ivBlueWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> wallsColor = "blue");
+        ivBlueWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            wallsColor = "blue";
+            custo(stage);
+        });
 
         Image greenWall = new Image("img/wall/green/Wall-green-Block.png", width, height, false, false);
         ImageView ivGreenWall = new ImageView(greenWall);
 
         popVbox.getChildren().add(ivGreenWall);
 
-        ivGreenWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> wallsColor = "green");
+        ivGreenWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            wallsColor = "green";
+            custo(stage);
+        });
 
         Image orangeWall = new Image("img/wall/orange/Wall-orange-Block.png", width, height, false, false);
         ImageView ivorangeWall = new ImageView(orangeWall);
 
         popVbox.getChildren().add(ivorangeWall);
 
-        ivorangeWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> wallsColor = "orange");
+        ivorangeWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            wallsColor = "orange";
+            custo(stage);
+        });
 
         Image purpleWall = new Image("img/wall/purple/Wall-purple-Block.png", width, height, false, false);
         ImageView ivpurpleWall = new ImageView(purpleWall);
 
         popVbox.getChildren().add(ivpurpleWall);
 
-        ivpurpleWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> wallsColor = "purple");
+        ivpurpleWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            wallsColor = "purple";
+            custo(stage);
+        });
 
         Image redWall = new Image("img/wall/red/Wall-red-Block.png", width, height, false, false);
         ImageView ivredWall = new ImageView(redWall);
 
         popVbox.getChildren().add(ivredWall);
 
-        ivredWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> wallsColor = "red");
+        ivredWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            wallsColor = "red";
+            custo(stage);
+        });
 
         Image yellowWall = new Image("img/wall/yellow/Wall-yellow-Block.png", width, height, false, false);
         ImageView ivyellowWall = new ImageView(yellowWall);
 
         popVbox.getChildren().add(ivyellowWall);
 
-        ivyellowWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> wallsColor = "yellow");
+        ivyellowWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
+            wallsColor = "yellow";
+            custo(stage);
+        });
 
         ImageView ivback = new ImageView(new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false));
         ivback.setY(SCENE_HEIGHT-20);
@@ -1015,31 +1037,46 @@ public class Window extends Application {
         ImageView ivNormal = new ImageView(normal);
         popVbox1.getChildren().add(ivNormal);
 
-        ivNormal.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "classic");
+        ivNormal.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> {
+            skin = "classic";
+            custo(stage);
+        });
 
         Image pokemon = new Image("img/Pacman/presentation/pokemon.png", width, height, false, false);
         ImageView ivPokemon = new ImageView(pokemon);
         popVbox1.getChildren().add(ivPokemon);
 
-        ivPokemon.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "Pokemon");
+        ivPokemon.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> {
+            skin = "Pokemon";
+            custo(stage);
+        });
 
         Image samus = new Image("img/Pacman/presentation/samus.png", width, height, false, false);
         ImageView ivSamus = new ImageView(samus);
         popVbox2.getChildren().add(ivSamus);
 
-        ivSamus.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "Samus");
+        ivSamus.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> {
+            skin = "Samus";
+            custo(stage);
+        });
 
         Image star = new Image("img/Pacman/presentation/starwars.png", width, height, false, false);
         ImageView ivStar = new ImageView(star);
         popVbox2.getChildren().add(ivStar);
 
-        ivStar.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "Starwars");
+        ivStar.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> {
+            skin = "Starwars";
+            custo(stage);
+        });
 
         Image tortue = new Image("img/Pacman/presentation/tortue-ninja.png", width, height, false, false);
         ImageView ivTortue = new ImageView(tortue);
         popVbox2.getChildren().add(ivTortue);
 
-        ivTortue.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> skin = "Ninja Turtle");
+        ivTortue.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> {
+            skin = "Ninja Turtle";
+            custo(stage);
+        });
 
         Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);

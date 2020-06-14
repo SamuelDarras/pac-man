@@ -10,6 +10,7 @@ public class SuperPacGomme extends Items{
        super(100, x, y, Constants.ITEM_DEFAULT_WIDTH*2, Constants.ITEM_DEFAULT_HEIGHT*2);
     }
 
+    //dessine super pac-gommes
     public void draw(GraphicsContext gc) {
         Color prev = (Color) gc.getFill();
 

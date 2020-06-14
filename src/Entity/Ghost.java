@@ -30,6 +30,7 @@ public abstract class Ghost extends Personnage {
     int curx = -1;
     int cury = -1;
 
+    //donne la direction à prendre selon le chemin calculé
     public Direction getDirectionAccordingToPath(ArrayList<Position<Integer>> path) {
 
         if (path.size() > 0) {
@@ -57,20 +58,9 @@ public abstract class Ghost extends Personnage {
             gc.drawImage(toDraw, getPos().getX() + getHitbox()[0], getPos().getY(), -getHitbox()[0], getHitbox()[1]);
         else
             gc.drawImage(toDraw, getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);
-        /*if (path != null && path.size() > 0) {
-            Position prev = path.get(0).copy();
-            for (Position pos : path) {
-                gc.setLineWidth(5);
-                gc.strokeLine((int) prev.getX() * Constants.WALL_WIDTH + Constants.WALL_WIDTH * .5, (int) prev.getY() * Constants.WALL_HEIGHT + Constants.WALL_HEIGHT * .5, (int) pos.getX() * Constants.WALL_WIDTH + Constants.WALL_WIDTH * .5, (int) pos.getY() * Constants.WALL_HEIGHT + Constants.WALL_HEIGHT * .5);
-                prev = pos.copy();
-            }
-        }
-        if (gotoPos != null) {
-            gc.setFill(Color.RED);
-            gc.fillOval((int) gotoPos.getX() * Constants.WALL_WIDTH, (int) gotoPos.getY() * Constants.WALL_HEIGHT, 10, 10);
-        }*/
     }
 
+    //algorithme de recherche de chemin
     public ArrayList<Position<Integer>> BreadthFirst(Position<Integer> start, Position<Integer> end, Plateau plat) {
         ArrayList<Position<Integer>> frontier = new ArrayList<>();
         frontier.add(start);
@@ -149,6 +139,7 @@ public abstract class Ghost extends Personnage {
         return -1;
     }
 
+    //modifie la direction selon l'état du jeu
     public Direction alterDirection(Pacman pac, Plateau plat) {
         if (curx == -1 || cury == -1) {
             curx = getGridPos().getX();

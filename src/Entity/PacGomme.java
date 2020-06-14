@@ -10,6 +10,7 @@ public class PacGomme extends Items{
         super(10, x, y, Constants.ITEM_DEFAULT_WIDTH, Constants.ITEM_DEFAULT_HEIGHT);
     }
 
+    //dessine les pac-gommes
     public void draw(GraphicsContext gc) {
         Color prev = (Color) gc.getFill();
 

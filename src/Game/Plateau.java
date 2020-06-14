@@ -41,6 +41,7 @@ public class Plateau {
         remplirPlateau(levelPath);
     }
 
+    //permet de remplir le tableau plateau avec les entites correspondant grace aux informations du .txt des levels
     public void remplirPlateau(String levelPath) throws Exception {
         BufferedReader read = new BufferedReader(new FileReader(levelPath));
         String t = read.readLine();
@@ -51,7 +52,7 @@ public class Plateau {
 
         System.out.print(haut);
 
-        larg = Integer.parseInt(lst[1]);  //permet de remplir le tableau plateau avec les entites correspondant grace aux informations du .txt des levels
+        larg = Integer.parseInt(lst[1]);
         Init(larg, haut);
         idxFruit = new ArrayList<>();
         idxPG = new ArrayList<>();
@@ -116,12 +117,13 @@ public class Plateau {
         read.close();
     }
 
+    //permet l'affichage des murs sur le programme
     public void setWalls() {
         for (int i = 0; i < plateau.length; i++) {
             if (plateau[i] instanceof Wall){
                 ((Wall) plateau[i]).setImg(defineWallImage(
                         (i + 1 < plateau.length && (i + 1)/larg == i/larg) ? plateau[i + 1] : new Entity(0, 0, 0, 0),
-                        i - larg >= 0 ? plateau[i - larg] : new Entity(0, 0, 0, 0),                                     //permet l'affichage des murs sur le programme
+                        i - larg >= 0 ? plateau[i - larg] : new Entity(0, 0, 0, 0),
                         (i - 1 >= 0 && (i - 1)/larg == i/larg) ? plateau[i - 1] : new Entity(0, 0, 0, 0),
                         i + larg < plateau.length ? plateau[i + larg] : new Entity(0, 0, 0, 0)
                 ));
@@ -144,6 +146,7 @@ public class Plateau {
         plateau[idx] = e;
     }
 
+    // permet de définir l'image des murs en fonction des murs autour d'eux
     private Image defineWallImage(Entity E, Entity N, Entity W, Entity S) {
         Image img = null;
         
@@ -160,7 +163,7 @@ public class Plateau {
             img = new Image("img/wall/"+wallsColor+"/Wall-"+wallsColor+"-End-right.png");
         if (!(E instanceof Wall) && (N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
             img = new Image("img/wall/"+wallsColor+"/Wall-"+wallsColor+"-End-down.png");
-        if ((E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))  // permet de définir l'image des murs en fonction des murs autour d'eux
+        if ((E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && !(S instanceof Wall))
             img = new Image("img/wall/"+wallsColor+"/Wall-"+wallsColor+"-End-left.png");
         if (!(E instanceof Wall) && !(N instanceof Wall) && !(W instanceof Wall) && (S instanceof Wall))
             img = new Image("img/wall/"+wallsColor+"/Wall-"+wallsColor+"-End-up.png");
@@ -201,19 +204,21 @@ public class Plateau {
         return pacman;
     }
 
+    //permet de creer une copie simplifiée du plateau
     public Plateau simpleCopy() {
         Plateau ret = new Plateau();
-        ret.plateau = this.plateau.clone();    //permet de creer une copie du plateau
+        ret.plateau = this.plateau.clone();
         ret.larg = this.larg;
         ret.haut = this.haut;
 
         return ret;
     }
 
+    //enleve l'entity correspondant dans le plateau et le remplace par du vide
     public void remove(Entity ent) {
         for (int i = 0; i < plateau.length; i++) {
             if (plateau[i] == ent) {
-                plateau[i] = new Entity(plateau[i].getPos(), plateau[i].getHitbox());     //enleve l'entity correspondant dans le plateau et le remplace par du vide
+                plateau[i] = new Entity(plateau[i].getPos(), plateau[i].getHitbox());
                 return;
             }
         }
@@ -223,13 +228,14 @@ public class Plateau {
         return house;
     }
 
+    //permet la gestion des fruits dans le temps
     public void setFruit(){
         for (Integer integer : idxFruit) {
             if (!(plateau[integer] instanceof Fruit)) {
                 if (ltdebut[idxFruit.indexOf(integer)]==null) {
                     ltdebut[idxFruit.indexOf(integer)] = LocalTime.now();
                 }
-                if(ChronoUnit.SECONDS.between(ltdebut[idxFruit.indexOf(integer)],LocalTime.now())>=10) {     //permet la gestion des fruits dans le temps
+                if(ChronoUnit.SECONDS.between(ltdebut[idxFruit.indexOf(integer)],LocalTime.now())>=10) {
                     Random random = new Random();
                     int temp = random.nextInt(Constants.FRUIT_NAME.length);
                     String typeFruit = Constants.FRUIT_NAME[temp];
@@ -243,20 +249,24 @@ public class Plateau {
             }
         }
     }
+
+    //permet de savoir si il reste des pac gommes dans le plateau
     public boolean isAvailablePG(){
         boolean available=false;
         for (Entity entity : plateau) {
-            if (entity instanceof PacGomme || entity instanceof SuperPacGomme) {       //permet de savoir si il reste des pac gommes dans le plateau
+            if (entity instanceof PacGomme || entity instanceof SuperPacGomme) {
                 available = true;
                 break;
             }
         }
         return available;
     }
+
+    //permet de replacer les pac gommes et les super pac gommes
     public void refillPG(){
         for (Integer integer : idxPG) {
             plateau[integer] = new PacGomme(plateau[integer].getPos().getX(), plateau[integer].getPos().getY());
-        }                                                                                                             //permet de replacer les pac gommes et les super pac gommes
+        }
         for(Integer integer : idxSPG){
             plateau[integer] = new SuperPacGomme(plateau[integer].getPos().getX(), plateau[integer].getPos().getY());
         }

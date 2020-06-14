@@ -15,6 +15,7 @@ public class Partie {
         pacman = pla.getPacman();
     }
 
+    //met à jour la partie
     public void tick(double dt) {
         pacman.move(dt / 10000000.0, pla);
         if (pacman.isDead(pla)) {

@@ -11,18 +11,20 @@ public class CustoMap {
     int height;
     int width;
 
+    //initialise avec le "plateau", le nom du fichier, la hauteur du plateau et ça largeur
     public CustoMap(ImageView[] tabIV,String name,int height,int width){
         this.tabIV=tabIV;
-        this.name = name;                                                   //initialise avec le "plateau", le nom du fichier, la hauteur du plateau et ça largeur
+        this.name = name;
         this.height=height;
         this.width=width;
     }
 
+    //permet de vérifier la présence ou non de certains éléments du plateau afin d'éviter un disfonctionnement du programme
     public String verifPlateau(){
         String txt="";
         int compPG=0;
         int compSPG=0;
-        int compPM=0;                                                 //permet de vérifier la présence ou non de certains éléments du plateau afin d'éviter un disfonctionnement du programme
+        int compPM=0;
         int compF=0;
         int compH=0;
         for (ImageView imageView : tabIV) {
@@ -47,10 +49,12 @@ public class CustoMap {
             txt+=" Il faut qu'une seule maison";
         return txt;
     }
+
+    //permet de créer le .txt du level avec toutes les informations du level
     public void createLvlFile() throws IOException {
         FileWriter fileWriter = new FileWriter("src//levels/custo//"+name+".txt");
         fileWriter.write(height+" "+width+"\n");
-        for(int i=0;i<height;i++){                                                          //permet de créer le .txt du level avec toutes les informations du level
+        for(int i=0;i<height;i++){
             for(int j=0;j<width;j++) {
                 fileWriter.write(getCarac(tabIV[i * width + j]) + "");
             }
@@ -58,6 +62,8 @@ public class CustoMap {
         }
         fileWriter.close();
     }
+
+    //permet de renvoyer le caractère correspondant à l'image permettant la création du .txt
     public String getCarac(ImageView iv){
         String url = iv.getImage().getUrl();
         if(url.contains("img/bgBlack.png"))
@@ -70,7 +76,7 @@ public class CustoMap {
             return "s";
         if(url.contains("img/createLevel/all_fruits.png"))
             return "F";
-        if(url.contains("img/createLevel/pacManR.png"))                   //permet de renvoyer le caractère correspondant à l'image permettant la création du .txt
+        if(url.contains("img/createLevel/pacManR.png"))
             return "M";
         if(url.contains("img/createLevel/BlinkyGhost.png"))
             return "B";

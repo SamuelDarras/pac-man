@@ -30,6 +30,7 @@ public class Entity {
 
     public void setHitbox(double w, double h) { hitbox[0] = w; hitbox[1] = h; }
 
+    //vérifie si l'entité courante entre en collision avec other
     public boolean hit(Entity other) {
 
         double x = pos.getX();

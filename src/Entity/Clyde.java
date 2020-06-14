@@ -20,6 +20,7 @@ public class Clyde extends Ghost {
         super.draw(gc);
     }
 
+    //met à jour la direction du fantôme
     public void tick(Pacman pac, Plateau p) {
         int xoff = 0;
         int yoff = 0;
