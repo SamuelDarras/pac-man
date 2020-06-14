@@ -69,11 +69,11 @@ public class Window extends Application {
         Canvas canvas = new Canvas(SCENE_WIDTH, SCENE_HEIGHT * margin);
         root.getChildren().add(canvas);
 
-        Image img = new Image("img/menu1Animate.png", SCENE_WIDTH, SCENE_HEIGHT, false, false);
+        Image img = new Image("img/menu1/menu1Animate.png", SCENE_WIDTH, SCENE_HEIGHT, false, false);
         ImageView iv = new ImageView(img);
         root.getChildren().add(iv);
 
-        Image fantomes = new Image("img/fantomes.png", 350, 150, false, false);
+        Image fantomes = new Image("img/menu1/fantomes.png", 350, 150, false, false);
         ImageView ivFtmes = new ImageView(fantomes);
         ivFtmes.preserveRatioProperty();
         ivFtmes.setX(-375);
@@ -123,28 +123,28 @@ public class Window extends Application {
     public void menu(Stage stage) {
         partie = null;
 
-        Image jouer = new Image("img/jouer.png",300,100,false,false);
+        Image jouer = new Image("img/menu2/jouer.png",300,100,false,false);
         ImageView ivJouer = new ImageView(jouer);
         ivJouer.preserveRatioProperty();
 
-        Image demo = new Image("img/demo.png",300,100,false,false);
+        Image demo = new Image("img/menu2/demo.png",300,100,false,false);
         /*System.out.println(demo.getUrl());*/
         ImageView ivDemo = new ImageView(demo);
         ivDemo.preserveRatioProperty();
 
-        Image imdj = new Image("img/mdj.png",700,100,false,false);
+        Image imdj = new Image("img/menu2/mdj.png",700,100,false,false);
         ImageView ivMdj = new ImageView(imdj);
         ivDemo.preserveRatioProperty();
 
-        Image custo = new Image("img/custo.png",700,100,false,false);
+        Image custo = new Image("img/menu2/custo.png",700,100,false,false);
         ImageView ivCusto = new ImageView(custo);
         ivDemo.preserveRatioProperty();
 
-        Image options = new Image("img/options.png",500,100,false,false);
+        Image options = new Image("img/menu2/options.png",500,100,false,false);
         ImageView ivOption = new ImageView(options);
         ivDemo.preserveRatioProperty();
 
-        Image trophy = new Image("img/trophy.png",300,300,false,false);
+        Image trophy = new Image("img/menu2/trophy.png",300,300,false,false);
         ImageView ivTrophy = new ImageView(trophy);
         ivTrophy.preserveRatioProperty();
 
@@ -160,7 +160,7 @@ public class Window extends Application {
 
         Canvas c = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
         GraphicsContext bg = c.getGraphicsContext2D();
-        Image image = new Image("img/bg.png");
+        Image image = new Image("img/menu2/bg.png");
         bg.drawImage(image, 0, 0, SCENE_WIDTH,SCENE_HEIGHT*margin);
 
         root.getChildren().add(c);
@@ -359,7 +359,7 @@ public class Window extends Application {
         HBox box = new HBox();
         box.setSpacing(50.);
 
-        Image iCreateLvl = new Image("img/Level_creator.png", 150, 150, false, false);
+        Image iCreateLvl = new Image("img/menu2/custo/Level_creator.png", 150, 150, false, false);
         ImageView ivCreateLvl = new ImageView(iCreateLvl);
         ivCreateLvl.setY(SCENE_HEIGHT-75);
         ivCreateLvl.setX(SCENE_WIDTH-150);
@@ -370,11 +370,11 @@ public class Window extends Application {
         Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);
 
-        Image custoWall = new Image("img/custoWall.png", 195, 65, false, false);
+        Image custoWall = new Image("img/menu2/custo/custoWall.png", 195, 65, false, false);
         ImageView ivCustoWall = new ImageView(custoWall);
         ivCustoWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> custoWall(stage));
 
-        Image custoAll = new Image("img/PacmanCusto.png", 195, 65, false, false);
+        Image custoAll = new Image("img/menu2/custo/PacmanCusto.png", 195, 65, false, false);
         ImageView ivCustoAll = new ImageView(custoAll);
         ivCustoAll.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> custoCarac(stage));
 
@@ -398,10 +398,10 @@ public class Window extends Application {
         soundfin.setVolume(volume);
         soundfin.play();
         if(etat.equals("win")) {
-            msg = new Image("img/win.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
+            msg = new Image("img/endGame/win.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
         }
         else {
-            msg = new Image("img/lose.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
+            msg = new Image("img/endGame/lose.png", SCENE_WIDTH, SCENE_HEIGHT * margin, false, false);
         }
 
         ImageView ivMsg = new ImageView(msg);
@@ -427,13 +427,13 @@ public class Window extends Application {
         ivback.setY(SCENE_HEIGHT-20);
         ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
 
-        Image soundOn = new Image("img/son-on.png", 200, 100, false, false);
+        Image soundOn = new Image("img/menu2/option/son-on.png", 200, 100, false, false);
         ImageView ivSoundOn = new ImageView(soundOn);
         ivSoundOn.preserveRatioProperty();
         ivSoundOn.setX(1.0*SCENE_WIDTH/2 - 100);
         ivSoundOn.setY(1.0*SCENE_HEIGHT/4);
 
-        Image soundOff = new Image("img/son-off.png", 200, 100, false, false);
+        Image soundOff = new Image("img/menu2/option/son-off.png", 200, 100, false, false);
         ImageView ivSoundOff = new ImageView(soundOff);
         ivSoundOff.preserveRatioProperty();
         ivSoundOff.setX(1.0*SCENE_WIDTH/2 - 100);
@@ -514,7 +514,7 @@ public class Window extends Application {
 
 
 
-        Image ilvl1 = new Image("img/0002_Level-1.png", width, height, false, false);
+        Image ilvl1 = new Image("img/menu2/jouer/0002_Level-1.png", width, height, false, false);
         ImageView ivlvl1 = new ImageView(ilvl1);
 
         popVbox.getChildren().add(ivlvl1);
@@ -524,7 +524,7 @@ public class Window extends Application {
             jeu(stage,mdj);
         });
 
-        Image ilvl2 = new Image("img/Level_2.png", width, height, false, false);
+        Image ilvl2 = new Image("img/menu2/jouer/Level_2.png", width, height, false, false);
         ImageView ivlvl2 = new ImageView(ilvl2);
 
         popVbox.getChildren().add(ivlvl2);
@@ -534,7 +534,7 @@ public class Window extends Application {
             jeu(stage,mdj);
         });
 
-        Image ilvl3 = new Image("img/0001_presentation1.2.png", width, height, false, false);
+        Image ilvl3 = new Image("img/menu2/jouer/0001_presentation1.2.png", width, height, false, false);
         ImageView ivlvl3 = new ImageView(ilvl3);
 
         popVbox.getChildren().add(ivlvl3);
@@ -544,7 +544,7 @@ public class Window extends Application {
             jeu(stage,mdj);
         });
 
-        Image ilvl4 = new Image("img/0000_presentation-2.png", width, height, false, false);
+        Image ilvl4 = new Image("img/menu2/jouer/0000_presentation-2.png", width, height, false, false);
         ImageView ivlvl4 = new ImageView(ilvl4);
 
         popVbox.getChildren().add(ivlvl4);
@@ -557,7 +557,7 @@ public class Window extends Application {
         ivback.setY(SCENE_HEIGHT-20);
         ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> menu(stage));
 
-        ImageView lvlCusto = new ImageView(new Image("img/Custom_level.png",width,height,false,false));
+        ImageView lvlCusto = new ImageView(new Image("img/menu2/jouer/Custom_level.png",width,height,false,false));
         lvlCusto.setX(SCENE_WIDTH-width);
         lvlCusto.addEventHandler(MouseEvent.MOUSE_CLICKED, click -> selectCusto(stage));
 
@@ -627,7 +627,7 @@ public class Window extends Application {
         ivback.setY(SCENE_HEIGHT-20);
         ivback.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
 
-        Image imdj1 = new Image("img/Classique.png", width, height, false, false);
+        Image imdj1 = new Image("img/menu2/mdj/Classique.png", width, height, false, false);
         ImageView ivmdj1 = new ImageView(imdj1);
 
         popVbox.getChildren().add(ivmdj1);
@@ -637,7 +637,7 @@ public class Window extends Application {
             menu(stage);
         });
 
-        Image imdj2 = new Image("img/Contre-la-montre.png", width, height, false, false);
+        Image imdj2 = new Image("img/menu2/mdj/Contre-la-montre.png", width, height, false, false);
         ImageView ivmdj2 = new ImageView(imdj2);
 
         popVbox.getChildren().add(ivmdj2);
@@ -647,7 +647,7 @@ public class Window extends Application {
             menu(stage);
         });
 
-        Image imdj3 = new Image("img/Infinity.png", width, height, false, false);
+        Image imdj3 = new Image("img/menu2/mdj/Infinity.png", width, height, false, false);
         ImageView ivmdj3 = new ImageView(imdj3);
 
         popVbox.getChildren().add(ivmdj3);
@@ -827,7 +827,7 @@ public class Window extends Application {
         TextField inputWidth = new TextField();
         TextField inputName = new TextField();
 
-        Image submit = new Image("img/Ok_custo.png", 50, 40, false, false);
+        Image submit = new Image("img/createLevel/Ok_custo.png", 50, 40, false, false);
         ImageView ivSubmit = new ImageView(submit);
         ivSubmit.setX(SCENE_WIDTH/3.1);
         ivSubmit.setY(20);
@@ -881,15 +881,15 @@ public class Window extends Application {
         hbox.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         ImageView[] select = {  new ImageView(new Image("img/bgBlack.png", 50, 50, false, false)),
                                 new ImageView(new Image("img/wall/purple/Wall-purple-T-full.png", 50, 50, false, false)),
-                                new ImageView(new Image("img/PacGomme.png", 50, 50, false, false)),
-                                new ImageView(new Image("img/SuperPacGomme.png", 50, 50, false, false)),
-                                new ImageView(new Image("img/all_fruits.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/createLevel/PacGomme.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/createLevel/SuperPacGomme.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/createLevel/all_fruits.png", 50, 50, false, false)),
                                 new ImageView(new Image("img/pacManR.png", 50, 50, false, false)),
                                 new ImageView(new Image("img/BlinkyGhost.png", 50, 50, false, false)),
                                 new ImageView(new Image("img/ClydeGhost.png", 50, 50, false, false)),
                                 new ImageView(new Image("img/InkyGhost.png", 50, 50, false, false)),
                                 new ImageView(new Image("img/PinkyGhost.png", 50, 50, false, false)),
-                                new ImageView(new Image("img/Home.png", 50, 50, false, false))
+                                new ImageView(new Image("img/createLevel/Home.png", 50, 50, false, false))
                               };
         for (ImageView imageView : select) {
             imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
@@ -904,7 +904,7 @@ public class Window extends Application {
             menu(stage);
         });
 
-        ImageView save = new ImageView(new Image("img/Save.png", 75, 75, false, false));
+        ImageView save = new ImageView(new Image("img/createLevel/Save.png", 75, 75, false, false));
         save.addEventHandler(MouseEvent.MOUSE_CLICKED, reset->{
                 String txt=verifPlateau(tabIV);
                 if(!(txt.equals(""))){
