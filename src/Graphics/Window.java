@@ -365,7 +365,7 @@ public class Window extends Application {
         ivCreateLvl.setY(SCENE_HEIGHT-75);
         ivCreateLvl.setX(SCENE_WIDTH-150);
 
-        ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> fromCreateLvl(stage));
+        ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> formCreateLvl(stage));
         Image bg = new Image("img/menu2/custo/custoBg.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);
 
