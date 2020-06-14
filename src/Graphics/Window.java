@@ -283,6 +283,10 @@ public class Window extends Application {
                     }
 
                     if(mdj==2 && !(partie.getPlateau().isAvailablePG())){
+                        partie.getPacman().addSpeed(partie.getPacman().getSpeed()*.2);
+                        for (Entity e : partie.getPlateau().getPlateau())
+                            if (e instanceof Ghost)
+                                ((Ghost) e).addSpeed(((Ghost)e).getSpeed()*.2);
                         partie.getPlateau().refillPG();
                     }
 
@@ -593,7 +597,7 @@ public class Window extends Application {
             int finalI = i;
             buttons[i].addEventHandler(MouseEvent.MOUSE_CLICKED, click-> {
                 levelPath = "src//levels//custo//" + files[finalI].getName();
-                jeu(stage, 4);
+                jeu(stage, mdj);
                     }
             );
         }
