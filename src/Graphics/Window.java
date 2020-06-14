@@ -884,11 +884,11 @@ public class Window extends Application {
                                 new ImageView(new Image("img/createLevel/PacGomme.png", 50, 50, false, false)),
                                 new ImageView(new Image("img/createLevel/SuperPacGomme.png", 50, 50, false, false)),
                                 new ImageView(new Image("img/createLevel/all_fruits.png", 50, 50, false, false)),
-                                new ImageView(new Image("img/pacManR.png", 50, 50, false, false)),
-                                new ImageView(new Image("img/BlinkyGhost.png", 50, 50, false, false)),
-                                new ImageView(new Image("img/ClydeGhost.png", 50, 50, false, false)),
-                                new ImageView(new Image("img/InkyGhost.png", 50, 50, false, false)),
-                                new ImageView(new Image("img/PinkyGhost.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/createLevel/pacManR.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/createLevel/BlinkyGhost.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/createLevel/ClydeGhost.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/createLevel/InkyGhost.png", 50, 50, false, false)),
+                                new ImageView(new Image("img/createLevel/PinkyGhost.png", 50, 50, false, false)),
                                 new ImageView(new Image("img/createLevel/Home.png", 50, 50, false, false))
                               };
         for (ImageView imageView : select) {
