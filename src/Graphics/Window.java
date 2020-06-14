@@ -374,7 +374,7 @@ public class Window extends Application {
         ImageView ivCustoWall = new ImageView(custoWall);
         ivCustoWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> custoWall(stage));
 
-        Image custoAll = new Image("img/menu2/custo/PacmanCusto.png", 195, 65, false, false);
+        Image custoAll = new Image("img/menu2/custo/PacmanCusto.png", 222, 95, false, false);
         ImageView ivCustoAll = new ImageView(custoAll);
         ivCustoAll.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> custoCarac(stage));
 
