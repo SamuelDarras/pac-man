@@ -17,6 +17,7 @@ public class Wall extends Entity{
         this.img = img;
     }
 
+    //dessine les murs
     public void draw(GraphicsContext gc) {
         if (img != null)
             gc.drawImage(img, getPos().getX(), getPos().getY(), getHitbox()[0], getHitbox()[1]);

@@ -47,7 +47,7 @@ public class Plateau {
         String[] lst = t.split("[. ]");
 
         haut = Integer.parseInt(lst[0]);
-        larg = Integer.parseInt(lst[1]);                               //permet de remplir le tableau plateau avec les entites correspondant grace aux informations du .txt des levels
+        larg = Integer.parseInt(lst[1]);  //permet de remplir le tableau plateau avec les entites correspondant grace aux informations du .txt des levels
         Init(larg, haut);
         idxFruit = new ArrayList<>();
         idxPG = new ArrayList<>();

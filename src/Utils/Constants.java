@@ -4,7 +4,6 @@ public class Constants {
     public static int larg;
     public static int haut;
 
-
     public static int SCENE_HEIGHT      = 700;
     public static int SCENE_WIDTH       = 700;
 
@@ -35,6 +34,4 @@ public class Constants {
     public static int FRUIT_SIZE = 30;
     public static String[] FRUIT_NAME = {"cherry","strawberry", "orange", "apple"};
     public static int[] FRUIT_SCORE = {100,300,500,700};
-
-
 }

@@ -8,7 +8,6 @@ import javafx.scene.paint.Paint;
 import java.util.ArrayList;
 import java.util.Random;
 
-
 public class Entity {
     private Position<Double> pos;
     private double[] hitbox;
@@ -35,10 +34,6 @@ public class Entity {
 
         gc.setStroke(Color.BLUE);
         gc.strokeRect(getPos().getX(), getPos().getY(), hitbox[0], hitbox[1]);
-        /*gc.strokeLine(getPos().getX(), getPos().getY(), getPos().getX()+200, getPos().getY()+200);
-        gc.strokeLine(getPos().getX(), getPos().getY(), getPos().getX()-200, getPos().getY()-200);
-        gc.strokeLine(getPos().getX(), getPos().getY(), getPos().getX()+200, -getPos().getY()+200);
-        gc.strokeLine(getPos().getX(), getPos().getY(), getPos().getX()-200, -getPos().getY()-200);*/
 
         gc.setStroke(prev);
     }

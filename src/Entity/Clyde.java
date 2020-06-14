@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 
 public class Clyde extends Ghost {
 
-
+    //fantôme orange
     public Clyde(double x, double y, double speed, String skin) {
         super(x, y, speed, skin);
         img = new Image("img/Pacman/"+skin+"/ClydeGhost.png");

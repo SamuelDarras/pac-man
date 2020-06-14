@@ -16,6 +16,7 @@ public class SuperPacGomme extends Items{
         return afficheScore;
     }
 
+    //dessine les super pac-gommes
     public void draw(GraphicsContext gc) {
         Color prev = (Color) gc.getFill();
 

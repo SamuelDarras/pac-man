@@ -62,6 +62,7 @@ public class Window extends Application {
     }
 
     @Override
+    //affiche le premier menu avec une animation
     public void start(Stage stage) {
 
         stage.setTitle("pac man");
@@ -122,6 +123,7 @@ public class Window extends Application {
         stage.show();
     }
 
+    //affiche le menu principal et renvoie au sous menu correspondant à chaque bouton
     public void menu(Stage stage) {
         partie = null;
 
@@ -185,6 +187,7 @@ public class Window extends Application {
         stage.setScene(new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin));
     }
 
+    //
     public void jeu(Stage stage,int mdj) {
         AtomicBoolean menu = new AtomicBoolean(false);
         final Group root = new Group();
@@ -236,12 +239,9 @@ public class Window extends Application {
             AudioClip chomp=Window.openAudio("src/music/pacman-ghostnoises.wav");
             chomp.setVolume(volume);
 
-
             new AnimationTimer() {
                 long prevtime;
                 long deltaTime;
-
-
 
                 LocalTime ltnow;
                 public void handle(long currentNanoTime) {
@@ -283,6 +283,10 @@ public class Window extends Application {
                     }
 
                     if(mdj==2 && !(partie.getPlateau().isAvailablePG())){
+                        partie.getPacman().addSpeed(partie.getPacman().getSpeed()*.2);
+                        for (Entity e : partie.getPlateau().getPlateau())
+                            if (e instanceof Ghost)
+                                ((Ghost) e).addSpeed(((Ghost)e).getSpeed()*.2);
                         partie.getPlateau().refillPG();
                     }
 
@@ -352,7 +356,7 @@ public class Window extends Application {
     }
 
 
-
+    //affiche le menu de customisation renvoyant à d'autre fenêtre
     public void custo(Stage stage) {
         Group group = new Group();
 
@@ -366,7 +370,7 @@ public class Window extends Application {
         ivCreateLvl.setX(SCENE_WIDTH-150);
 
         ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            formCreateLvl(stage);
+            fromCreateLvl(stage);
         });
         Image bg = new Image("img/menu2/custo/custoBg.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);
@@ -393,6 +397,7 @@ public class Window extends Application {
         stage.show();
     }
 
+    //affiche l'image de fin correspondant et génère les highscores
     public void finJeu(Stage stage,String etat, Score score, String timer,int mdj){
         Image msg;
         AudioClip soundfin = Window.openAudio("src/music/pacman_beginning.wav");
@@ -426,6 +431,7 @@ public class Window extends Application {
         stage.show();
     }
 
+    //affiche les options permettant de changer le volume et de couper les effets sonores
     public void settings(Stage stage) {
         Image iback = new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false);
         ImageView ivback = new ImageView(iback);
@@ -501,6 +507,8 @@ public class Window extends Application {
 
         stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
     }
+
+    //affiche le menu permettant de choisir un level
     public void select(Stage stage) {
         double width = 1.0*SCENE_WIDTH/4;
         double height = 1.0*SCENE_HEIGHT/4;
@@ -572,6 +580,8 @@ public class Window extends Application {
         stage.setScene(popUp);
         stage.show();
     }
+
+    //affiche le menu des levels créés par l'utilisateur
     public void selectCusto(Stage stage){
         Group root = new Group();
 
@@ -587,7 +597,7 @@ public class Window extends Application {
             int finalI = i;
             buttons[i].addEventHandler(MouseEvent.MOUSE_CLICKED, click-> {
                 levelPath = "src//levels//custo//" + files[finalI].getName();
-                jeu(stage, 4);
+                jeu(stage, mdj);
                     }
             );
         }
@@ -605,13 +615,13 @@ public class Window extends Application {
             }
         }
 
-
         root.getChildren().addAll(main,gridPane,ivback);
 
         stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
 
     }
 
+    //affiche le menu permettant de choisir un mode de jeu
     public void menuMdj(Stage stage) {
         double width = 1.0*SCENE_WIDTH/4;
         double height = 1.0*SCENE_HEIGHT/4;
@@ -670,6 +680,7 @@ public class Window extends Application {
         stage.show();
     }
 
+    //affiche les highscores du mode de jeu sélectionné
     public void afficheScore(Stage stage, int mode){
         Label tmp0;
         Label tmp1;
@@ -727,6 +738,7 @@ public class Window extends Application {
         stage.show();
     }
 
+    //écrit le score effectué dans le menu correspondant et renvoie à la méthode afficheScore
     public void ecrireScore(Score score, Stage stage, String timer, int mdj){
         if(mdj!=4) {
             Label label = new Label("Entrer votre nom :");
@@ -761,6 +773,7 @@ public class Window extends Application {
             menu(stage);
     }
 
+    //affiche le menu permettant de choisir quelle highscore afficher
     public void scoreBoard(Stage stage){
         double width = 200;
         double height = 200;
@@ -859,11 +872,13 @@ public class Window extends Application {
         stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
 
     }
+
+    //affiche la fenêtre permettant de créer un plateau
     public void createLvl(int height,int width,String name,Stage stage){
         Group root = new Group();
         AtomicReference<String> currentBlock = new AtomicReference<>("img/bgBlack.png");
         int tailleP=height*width;
-        ImageView[] tabIV = new ImageView[tailleP];           //affichage de l'ecran de customisation de levels
+        ImageView[] tabIV = new ImageView[tailleP];
         VBox vbox = new VBox();
         HBox hbox = new HBox();
 
@@ -940,6 +955,7 @@ public class Window extends Application {
         return new AudioClip(Paths.get(path).toUri().toString());
     }
 
+    //affiche le menu permettant de choisir la couleur des murs
     public void custoWall(Stage stage){
         HBox popVbox=new HBox();
 
@@ -1018,6 +1034,7 @@ public class Window extends Application {
         stage.show();
     }
 
+    //affiche le menu permettant de choisir les apparences de pac man et des fantômes
     public void custoCarac(Stage stage){
         double width = 150;
         double height = 150;
