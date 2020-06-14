@@ -766,13 +766,13 @@ public class Window extends Application {
         Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);
 
-        Image classic = new Image("img/Classique.png", width, height, false, false);
+        Image classic = new Image("img/menu2/mdj/Classique.png", width, height, false, false);
         ImageView ivClassic = new ImageView(classic);
 
-        Image clm = new Image("img/Contre-la-montre.png", width, height, false, false);
+        Image clm = new Image("img/menu2/mdj/Contre-la-montre.png", width, height, false, false);
         ImageView ivclm = new ImageView(clm);
 
-        Image infini = new Image("img/Infinity.png", width, height, false, false);
+        Image infini = new Image("img/menu2/mdj/Infinity.png", width, height, false, false);
         ImageView ivinfini = new ImageView(infini);
 
 
