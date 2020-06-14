@@ -41,6 +41,7 @@ public class Plateau {
         remplirPlateau(levelPath);
     }
 
+    //remplit le plateau en fonction du niveau selctionné
     public void remplirPlateau(String levelPath) throws Exception {
         BufferedReader read = new BufferedReader(new FileReader(levelPath));
         String t = read.readLine();
@@ -48,9 +49,6 @@ public class Plateau {
 
         haut = Integer.parseInt(lst[0]);
         larg = Integer.parseInt(lst[1]);
-
-        System.out.print(haut);
-        System.out.println("; " + larg);
 
         Init(larg, haut);
         idxFruit = new ArrayList<>();
@@ -115,6 +113,7 @@ public class Plateau {
 
         read.close();
     }
+
 
     public void setWalls(String color) {
         for (int i = 0; i < plateau.length; i++) {

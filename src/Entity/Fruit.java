@@ -18,7 +18,6 @@ public class Fruit extends Items{
         this.typeFruit=typeFruit;
 
         setHitbox(Constants.FRUIT_SIZE, Constants.FRUIT_SIZE);
-
     }
     public void setImg(Image img) {
         this.img = img;
@@ -27,7 +26,6 @@ public class Fruit extends Items{
     public boolean isAfficheScore() {
         return afficheScore;
     }
-
 
     public String GetFruits(){
         return typeFruit;

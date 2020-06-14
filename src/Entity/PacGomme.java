@@ -8,7 +8,6 @@ public class PacGomme extends Items{
 
     private boolean afficheScore = false;
 
-
     public PacGomme(double x, double y){
         super(10, x, y, Constants.ITEM_DEFAULT_WIDTH, Constants.ITEM_DEFAULT_HEIGHT);
     }
@@ -17,6 +16,7 @@ public class PacGomme extends Items{
         return afficheScore;
     }
 
+    //dessine les pac-gommes
     public void draw(GraphicsContext gc) {
         Color prev = (Color) gc.getFill();
 

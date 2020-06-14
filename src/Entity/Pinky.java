@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class Pinky extends Ghost {
 
+    //fantôme rose
     public Pinky(double x, double y, double speed, String skin) {
         super(x, y, speed, skin);
         img = new Image("img/Pacman/"+skin+"/PinkyGhost.png");
