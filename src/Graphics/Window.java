@@ -413,10 +413,14 @@ public class Window extends Application {
         root.getChildren().addAll(ivMsg);
 
         ivMsg.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if (mdj == 4)
+                menu(stage);
+            else{
             if (mdj == 2 || etat.equals("win"))
                 ecrireScore(score, stage, timer, mdj);
             else
                 afficheScore(stage, mdj);
+            }
         });
 
         Scene fin = new Scene(root,SCENE_WIDTH,SCENE_HEIGHT*margin);
