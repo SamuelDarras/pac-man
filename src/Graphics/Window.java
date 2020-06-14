@@ -357,6 +357,7 @@ public class Window extends Application {
         Group group = new Group();
 
         HBox box = new HBox();
+        box.setPadding(new Insets(SCENE_WIDTH/2,0,0,SCENE_WIDTH/6));
         box.setSpacing(50.);
 
         Image iCreateLvl = new Image("img/menu2/custo/Level_creator.png", 150, 150, false, false);
@@ -367,14 +368,14 @@ public class Window extends Application {
         ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             fromCreateLvl(stage);
         });
-        Image bg = new Image("img/bgBlack.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
+        Image bg = new Image("img/menu2/custo/custoBg.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);
 
         Image custoWall = new Image("img/menu2/custo/custoWall.png", 195, 65, false, false);
         ImageView ivCustoWall = new ImageView(custoWall);
         ivCustoWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> custoWall(stage));
 
-        Image custoAll = new Image("img/menu2/custo/PacmanCusto.png", 222, 95, false, false);
+        Image custoAll = new Image("img/menu2/custo/PacmanCusto.png", 222, 70, false, false);
         ImageView ivCustoAll = new ImageView(custoAll);
         ivCustoAll.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> custoCarac(stage));
 
