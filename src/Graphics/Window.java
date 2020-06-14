@@ -366,7 +366,7 @@ public class Window extends Application {
         ivCreateLvl.setX(SCENE_WIDTH-150);
 
         ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            fromCreateLvl(stage);
+            formCreateLvl(stage);
         });
         Image bg = new Image("img/menu2/custo/custoBg.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);
@@ -815,7 +815,7 @@ public class Window extends Application {
         stage.setScene(scoreBoard);
         stage.show();
     }
-    public void fromCreateLvl(Stage stage){
+    public void formCreateLvl(Stage stage){
         Group root = new Group();
 
         Canvas main = new Canvas(SCENE_WIDTH, SCENE_HEIGHT*margin);
@@ -829,7 +829,7 @@ public class Window extends Application {
         height.setTextFill(Color.WHITE);
         width.setTextFill(Color.WHITE);
         name.setTextFill(Color.WHITE);
-        TextField inputHeight = new TextField();
+        TextField inputHeight = new TextField();                           //scene qui afficher trois inputs afin d'avoir les information du levels que l'on souhaite créer
         TextField inputWidth = new TextField();
         TextField inputName = new TextField();
 
@@ -837,7 +837,6 @@ public class Window extends Application {
         ImageView ivSubmit = new ImageView(submit);
         ivSubmit.setX(SCENE_WIDTH/3.1);
         ivSubmit.setY(20);
-
         ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             if(inputHeight.getText()!=null && inputHeight.getText()!=null && inputName.getText()!=null)
                createLvl(Integer.valueOf(inputHeight.getText()),Integer.valueOf(inputWidth.getText()),inputName.getText(),stage);
@@ -864,7 +863,7 @@ public class Window extends Application {
         Group root = new Group();
         AtomicReference<String> currentBlock = new AtomicReference<>("img/bgBlack.png");
         int tailleP=height*width;
-        ImageView[] tabIV = new ImageView[tailleP];
+        ImageView[] tabIV = new ImageView[tailleP];           //affichage de l'ecran de customisation de levels
         VBox vbox = new VBox();
         HBox hbox = new HBox();
 
