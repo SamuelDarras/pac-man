@@ -4,7 +4,7 @@ import Utils.Constants;
 
 public class Items extends Entity{
 
-    private int score;
+    private final int score;
 
     public Items(int score, double x, double y){
         super(x, y, Constants.ITEM_DEFAULT_WIDTH, Constants.ITEM_DEFAULT_HEIGHT);

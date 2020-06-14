@@ -13,7 +13,7 @@ public class Pinky extends Ghost {
 
     public Pinky(double x, double y, double speed, String skin) {
         super(x, y, speed, skin);
-        img = new Image("img/Pacman/"+skin+"/PinkyGhost.png");
+        img = new Image("img/Pacman/" + skin + "/PinkyGhost.png");
     }
 
     public void draw(GraphicsContext gc) {
@@ -27,10 +27,8 @@ public class Pinky extends Ghost {
         int xoff = 0;
         int yoff = 0;
 
-        int curpac_x = (int) pac.getGridPos().getX();
-        int curpac_y = (int) pac.getGridPos().getY();
-
-        path = BreadthFirst(getGridPos().copy(), pac.getGridPos().copy(), p);
+        int curpac_x = pac.getGridPos().getX();
+        int curpac_y = pac.getGridPos().getY();
 
         switch (pac.getDir()) {
             case LEFT:
@@ -51,13 +49,15 @@ public class Pinky extends Ghost {
                 break;
         }
 
-        gotoPos = new Position(curpac_x + xoff, curpac_y + yoff);
-        path = BreadthFirst(getGridPos().copy(), gotoPos.copy(), p);
+        gotoPos = new Position<>(curpac_x + xoff, curpac_y + yoff);
+        path = BreadthFirst(getGridPos(), gotoPos, p);
 
         Direction n_dir = getDirectionAccordingToPath(path);
+        if (path.size() == 0) {
+            n_dir = getDirectionAccordingToPath(super.getNeighbours(getGridPos(), p));
+        }
         changeDir(n_dir);
         changeDir(super.alterDirection(pac, p));
     }
-
 
 }

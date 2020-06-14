@@ -22,19 +22,19 @@ public class Inky extends Ghost {
     }
 
     public void tick(Pacman pac, Plateau p) {
-        int gotoX = (int) pac.getGridPos().getX();
-        int gotoY = (int) pac.getGridPos().getY();
+        int gotoX = pac.getGridPos().getX();
+        int gotoY = pac.getGridPos().getY();
         for (Entity e : p.getPlateau()) {
             if (e instanceof Blinky) {
-                gotoX = (int) pac.getGridPos().getX() - (int) ((Blinky) e).getGridPos().getX();
-                gotoY = (int) pac.getGridPos().getY() - (int) ((Blinky) e).getGridPos().getY();
+                gotoX = pac.getGridPos().getX() - ((Blinky) e).getGridPos().getX();
+                gotoY = pac.getGridPos().getY() - ((Blinky) e).getGridPos().getY();
                 gotoX += gotoX;
                 gotoY += gotoY;
             }
         }
 
-        gotoPos = new Position(gotoX, gotoY);
-        if (p.getCell((int) gotoPos.getX(), (int) gotoPos.getY()) instanceof Wall)
+        gotoPos = new Position<>(gotoX, gotoY);
+        if (p.getCell(gotoPos.getX(), gotoPos.getY()) instanceof Wall)
             path = BreadthFirst(getGridPos(), gotoPos, p);
         else
             path = BreadthFirst(getGridPos(), pac.getGridPos(), p);

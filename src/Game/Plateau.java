@@ -27,7 +27,7 @@ public class Plateau {
     int larg;
     int haut;
 
-    Position house = new Position(0, 0);
+    Position<Integer> house = new Position<>(0, 0);
 
     Pacman pacman;
 
@@ -50,7 +50,6 @@ public class Plateau {
         larg = Integer.parseInt(lst[1]);
 
         System.out.print(haut);
-        System.out.println("; " + larg);
 
         Init(larg, haut);
         idxFruit = new ArrayList<>();
@@ -95,7 +94,7 @@ public class Plateau {
                         plateau[larg * i + j] = pacman;
                         break;
                     case 'H':
-                        house = new Position(j, i);
+                        house = new Position<>(j, i);
                         plateau[larg * i + j] = new Entity(x, y, 1, 1);
                         break;
                     case'F':
@@ -110,13 +109,13 @@ public class Plateau {
 
         }
 
-        setWalls("blue");
+        setWalls();
         ltdebut=new LocalTime[idxFruit.size()];
 
         read.close();
     }
 
-    public void setWalls(String color) {
+    public void setWalls() {
         for (int i = 0; i < plateau.length; i++) {
             if (plateau[i] instanceof Wall){
                 ((Wall) plateau[i]).setImg(defineWallImage(
@@ -201,10 +200,6 @@ public class Plateau {
         return pacman;
     }
 
-    public List<Integer> getIdxFruit() {
-        return idxFruit;
-    }
-
     public Plateau simpleCopy() {
         Plateau ret = new Plateau();
         ret.plateau = this.plateau.clone();
@@ -223,7 +218,7 @@ public class Plateau {
         }
     }
 
-    public Position getHouse() {
+    public Position<Integer> getHouse() {
         return house;
     }
 
@@ -240,7 +235,7 @@ public class Plateau {
                     int score = Constants.FRUIT_SCORE[temp];
                     double x = plateau[integer].getPos().getX();
                     double y = plateau[integer].getPos().getY();
-                    plateau[integer] = new Fruit(score, x, y, typeFruit);
+                    plateau[integer] = new Fruit(score, x, y);
                     ((Fruit) plateau[integer]).setImg(new Image("img/" + typeFruit + ".png"));
                     ltdebut[idxFruit.indexOf(integer)]=null;
                 }
@@ -249,8 +244,8 @@ public class Plateau {
     }
     public boolean isAvailablePG(){
         boolean available=false;
-        for(int i=0;i<plateau.length;i++){
-            if(plateau[i] instanceof PacGomme || plateau[i] instanceof SuperPacGomme) {
+        for (Entity entity : plateau) {
+            if (entity instanceof PacGomme || entity instanceof SuperPacGomme) {
                 available = true;
                 break;
             }

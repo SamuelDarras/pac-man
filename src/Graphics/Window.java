@@ -10,8 +10,6 @@ import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -21,8 +19,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
@@ -31,11 +27,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -232,7 +228,7 @@ public class Window extends Application {
 
     public void mdj1(AtomicBoolean menu, LocalTime ltDebut, Stage stage, GraphicsContext gc, int mdj){
         try {
-            partie = new Partie(levelPath, wallsColor, this, skin,volume);
+            partie = new Partie(levelPath, wallsColor, skin,volume);
             AudioClip chomp=Window.openAudio("src/music/pacman-ghostnoises.wav");
             chomp.setVolume(volume);
 
@@ -361,7 +357,7 @@ public class Window extends Application {
         Group group = new Group();
 
         HBox box = new HBox();
-        box.setPadding(new Insets(SCENE_WIDTH/2,0,0,SCENE_WIDTH/6));
+        box.setPadding(new Insets(SCENE_WIDTH/2.0,0,0,SCENE_WIDTH/6.0));
         box.setSpacing(50.);
 
         Image iCreateLvl = new Image("img/menu2/custo/Level_creator.png", 150, 150, false, false);
@@ -369,9 +365,7 @@ public class Window extends Application {
         ivCreateLvl.setY(SCENE_HEIGHT-75);
         ivCreateLvl.setX(SCENE_WIDTH-150);
 
-        ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            fromCreateLvl(stage);
-        });
+        ivCreateLvl.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> fromCreateLvl(stage));
         Image bg = new Image("img/menu2/custo/custoBg.png", SCENE_WIDTH, SCENE_HEIGHT*margin, false, false);
         ImageView ivBg = new ImageView(bg);
 
@@ -473,13 +467,10 @@ public class Window extends Application {
 
         slider.setBlockIncrement(5);
 
-        slider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, //
-                                Number oldValue, Number newValue) {
-                volume = newValue.intValue()*1.0/100;
-                tempVolume = volume;
-            }
+        //
+        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            volume = newValue.intValue()*1.0/100;
+            tempVolume = volume;
         });
 
         vVol.getChildren().addAll(labVol,slider);
@@ -511,7 +502,7 @@ public class Window extends Application {
 
         VBox popVbox=new VBox();
         popVbox.setSpacing(10.);
-        popVbox.setPadding(new Insets(0,0,0, SCENE_WIDTH/3));
+        popVbox.setPadding(new Insets(0,0,0, SCENE_WIDTH/3.0));
         popVbox.setAlignment(Pos.TOP_CENTER);
 
         Group pop = new Group();
@@ -622,7 +613,7 @@ public class Window extends Application {
 
         VBox popVbox=new VBox();
         popVbox.setSpacing(30.);
-        popVbox.setPadding(new Insets(0,0,0,SCENE_WIDTH/3));
+        popVbox.setPadding(new Insets(0,0,0,SCENE_WIDTH/3.0));
         popVbox.setAlignment(Pos.TOP_CENTER);
 
         Group pop = new Group();
@@ -686,7 +677,7 @@ public class Window extends Application {
 
         int c = 5;
 
-        for (String s : Score.readScoreFromFile(mode)){
+        for (String s : Objects.requireNonNull(Score.readScoreFromFile(mode))){
 
             String[] str = s.split(";");
 
@@ -722,9 +713,7 @@ public class Window extends Application {
 
         group.getChildren().addAll(ivBg, ivLabel , ivSubmit,vbox);
 
-        ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            menu(stage);
-        });
+        ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
 
         Scene score = new Scene(group,450,SCENE_HEIGHT*margin+100);
         stage.setScene(score);
@@ -791,7 +780,7 @@ public class Window extends Application {
 
 
         VBox vbox = new VBox();
-        vbox.setPadding(new Insets(100,0,0,SCENE_WIDTH/3));
+        vbox.setPadding(new Insets(100,0,0,SCENE_WIDTH/3.0));
         vbox.setSpacing(20.);
 
         vbox.getChildren().addAll(ivClassic,ivclm,ivinfini);
@@ -799,21 +788,13 @@ public class Window extends Application {
         Group group = new Group();
         group.getChildren().addAll(ivBg,vbox,ivBack,ivSelect);
 
-        ivClassic.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            afficheScore(stage , 0);
-        });
+        ivClassic.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> afficheScore(stage , 0));
 
-        ivclm.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            afficheScore(stage , 1);
-        });
+        ivclm.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> afficheScore(stage , 1));
 
-        ivinfini.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            afficheScore(stage , 2);
-        });
+        ivinfini.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> afficheScore(stage , 2));
 
-        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            menu(stage);
-        });
+        ivBack.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
 
         Scene scoreBoard = new Scene(group,SCENE_WIDTH,SCENE_HEIGHT*margin);
         stage.setScene(scoreBoard);
@@ -844,7 +825,7 @@ public class Window extends Application {
 
         ivSubmit.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
             if(inputHeight.getText()!=null && inputHeight.getText()!=null && inputName.getText()!=null)
-               createLvl(Integer.valueOf(inputHeight.getText()),Integer.valueOf(inputWidth.getText()),inputName.getText(),stage);
+               createLvl(Integer.parseInt(inputHeight.getText()),Integer.parseInt(inputWidth.getText()),inputName.getText(),stage);
         });
 
         form.add(height,0,0);
@@ -880,10 +861,7 @@ public class Window extends Application {
             tabIV[i]=new ImageView(new Image("img/bgBlack.png", ((SCENE_WIDTH*1.0)/width)-8, (SCENE_HEIGHT*1.0)/height-8, false, false));
 
             int finalI = i;
-            tabIV[i].addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-                tabIV[finalI].setImage(new Image(currentBlock.get(), ((SCENE_WIDTH*1.0)/width)-8, (SCENE_HEIGHT*1.0)/height-8, false, false));
-
-            });
+            tabIV[i].addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> tabIV[finalI].setImage(new Image(currentBlock.get(), ((SCENE_WIDTH*1.0)/width)-8, (SCENE_HEIGHT*1.0)/height-8, false, false)));
             plateau.add(tabIV[i],i%width,i/width);
         }
         hbox.setMinWidth(100);
@@ -902,17 +880,13 @@ public class Window extends Application {
                                 new ImageView(new Image("img/createLevel/Home.png", 50, 50, false, false))
                               };
         for (ImageView imageView : select) {
-            imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-                currentBlock.set(imageView.getImage().getUrl());
-            });
+            imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> currentBlock.set(imageView.getImage().getUrl()));
             hbox.getChildren().add(imageView);
         }
         HBox hbox2 = new HBox();
         ImageView back = new ImageView(new Image("img/back.png", 75, 75, false, false));
 
-        back.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            menu(stage);
-        });
+        back.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> menu(stage));
 
         ImageView save = new ImageView(new Image("img/createLevel/Save.png", 75, 75, false, false));
         save.addEventHandler(MouseEvent.MOUSE_CLICKED, reset->{
@@ -935,7 +909,7 @@ public class Window extends Application {
         hbox2.getChildren().addAll(save,back);
         plateau.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(3))));
         vbox.getChildren().addAll(plateau,hbox,hbox2);
-        vbox.setPadding(new Insets(0,0,0,SCENE_WIDTH/30));
+        vbox.setPadding(new Insets(0,0,0,SCENE_WIDTH/30.0));
         root.getChildren().addAll(main,vbox);
 
         stage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT*margin));
@@ -964,54 +938,42 @@ public class Window extends Application {
         double width = 1.0*SCENE_WIDTH/6;
         double height = 1.0*SCENE_HEIGHT/6;
 
-        ivBlueWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            wallsColor = "blue";
-        });
+        ivBlueWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> wallsColor = "blue");
 
         Image greenWall = new Image("img/wall/green/Wall-green-Block.png", width, height, false, false);
         ImageView ivGreenWall = new ImageView(greenWall);
 
         popVbox.getChildren().add(ivGreenWall);
 
-        ivGreenWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            wallsColor = "green";
-        });
+        ivGreenWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> wallsColor = "green");
 
         Image orangeWall = new Image("img/wall/orange/Wall-orange-Block.png", width, height, false, false);
         ImageView ivorangeWall = new ImageView(orangeWall);
 
         popVbox.getChildren().add(ivorangeWall);
 
-        ivorangeWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            wallsColor = "orange";
-        });
+        ivorangeWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> wallsColor = "orange");
 
         Image purpleWall = new Image("img/wall/purple/Wall-purple-Block.png", width, height, false, false);
         ImageView ivpurpleWall = new ImageView(purpleWall);
 
         popVbox.getChildren().add(ivpurpleWall);
 
-        ivpurpleWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            wallsColor = "purple";
-        });
+        ivpurpleWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> wallsColor = "purple");
 
         Image redWall = new Image("img/wall/red/Wall-red-Block.png", width, height, false, false);
         ImageView ivredWall = new ImageView(redWall);
 
         popVbox.getChildren().add(ivredWall);
 
-        ivredWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            wallsColor = "red";
-        });
+        ivredWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> wallsColor = "red");
 
         Image yellowWall = new Image("img/wall/yellow/Wall-yellow-Block.png", width, height, false, false);
         ImageView ivyellowWall = new ImageView(yellowWall);
 
         popVbox.getChildren().add(ivyellowWall);
 
-        ivyellowWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> {
-            wallsColor = "yellow";
-        });
+        ivyellowWall.addEventHandler(MouseEvent.MOUSE_CLICKED, reset -> wallsColor = "yellow");
 
         ImageView ivback = new ImageView(new Image("img/back.png", 1.0*SCENE_WIDTH/8, 1.0*SCENE_HEIGHT/8, false, false));
         ivback.setY(SCENE_HEIGHT-20);

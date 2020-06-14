@@ -7,17 +7,17 @@ import static Utils.Constants.*;
 
 public class Personnage extends Entity{
 
-  private double baseSpeed;
+  private final double baseSpeed;
   private double speed;
-  private static final double[] speedLimits = new double[] {0, 4};
+  private static final double[] speedLimits = new double[] {0, 8};
 
-  Position originalPos;
+  Position<Double> originalPos;
 
   private Direction dir = Direction.RIGHT;
 
   public Personnage (double _x, double _y, double _baseSpeed) {
     super(_x, _y, PERSONNAGE_WIDTH, PERSONNAGE_HEIGHT);
-    originalPos = new Position(_x, _y);
+    originalPos = new Position<>(_x, _y);
     baseSpeed = _baseSpeed;
     speed = baseSpeed;
   }
@@ -92,14 +92,13 @@ public class Personnage extends Entity{
       speed = speedLimits[0];
     }
   }
-  public Position getGridPos() {
-    return new Position((int) Math.round(getPos().getX()/WALL_WIDTH), (int) Math.round(getPos().getY()/WALL_HEIGHT));
+  public Position<Integer> getGridPos() {
+    return new Position<>((int) Math.round(getPos().getX()/WALL_WIDTH), (int) Math.round(getPos().getY()/WALL_HEIGHT));
   }
   public void resetSpeed() {
     speed = baseSpeed;
   }
   public double getSpeed() { return speed; }
-  public double getBaseSpeed() { return baseSpeed; }
 
   public void resetPosition() {
     setPos(originalPos);

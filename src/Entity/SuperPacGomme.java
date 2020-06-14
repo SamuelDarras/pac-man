@@ -6,14 +6,8 @@ import javafx.scene.paint.Color;
 
 public class SuperPacGomme extends Items{
 
-    private boolean afficheScore = true;
-
     public SuperPacGomme(double x, double y){
        super(100, x, y, Constants.ITEM_DEFAULT_WIDTH*2, Constants.ITEM_DEFAULT_HEIGHT*2);
-    }
-
-    public boolean isAfficheScore() {
-        return afficheScore;
     }
 
     public void draw(GraphicsContext gc) {

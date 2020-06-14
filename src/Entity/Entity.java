@@ -2,16 +2,10 @@ package Entity;
 
 import Utils.Position;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-
-import java.util.ArrayList;
-import java.util.Random;
-
 
 public class Entity {
     private Position<Double> pos;
-    private double[] hitbox;
+    private final double[] hitbox;
 
     public Entity(double x, double y, double w, double h) {
         pos = new Position<>(x, y);
@@ -29,20 +23,6 @@ public class Entity {
     public void draw(GraphicsContext gc) {
 
     }
-
-    public void drawHitbox(GraphicsContext gc) {
-        Paint prev = gc.getStroke();
-
-        gc.setStroke(Color.BLUE);
-        gc.strokeRect(getPos().getX(), getPos().getY(), hitbox[0], hitbox[1]);
-        /*gc.strokeLine(getPos().getX(), getPos().getY(), getPos().getX()+200, getPos().getY()+200);
-        gc.strokeLine(getPos().getX(), getPos().getY(), getPos().getX()-200, getPos().getY()-200);
-        gc.strokeLine(getPos().getX(), getPos().getY(), getPos().getX()+200, -getPos().getY()+200);
-        gc.strokeLine(getPos().getX(), getPos().getY(), getPos().getX()-200, -getPos().getY()-200);*/
-
-        gc.setStroke(prev);
-    }
-
 
     public Position<Double> getPos() { return pos; }
     public void setPos(Position<Double> n_pos) { pos = n_pos.copy(); }

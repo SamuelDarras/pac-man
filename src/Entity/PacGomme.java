@@ -6,15 +6,8 @@ import javafx.scene.paint.Color;
 
 public class PacGomme extends Items{
 
-    private boolean afficheScore = false;
-
-
     public PacGomme(double x, double y){
         super(10, x, y, Constants.ITEM_DEFAULT_WIDTH, Constants.ITEM_DEFAULT_HEIGHT);
-    }
-
-    public boolean isAfficheScore() {
-        return afficheScore;
     }
 
     public void draw(GraphicsContext gc) {

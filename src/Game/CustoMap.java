@@ -2,7 +2,6 @@ package Game;
 
 import javafx.scene.image.ImageView;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -49,7 +48,6 @@ public class CustoMap {
         return txt;
     }
     public void createLvlFile() throws IOException {
-        File file = new File("src//levels//custo//"+name+".txt");
         FileWriter fileWriter = new FileWriter("src//levels/custo//"+name+".txt");
         fileWriter.write(height+" "+width+"\n");
         for(int i=0;i<height;i++){

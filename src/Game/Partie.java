@@ -2,21 +2,17 @@ package Game;
 
 
 import Entity.*;
-import Graphics.Window;
 
 public class Partie {
-    private Score score;
+    private final Score score;
 
-    private Plateau pla;
-    private Pacman pacman;
+    private final Plateau pla;
+    private final Pacman pacman;
 
-    private Window win;
-
-    public Partie(String levelPath, String wallsColor, Window window, String skin,double volume) throws Exception {
+    public Partie(String levelPath, String wallsColor, String skin, double volume) throws Exception {
         score = new Score();
         pla = new Plateau(levelPath, wallsColor, skin,volume);
         pacman = pla.getPacman();
-        win = window;
     }
 
     public void tick(double dt) {

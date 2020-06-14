@@ -42,7 +42,7 @@ public class Pacman extends Personnage{
 	public boolean isDead(Plateau p){
         for (Entity e : p.getPlateau()) {
             if (e instanceof Ghost && e.hit(this)) {
-                if (!superPacman) {
+                if (!superPacman || ((Ghost) e).alreadyDied) {
                     for (Entity ee : p.getPlateau())
                         if (ee instanceof Ghost)
                             ((Ghost) ee).resetPosition();
@@ -80,6 +80,12 @@ public class Pacman extends Personnage{
                 if (e instanceof SuperPacGomme) {
                     chomp.play();
                     superPacman = true;
+                    tempSPM = LocalTime.now();
+                    for (Entity ee : partie.getPlateau().getPlateau()) {
+                        if (ee instanceof Ghost)
+                            ((Ghost)ee).alreadyDied = false;
+                    }
+
                     tempSPM= LocalTime.now();
                 }
                 partie.scoreAdd(((Items) e).getScore());

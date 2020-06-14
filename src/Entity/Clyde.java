@@ -24,12 +24,12 @@ public class Clyde extends Ghost {
         int xoff = 0;
         int yoff = 0;
 
-        int curpac_x = (int) pac.getGridPos().getX();
-        int curpac_y = (int) pac.getGridPos().getY();
+        int curpac_x = pac.getGridPos().getX();
+        int curpac_y = pac.getGridPos().getY();
 
-        gotoPos = new Position(1, 1);
-        if (((int) getGridPos().getX() - curpac_x) * ((int) getGridPos().getX() - curpac_x) + ((int) getGridPos().getY() - curpac_y) * ((int) getGridPos().getY() - curpac_y) > 8 << 3)
-            gotoPos = new Position(curpac_x + xoff, curpac_y + yoff);
+        gotoPos = new Position<>(1, 1);
+        if ((getGridPos().getX() - curpac_x) * (getGridPos().getX() - curpac_x) + (getGridPos().getY() - curpac_y) * (getGridPos().getY() - curpac_y) > 8 << 3)
+            gotoPos = new Position<>(curpac_x + xoff, curpac_y + yoff);
 
         path = BreadthFirst(getGridPos(), gotoPos, p);
 
